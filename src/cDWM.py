@@ -100,7 +100,8 @@ class Meta:
         self.iT = 0.
 
         # Plot Specification
-        self.BEM_AINSLIE_plot = True
+        self.BEM_AINSLIE_plot = False
+        self.MEANDERING_plot = False
 
         # Model Specification
         # In the dynamic approach, we can average the deficits (and turbulence) in time,
@@ -188,6 +189,7 @@ class Meand:
                 raise Exception('Key is not found, check spelling')
 
 class FFoR:
+    # FFoR BOX is scaled per [D] /!\
      def __init__(self):
         """ Initializing the data / Set default value ."""
         self.x_vec_t               = np.asarray([])    #coordinate vector in fixed frame of reference nx,nz

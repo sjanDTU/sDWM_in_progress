@@ -601,17 +601,23 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
     # meta.y_mat = np.tile(meta.y_vec,(meta.nx,1))
     meta.z_mat = np.tile(meta.vz,(meta.nx,1))
     print 'meta vz: ', meta.vz
+
+    # Store the ffor flow field
+    ffor.x_vec = (meta.x_vec - meta.hub_x[0]) / 2.
+    ffor.y_vec = (meta.y_vec - meta.hub_y) / 2.
+    ffor.z_vec = meta.z_vec + np.hstack((0., np.cumsum(meta.hub_z[0:])))[0]
+    ffor.x_mat = meta.x_mat / 2.        # [R] -> [D]
+    ffor.y_mat = meta.y_mat / 2.        # [R] -> [D]
+    ffor.z_mat = meta.z_mat / meta.dz   # [D]
+
+    if meta.MEANDERING_plot:
+        plt.ion()
+        plt.figure()
+
     for i_z in np.arange(0, meta.nz, 1):
+
         #print 'meta.vz[iz]: ', meta.vz[i_z]
         # EXTRACT TI_DWM AND WS_DWM IN MFoR
-        #Plot deficit MFOR
-        #"""
-        plt.plot(mfor.U[meta.vz[i_z], :], meta.vr_mixl)
-        plt.title('Deficit in MFoR at Turbine '+str(7-i_z)+' Location')
-        plt.ylabel('vr (polar discretization)')
-        plt.xlabel('U (axial velocitie in MFoR)')
-        plt.show()
-        #"""
         try:
             DWM_WS_DATA = mfor.U[meta.vz[i_z], :]
 
@@ -623,32 +629,19 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
         DWM_TI_DATA = mfor.TI_DWM[meta.vz[i_z],:]
         #print 'DWM_TI_DATA: ', DWM_TI_DATA
 
-        #Plot TI MFOR
-
-        """
-        plt.plot(meta.vr_mixl,mfor.TI_DWM[meta.vz[i_z], :])
-        plt.title('TI in MFoR at Turbine '+str(7-i_z)+' Location')
-        plt.xlabel('vr (polar discretization)')
-        plt.ylabel('TI (Turbulence Intensity in MFoR)')
-        plt.show()
-        """
-
         ### Correct DWM_TI_DATA so that no point to have lower TI than "TIamb"
         DWM_TI_DATA[DWM_TI_DATA < np.nanmean(meta.mean_TI_DWM)] = np.nanmean(meta.mean_TI_DWM)
-        plot_bool = False
-        if plot_bool:
-            plt.ion()
-            plt.figure()
-            plt.title('Wake center draw in time')
+
+
+
+
+
+        #for i_t in np.arange(0, 2, 1):
         for i_t in np.arange(0,len(meand.time),1):
             Ro_x                    = meand.meand_pos_x[i_z,i_t]
             Ro_y                    = meand.meand_pos_y[i_z,i_t]
 
             #print '(Ro_x,Ro_y): ', [Ro_x, Ro_y]
-            if plot_bool:
-                plt.plot(Ro_x,Ro_y,'x')
-                plt.draw
-                plt.pause(0.1)
             #print 'meta.x_mat: ', meta.x_mat
             r_dist                  = np.sqrt((meta.x_mat - Ro_x)**2 + (meta.y_mat - Ro_y)**2 )
             #print 'r_dist: ', r_dist
@@ -661,11 +654,11 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
             ################################################################
             #print 'tmp_index: ', tmp_index
             #raw_input('entry')
-            tmp_field_WS            = np.ones((meta.nx,meta.ny))
+            tmp_field_WS            = np.zeros((meta.nx,meta.ny))
             #print 'tmp_index: ', tmp_index
 
             # it's here that we change the velocity to be in FFOR
-            tmp_field_WS[tmp_index] = np.interp( r_dist[tmp_index],meta.vr_m, DWM_WS_DATA)
+            tmp_field_WS[tmp_index] = np.interp(r_dist[tmp_index], meta.vr_m, DWM_WS_DATA)
 
             """
             plt.figure()
@@ -702,19 +695,37 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
 
             ffor.ffor_flow_field_TI_tmp_tmp[:, :]      = tmp_field_TI
             ffor.TI_axial_ffor_tmp[:, :, i_z]     = ffor.TI_axial_ffor_tmp[:, :, i_z] + ffor.ffor_flow_field_TI_tmp_tmp**2
+
+            if meta.MEANDERING_plot:
+                plt.subplot(131)
+                plt.title('Axial Velocity at WT ' + str(7 - i_z)+' in MFoR')
+                plt.plot(DWM_WS_DATA, meta.vr_mixl, label='DWM_WS_DATA')
+                plt.xlabel('U (MFoR)'), plt.ylabel('r [R]')
+                plt.legend()
+
+                plt.subplot(132)
+                plt.title('Meandering WS in Time, at WT ' + str(7 - i_z) + ' in FFoR')
+                CF = plt.contourf(ffor.x_mat, ffor.y_mat, tmp_field_WS, np.arange(0.2, 1, .05), extend='both')
+                plt.xlabel('Lateral direction, x [D]'), plt.ylabel('Longitudinal direction, y [D]')
+                plt.colorbar(CF), plt.legend()
+
+                plt.subplot(133)
+                plt.title('Meandering TI in Time, at WT ' + str(7 - i_z) + ' in FFoR')
+                CF = plt.contourf(ffor.x_mat, ffor.y_mat, tmp_field_TI, np.arange(0.08, 0.4, .02), extend='both')
+                plt.xlabel('Lateral direction, x [D]'), plt.ylabel('Longitudinal direction, y [D]')
+                plt.colorbar(CF), plt.legend()
+
+                plt.draw()
+                plt.pause(0.1)
+                plt.cla()
+                plt.clf()
+        #plt.plot([0,100],[0,1],ffor.WS_axial_ffor_tmp[:, :, i_z])
+        # """
+
+    if meta.MEANDERING_plot:
         plt.ioff()
 
-        """
-        plt.figure()
-        plt.subplot(121)
-        plt.title('DWM_WS_DATA')
-        plt.plot(DWM_WS_DATA, label='DWM_WS_DATA')
-        plt.legend()
-        plt.subplot(122)
-        plt.title('tmp WS in FFoR')
-        plt.plot(ffor.WS_axial_ffor_tmp[:, :, i_z])
-        plt.legend()
-        plt.show()
+        #"""
         #"""
     # Stores the mean field
     for i_z in np.arange(0,meta.nz,1):
@@ -725,47 +736,7 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
         ffor.TI_axial_ffor[:, :, i_z]      = (ffor.TI_axial_ffor_tmp[:, :, i_z]  / len(meand.time))**(1.0/2.0)
 
         ffor.x_vec_t[:, i_z]               = (meta.x_vec-meta.hub_x[i_z])/2.
-        ffor.x_mat_t[:,:,i_z]              = np.tile(ffor.x_vec_t[:, i_z] .reshape(len(ffor.x_vec_t[:, i_z]),1),meta.ny)/2.
-
-    # Store the ffor flow field
-    ffor.x_vec                   = (meta.x_vec-meta.hub_x[0])/2.
-    ffor.y_vec                   = (meta.y_vec-meta.hub_y)/2.
-    ffor.z_vec                   = meta.z_vec+np.hstack((0., np.cumsum(meta.hub_z[0:])))[0]
-    ffor.x_mat                   = meta.x_mat/2.
-    ffor.y_mat                   = meta.y_mat/2.
-    ffor.z_mat                   = meta.z_mat/meta.dz
-
-    """# print ffor.WS_axial_ffor.shape
-    x = ffor.x_vec
-    y = ffor.y_vec
-    X, Y = np.meshgrid(x, y)
-    for i_z in np.arange(0, meta.nz, 1):
-        CS = plt.contourf(X, Y, ffor.WS_axial_ffor[:, :, i_z], 15, cmap=plt.cm.Reds)
-        plt.xlabel('x'), plt.ylabel('y'), plt.title('Velocity FFoR for Turbine '+str(7-i_z))
-        cbar = plt.colorbar(CS)
-        plt.show()
-    """
-
-    """# print ffor.TI_axial_ffor
-    x = ffor.x_vec
-    y = ffor.y_vec
-    X, Y = np.meshgrid(x, y)
-    for i_z in np.arange(0, meta.nz, 1):
-        CS = plt.contourf(X, Y, ffor.TI_axial_ffor[:, :, i_z], 15, cmap=plt.cm.bone)
-        plt.xlabel('x'), plt.ylabel('y'), plt.title('TI FFoR for Turbine ' + str(7 - i_z))
-        cbar = plt.colorbar(CS)
-        plt.show()
-    """
-    """
-    x = ffor.x_vec
-    y = ffor.y_vec
-    X, Y = np.meshgrid(x, y)
-
-    CS = plt.contourf(X, Y, ffor.WS_axial_ffor[:, :, meta.nz], 15, cmap=plt.cm.Reds)
-    plt.xlabel('x'), plt.ylabel('y'), plt.title('Velocity FFoR for Turbine '+str(7-i_z))
-    cbar = plt.colorbar(CS)
-    plt.show()
-    """
+        ffor.x_mat_t[:, :, i_z]              = np.tile(ffor.x_vec_t[:, i_z] .reshape(len(ffor.x_vec_t[:, i_z]),1),meta.ny)/2.
     return mfor,ffor,meta,meand
 
 def DWM_make_grid(meta):
@@ -890,6 +861,15 @@ def DWM_meta_meand(meand,meta):
     #print meta.hub_x[0]
     #print meand.std_meand_x
     #print meand.meand_pos_x[1,0]
+    if meta.MEANDERING_plot:
+        for i_z in np.arange(meta.nz-1, -1, -1):
+            plt.figure('Wake Center position (statistical approach) for WT '+str(7-i_z))
+            plt.title('Wake Center position (statistical approach) for WT '+str(7-i_z))
+            plt.plot(meand.meand_pos_x[i_z,:], meand.meand_pos_y[i_z,:], 'x')
+            plt.xlabel('Lateral deviation, x [R]'), plt.ylabel('Longitudinal deviation, y [R]')
+            plt.xlim((-6, 9))
+            plt.ylim((-2, 8))
+        plt.show()
     return meand
 
 def meand_table_DWM_method(meta):
@@ -993,12 +973,13 @@ def meand_table_DWM_method(meta):
     std_meand_y=std_meand_y[index_orig]
     #print 'Std_meand_y: ', std_meand_y
     #print 'Std_meand_x: ', std_meand_x
-
-    """
-    plt.figure()
-    plt.title('Center meand location'),plt.plot(std_meand_x,std_meand_y,'x')
-    plt.show()
-    #"""
+    if meta.MEANDERING_plot:
+        plt.figure('Standard deviation (statistical approach)')
+        plt.title('Standard deviation (statistical approach) for each WindTurbines')
+        plt.plot(range(meta.nz-1, -1, -1), std_meand_x, 'o', label= 'Std x')
+        plt.plot(range(meta.nz-1, -1, -1), std_meand_y, 'x', label='Std y')
+        plt.xlabel('Downstreamwise'), plt.ylabel('Standard Deviation')
+        plt.show()
     return std_meand_x, std_meand_y
 
 def DWM_outputs(DWM,ffor,mfor,meta, aero,par, BEM):
