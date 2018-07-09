@@ -1,0 +1,8 @@
+virtualenv venDWM
+. venDWM/bin/activate
+pip install --upgrade pip 
+pip install numpy
+pip install scipy (lapack, gfortran)
+pip install ipython[notebook]
+pip install matplotlib
+pip install pandas

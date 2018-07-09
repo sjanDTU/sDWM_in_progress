@@ -1,0 +1,26 @@
+function x=canonix()
+[x,y] = ndgrid(linspace(-3,3,10));
+z = exp(-x.^2 -y.^2);
+c = contourf(z);
+size(c)
+s = getcontourlines(c);
+% size(s)
+figure
+plot(s(1).x, s(1).y, 'b', s(4).x, s(4).y, 'r', s(8).x, s(8).y, 'g')
+end
+
+function s = getcontourlines(c)
+    sz = size(c,2);     % Size of the contour matrix c
+    ii = 1;             % Index to keep track of current location
+    jj = 1;             % Counter to keep track of % of contour lines
+
+    while ii < sz       % While we haven't exhausted the array
+        n = c(2,ii);    % How many points in this contour?
+        s(jj).v = c(1,ii);        % Value of the contour
+        s(jj).x = c(1,ii+1:ii+n); % X coordinates
+        s(jj).y = c(2,ii+1:ii+n); % Y coordinates
+        ii = ii + n + 1;          % Skip ahead to next contour line
+        jj = jj + 1;              % Increment number of contours
+    end
+
+end

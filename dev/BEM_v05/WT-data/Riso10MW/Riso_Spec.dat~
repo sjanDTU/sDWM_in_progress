@@ -1,0 +1,10 @@
+3                    NumBlade:    Number of blades.
+86.974                BladeLength:     
+2.8                  HubRad:     Hub radius 
+0.0                  PreCone:    Precone angle, positive downwind [deg].
+0.0                  Tilt: (Shouldbe 2)      Shaft tilt [deg].
+0.0                  Yaw:        Yaw error [deg]. (useless)
+125                   HubHt:      Hub height 
+10                  NumSeg:     Number of blade segments
+9.6                 RotSpeed
+11000                Prated kW
