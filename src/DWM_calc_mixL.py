@@ -482,4 +482,13 @@ def DWM_calc_mixL(meta,aero,mfor):
 #    elapsed = time.time() - t
 #    print 'Velocity model computation time %i' % (int(elapsed))
     #raw_input('entry (end of Ainslie Part)')
+    if meta.BEM_AINSLIE_plot:
+        plt.figure()
+        plt.title('Axial Velocity Output from mixL domain (MFOR)')
+        plt.ylabel('vr (polar discretization)[R]')
+        plt.xlabel('U [U0]')
+        for i_z in np.arange(0, meta.nz, 1):
+            plt.plot(mfor.U[meta.vz[i_z], :], meta.vr_mixl, label='at Turbine '+ str(7-i_z))
+
+        plt.legend(), plt.show()
     return mfor

@@ -201,15 +201,16 @@ def DWM_aero(meta,ffor,aero,deficits,turb,inlets_ffor,inlets_ffor_deficits,out,I
 
     # domain induction
     a_domain     = np.interp(meta.vr_m,np.hstack(([aero.r_w, aero.r_w[-1]+0.01, aero.r_w[-1]+0.02])), np.hstack((( 1.0 - aero.U_w), [0., 0.])))
-    print len(a_domain)
-    print len(BEM.a)
-    print 'a_domain: ', a_domain
-    print 'BEM a', BEM.a
-    plt.figure()
-    plt.plot(meta.vr_mixl, a_domain)
-    plt.plot(aero.r_t, BEM.a)
-    plt.show()
-    raw_input('Press Enter to continue')
+
+    if meta.BEM_AINSLIE_plot:
+        print 'Aero CT: ', aero.CT
+        plt.figure('Comparison between a_domain (Ainslie) and a (BEM)')
+        plt.title('Comparison between a_domain (Ainslie) and a (BEM)')
+        plt.plot(a_domain, meta.vr_mixl, label='a_domain')
+        plt.plot(BEM.a, aero.r_t, label='a (BEM)')
+        plt.xlabel('Induction Factor'), plt.ylabel('radius [R]'), plt.legend()
+        plt.show()
+        print ' '
 
     ## Compute the accumulated flow field for accurate inlet definition of the MFoR wake calculation
     # center all disks before wake accumulation
@@ -280,11 +281,14 @@ def DWM_aero(meta,ffor,aero,deficits,turb,inlets_ffor,inlets_ffor_deficits,out,I
         mfor.U_init_raw=mfor.U_init
         mfor.U_init[mfor.U_init < 0.0]=0.0 # prevent from negative velocities on linear summation
         mfor.U_init=smooth( mfor.U_init,window_len=5)
-    print 'U_init shape: ', np.shape(mfor.U_init)
-    plt.figure()
-    plt.plot(range(80), mfor.U_init)
-    plt.show()
-    raw_input('Press Enter to continue')
+    if meta.BEM_AINSLIE_plot:
+        print 'U_init shape: ', np.shape(mfor.U_init)
+        plt.figure('U_init, the Input for Ainslie Coming from BEM')
+        plt.title('U_init, the Input for Ainslie Coming from BEM')
+        plt.plot(mfor.U_init, meta.vr_mixl, label='U_init')
+        plt.xlabel('r [R]'), plt.ylabel('U[U0]'), plt.legend()
+        plt.show()
+        print ' '
 
     # Power curve based
     try:
@@ -362,8 +366,6 @@ def DWM_rotor_aero(meta,aero,ID_waked, *args):
         aero.a=  aero.ia*np.ones(len(aero.r_t))
     # print 'BEM predicts %4.2f kW at %4.2f m/s' %(BEM.Power/1000.,meta.mean_WS_DWM)
 
-    print ' Aero CT: ', aero.CT
-    raw_input('Press enter to Continue')
     # Boundary conditions for the r_w
     aero.dA = np.concatenate(([0], (pi*aero.r_t [1:]**2 - pi*aero.r_t [0:-1]**2)), axis=0)
     aero.mean_a= np.sum(aero.a*aero.dA)/pi
@@ -915,9 +917,6 @@ def meand_table_DWM_method(meta):
     print 'number of remaining wind Turbine (lloc): ', lloc   #number of remaining wind Turbine
     index_orig=np.argsort(location)
     location=np.sort(location) # sorting for interpolation on continuous function
-    print 'location:'
-    print location
-    raw_input('entry')
     Meand = io.loadmat('../data/meand_data.mat')
     #print 'Meand: ', Meand
     print 'shape(Meand): ', np.shape(Meand)
@@ -1157,6 +1156,8 @@ def DWM_outputs(DWM,ffor,mfor,meta, aero,par, BEM):
 
 
 #################################################################################################
+
+
 def get_Meandering_dynamic(meta, meand):
 
 
@@ -1170,8 +1171,6 @@ def get_Meandering_dynamic(meta, meand):
 
 
     return meta, meand
-
-
 
 def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor):
     """
@@ -1358,7 +1357,6 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor):
         plt.ioff()
 
     return mfor, ffor, meta, meand
-
 
 def DWM_get_deficit_FFOR_dynamic(ffor, meta,deficits,ID_waked,inlets_ffor,inlets_ffor_deficits):
     ###############################################################

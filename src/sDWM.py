@@ -86,7 +86,7 @@ def sDWM(derating,kwargs,xind):
     print 'inlets_ffor: ', inlets_ffor
     print 'inlets_ffor_deficits: ', inlets_ffor_deficits
     print 'inlets_ffor_turb: ', inlets_ffor_turb
-    raw_input('entry')
+    #raw_input('entry')
 
     # Extreme wake to define WT's in each wake, including partial wakes
     # but it doesn't keep Rw, however Rw is an important quantity used to model Meandering Dynamic!
@@ -147,7 +147,6 @@ def sDWM(derating,kwargs,xind):
         C2C=C2C[index_orig]
 
         print 'row', row
-        raw_input('entry')
         # Wrapping the DWM core model with I/O
         par={
          'WS':WS,
@@ -171,6 +170,7 @@ def sDWM(derating,kwargs,xind):
         }
         ID_wake_adj[str(id0[iT])]=row
         #"""
+        raw_input('Begin of DWM_main_fiel_model, Press enter to continue')
         aero, meta, mfor, ffor, DWM, deficits,inlets_ffor,inlets_ffor_deficits, inlets_ffor_turb,turb, out,ID_waked = DWM_main_field_model(ID_waked,deficits,inlets_ffor,inlets_ffor_deficits,inlets_ffor_turb,turb,DWM,out,**par)
         # Farm_p_out= Farm_p_out+out[str(meta.wtg_ind[0])][4] # based on power curve
 

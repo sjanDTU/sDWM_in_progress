@@ -99,6 +99,9 @@ class Meta:
         # Iterative Progress for the Main Loop
         self.iT = 0.
 
+        # Plot Specification
+        self.BEM_AINSLIE_plot = True
+
         # Model Specification
         # In the dynamic approach, we can average the deficits (and turbulence) in time,
         # and use this mean for the BEM-Ainslie Computation.
