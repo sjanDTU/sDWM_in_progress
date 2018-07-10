@@ -99,7 +99,7 @@ class Meta:
         # Iterative Progress for the Main Loop
         self.iT = 0.
 
-        # Plot Specification
+        # Plot Setting Options
         self.BEM_AINSLIE_plot = False
         self.MEANDERING_plot = False
 

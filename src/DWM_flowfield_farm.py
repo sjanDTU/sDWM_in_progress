@@ -701,19 +701,18 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
                 plt.title('Axial Velocity at WT ' + str(7 - i_z)+' in MFoR')
                 plt.plot(DWM_WS_DATA, meta.vr_mixl, label='DWM_WS_DATA')
                 plt.xlabel('U (MFoR)'), plt.ylabel('r [R]')
-                plt.legend()
 
                 plt.subplot(132)
                 plt.title('Meandering WS in Time, at WT ' + str(7 - i_z) + ' in FFoR')
                 CF = plt.contourf(ffor.x_mat, ffor.y_mat, tmp_field_WS, np.arange(0.2, 1, .05), extend='both')
                 plt.xlabel('Lateral direction, x [D]'), plt.ylabel('Longitudinal direction, y [D]')
-                plt.colorbar(CF), plt.legend()
+                plt.colorbar(CF)
 
                 plt.subplot(133)
                 plt.title('Meandering TI in Time, at WT ' + str(7 - i_z) + ' in FFoR')
                 CF = plt.contourf(ffor.x_mat, ffor.y_mat, tmp_field_TI, np.arange(0.08, 0.4, .02), extend='both')
                 plt.xlabel('Lateral direction, x [D]'), plt.ylabel('Longitudinal direction, y [D]')
-                plt.colorbar(CF), plt.legend()
+                plt.colorbar(CF)
 
                 plt.draw()
                 plt.pause(0.1)
@@ -737,6 +736,31 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
 
         ffor.x_vec_t[:, i_z]               = (meta.x_vec-meta.hub_x[i_z])/2.
         ffor.x_mat_t[:, :, i_z]              = np.tile(ffor.x_vec_t[:, i_z] .reshape(len(ffor.x_vec_t[:, i_z]),1),meta.ny)/2.
+
+    if meta.MEANDERING_plot:
+        for i_z in np.arange(0, meta.nz, 1):
+
+            plt.figure('Averaged Meandering WS for statistical approach (FFoR) at WT'+str(7-i_z))
+            plt.title('Averaged axial WS Field at WT' + str(7 - i_z))
+            CF1 = plt.contourf(ffor.x_mat, ffor.y_mat, ffor.WS_axial_ffor[:, :, i_z])
+            plt.xlabel('Lateral direction, x [D]'), plt.ylabel('Longitudinal direction, y [D]')
+            plt.colorbar(CF1)
+
+
+            plt.figure('Averaged Meandering TI for statistical approach (FFoR) at WT' + str(7 - i_z))
+            plt.subplot(121)
+            plt.title('Averaged axial TI at WT' + str(7 - i_z))
+            CF2 = plt.contourf(ffor.x_mat, ffor.y_mat, ffor.TI_axial_ffor[:, :, i_z])
+            plt.xlabel('Lateral direction, x [D]'), plt.ylabel('Longitudinal direction, y [D]')
+            plt.colorbar(CF2)
+
+            plt.subplot(122)
+            plt.title('Averaged axial meandering TI at WT' + str(7 - i_z))
+            CF3 = plt.contourf(ffor.x_mat, ffor.y_mat, ffor.TI_meand_axial_ffor[:, :, i_z])
+            plt.xlabel('Lateral direction, x [D]'), plt.ylabel('Longitudinal direction, y [D]')
+            plt.colorbar(CF3)
+        plt.show()
+
     return mfor,ffor,meta,meand
 
 def DWM_make_grid(meta):

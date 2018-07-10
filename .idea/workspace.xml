@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b1e85f50-429b-433c-a650-5d1954bfe52d" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/sDWM_in_progress.iml" afterPath="$PROJECT_DIR$/.idea/sDWM_in_progress.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/DWM_calc_mixL.py" afterPath="$PROJECT_DIR$/src/DWM_calc_mixL.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/DWM_flowfield_farm.py" afterPath="$PROJECT_DIR$/src/DWM_flowfield_farm.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cDWM.py" afterPath="$PROJECT_DIR$/src/cDWM.py" />
     </list>
@@ -15,11 +16,11 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file leaf-file-name="RUN_sDWM_tests.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/RUN_sDWM_tests.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-153">
+            <state relative-caret-position="0">
               <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
@@ -28,11 +29,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DWM_flowfield_farm.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="DWM_flowfield_farm.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/DWM_flowfield_farm.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-85">
-              <caret line="555" column="43" lean-forward="false" selection-start-line="555" selection-start-column="43" selection-end-line="555" selection-end-column="43" />
+            <state relative-caret-position="-329">
+              <caret line="702" column="59" lean-forward="false" selection-start-line="702" selection-start-column="59" selection-end-line="702" selection-end-column="59" />
               <folding>
                 <element signature="e#136#154#0" expanded="true" />
                 <element signature="e#7858#17937#0" expanded="false" />
@@ -40,18 +41,19 @@
                 <element signature="e#20684#25186#0" expanded="false" />
                 <element signature="e#25276#28893#0" expanded="false" />
                 <element signature="e#28951#31219#0" expanded="false" />
-                <element signature="e#31269#39792#0" expanded="false" />
                 <element signature="e#36353#36694#1" expanded="false" />
                 <element signature="e#36922#37286#1" expanded="false" />
-                <element signature="e#39823#41346#0" expanded="false" />
-                <element signature="e#41384#45378#0" expanded="false" />
-                <element signature="e#45418#50395#0" expanded="false" />
-                <element signature="e#50453#55992#0" expanded="false" />
-                <element signature="e#56142#56596#0" expanded="false" />
-                <element signature="e#56657#64282#0" expanded="false" />
-                <element signature="e#64385#70273#0" expanded="false" />
-                <element signature="e#70339#73770#0" expanded="false" />
-                <element signature="e#73874#84871#0" expanded="false" />
+                <element signature="e#38892#38929#0" expanded="false" />
+                <element signature="e#39742#40910#0" expanded="false" />
+                <element signature="e#40974#42497#0" expanded="false" />
+                <element signature="e#42535#46529#0" expanded="false" />
+                <element signature="e#46569#51546#0" expanded="false" />
+                <element signature="e#51604#57143#0" expanded="false" />
+                <element signature="e#57293#57747#0" expanded="false" />
+                <element signature="e#57808#65433#0" expanded="false" />
+                <element signature="e#65536#71424#0" expanded="false" />
+                <element signature="e#71490#74921#0" expanded="false" />
+                <element signature="e#75025#86022#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -60,28 +62,29 @@
       <file leaf-file-name="DWM_calc_mixL.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/DWM_calc_mixL.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="609">
-              <caret line="503" column="15" lean-forward="true" selection-start-line="503" selection-start-column="15" selection-end-line="503" selection-end-column="15" />
+            <state relative-caret-position="306">
+              <caret line="503" column="15" lean-forward="false" selection-start-line="503" selection-start-column="15" selection-end-line="503" selection-end-column="15" />
               <folding>
                 <element signature="e#334#10343#0" expanded="false" />
                 <element signature="e#10401#13377#0" expanded="false" />
                 <element signature="e#13518#19062#0" expanded="false" />
                 <element signature="e#19107#23307#0" expanded="false" />
+                <element signature="e#23348#28173#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="cDWM.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="cDWM.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/cDWM.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="103" column="36" lean-forward="false" selection-start-line="103" selection-start-column="36" selection-end-line="103" selection-end-column="36" />
+            <state relative-caret-position="141">
+              <caret line="101" column="30" lean-forward="false" selection-start-line="101" selection-start-column="30" selection-end-line="101" selection-end-column="30" />
               <folding>
-                <element signature="e#7341#10342#0" expanded="false" />
-                <element signature="e#12229#13476#0" expanded="false" />
-                <element signature="e#13498#16823#0" expanded="false" />
-                <element signature="e#16843#17569#0" expanded="false" />
+                <element signature="e#7343#10344#0" expanded="false" />
+                <element signature="e#12231#13478#0" expanded="false" />
+                <element signature="e#13500#16825#0" expanded="false" />
+                <element signature="e#16845#17571#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -90,8 +93,8 @@
       <file leaf-file-name="sDWM.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/sDWM.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-816">
-              <caret line="35" column="4" lean-forward="true" selection-start-line="35" selection-start-column="4" selection-end-line="35" selection-end-column="4" />
+            <state relative-caret-position="595">
+              <caret line="35" column="4" lean-forward="false" selection-start-line="35" selection-start-column="4" selection-end-line="35" selection-end-column="4" />
               <folding />
             </state>
           </provider>
@@ -102,6 +105,7 @@
   <component name="Git.Settings">
     <option name="PREVIOUS_COMMIT_AUTHORS">
       <list>
+        <option value="AugustinGr &lt;augustin.grosdidier@gmail.com&gt;" />
         <option value="AugustinGr &lt;augustin.grosdidier@gmail.com&gt;stin" />
       </list>
     </option>
@@ -113,15 +117,15 @@
         <option value="$PROJECT_DIR$/src/DWM_main_BEM.py" />
         <option value="$PROJECT_DIR$/src/sDWM.py" />
         <option value="$PROJECT_DIR$/src/DWM_calc_mixL.py" />
-        <option value="$PROJECT_DIR$/src/DWM_flowfield_farm.py" />
         <option value="$PROJECT_DIR$/src/cDWM.py" />
+        <option value="$PROJECT_DIR$/src/DWM_flowfield_farm.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="410" />
-    <option name="y" value="37" />
-    <option name="width" value="939" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="426" />
+    <option name="y" value="2" />
+    <option name="width" value="945" />
     <option name="height" value="775" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -140,8 +144,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -158,6 +160,8 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -218,29 +222,37 @@
       <option name="project" value="LOCAL" />
       <updated>1531138477329</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Plot Option added (in progress):&#10;Meandering part added&#10;Still deficit part to add.">
+      <created>1531150220310</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1531150220310</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="784" extended-state="6" />
+    <frame x="426" y="2" width="945" height="775" extended-state="0" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.13103953" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1926803" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32488823" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3247734" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
-      <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -249,7 +261,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Plot Option added (in progress)" />
-    <option name="LAST_COMMIT_MESSAGE" value="Plot Option added (in progress)" />
+    <MESSAGE value="Plot Option added (in progress):&#10;Meandering part added&#10;Still deficit part to add." />
+    <option name="LAST_COMMIT_MESSAGE" value="Plot Option added (in progress):&#10;Meandering part added&#10;Still deficit part to add." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -258,40 +271,9 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/DWM_main_BEM.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="139">
-          <caret line="23" column="40" lean-forward="true" selection-start-line="23" selection-start-column="40" selection-end-line="23" selection-end-column="40" />
-          <folding>
-            <element signature="e#241#252#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/DWM_calc_mixL.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="609">
-          <caret line="503" column="15" lean-forward="true" selection-start-line="503" selection-start-column="15" selection-end-line="503" selection-end-column="15" />
-          <folding>
-            <element signature="e#334#10343#0" expanded="false" />
-            <element signature="e#10401#13377#0" expanded="false" />
-            <element signature="e#13518#19062#0" expanded="false" />
-            <element signature="e#19107#23307#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sDWM.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-816">
-          <caret line="35" column="4" lean-forward="true" selection-start-line="35" selection-start-column="4" selection-end-line="35" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/RUN_sDWM_tests.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-153">
+        <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
@@ -301,7 +283,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/DWM_flowfield_farm.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-85">
+        <state relative-caret-position="2465">
           <caret line="555" column="43" lean-forward="false" selection-start-line="555" selection-start-column="43" selection-end-line="555" selection-end-column="43" />
           <folding>
             <element signature="e#136#154#0" expanded="true" />
@@ -310,31 +292,134 @@
             <element signature="e#20684#25186#0" expanded="false" />
             <element signature="e#25276#28893#0" expanded="false" />
             <element signature="e#28951#31219#0" expanded="false" />
-            <element signature="e#31269#39792#0" expanded="false" />
             <element signature="e#36353#36694#1" expanded="false" />
             <element signature="e#36922#37286#1" expanded="false" />
-            <element signature="e#39823#41346#0" expanded="false" />
-            <element signature="e#41384#45378#0" expanded="false" />
-            <element signature="e#45418#50395#0" expanded="false" />
-            <element signature="e#50453#55992#0" expanded="false" />
-            <element signature="e#56142#56596#0" expanded="false" />
-            <element signature="e#56657#64282#0" expanded="false" />
-            <element signature="e#64385#70273#0" expanded="false" />
-            <element signature="e#70339#73770#0" expanded="false" />
-            <element signature="e#73874#84871#0" expanded="false" />
+            <element signature="e#38892#38929#0" expanded="false" />
+            <element signature="e#39742#40910#0" expanded="false" />
+            <element signature="e#40974#42497#0" expanded="false" />
+            <element signature="e#42535#46529#0" expanded="false" />
+            <element signature="e#46569#51546#0" expanded="false" />
+            <element signature="e#51604#57143#0" expanded="false" />
+            <element signature="e#57293#57747#0" expanded="false" />
+            <element signature="e#57808#65433#0" expanded="false" />
+            <element signature="e#65536#71424#0" expanded="false" />
+            <element signature="e#71490#74921#0" expanded="false" />
+            <element signature="e#75025#86022#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DWM_calc_mixL.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1921">
+          <caret line="503" column="15" lean-forward="true" selection-start-line="503" selection-start-column="15" selection-end-line="503" selection-end-column="15" />
+          <folding>
+            <element signature="e#334#10343#0" expanded="false" />
+            <element signature="e#10401#13377#0" expanded="false" />
+            <element signature="e#13518#19062#0" expanded="false" />
+            <element signature="e#19107#23307#0" expanded="false" />
+            <element signature="e#23348#28173#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sDWM.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="595">
+          <caret line="35" column="4" lean-forward="true" selection-start-line="35" selection-start-column="4" selection-end-line="35" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cDWM.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1564">
+          <caret line="93" column="31" lean-forward="true" selection-start-line="93" selection-start-column="31" selection-end-line="93" selection-end-column="31" />
+          <folding>
+            <element signature="e#7343#10344#0" expanded="false" />
+            <element signature="e#12231#13478#0" expanded="false" />
+            <element signature="e#13500#16825#0" expanded="false" />
+            <element signature="e#16845#17571#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DWM_main_BEM.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="139">
+          <caret line="23" column="40" lean-forward="true" selection-start-line="23" selection-start-column="40" selection-end-line="23" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sDWM.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="595">
+          <caret line="35" column="4" lean-forward="false" selection-start-line="35" selection-start-column="4" selection-end-line="35" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/RUN_sDWM_tests.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DWM_calc_mixL.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="503" column="15" lean-forward="false" selection-start-line="503" selection-start-column="15" selection-end-line="503" selection-end-column="15" />
+          <folding>
+            <element signature="e#334#10343#0" expanded="false" />
+            <element signature="e#10401#13377#0" expanded="false" />
+            <element signature="e#13518#19062#0" expanded="false" />
+            <element signature="e#19107#23307#0" expanded="false" />
+            <element signature="e#23348#28173#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/cDWM.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="103" column="36" lean-forward="false" selection-start-line="103" selection-start-column="36" selection-end-line="103" selection-end-column="36" />
+        <state relative-caret-position="141">
+          <caret line="101" column="30" lean-forward="false" selection-start-line="101" selection-start-column="30" selection-end-line="101" selection-end-column="30" />
           <folding>
-            <element signature="e#7341#10342#0" expanded="false" />
-            <element signature="e#12229#13476#0" expanded="false" />
-            <element signature="e#13498#16823#0" expanded="false" />
-            <element signature="e#16843#17569#0" expanded="false" />
+            <element signature="e#7343#10344#0" expanded="false" />
+            <element signature="e#12231#13478#0" expanded="false" />
+            <element signature="e#13500#16825#0" expanded="false" />
+            <element signature="e#16845#17571#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DWM_flowfield_farm.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-329">
+          <caret line="702" column="59" lean-forward="false" selection-start-line="702" selection-start-column="59" selection-end-line="702" selection-end-column="59" />
+          <folding>
+            <element signature="e#136#154#0" expanded="true" />
+            <element signature="e#7858#17937#0" expanded="false" />
+            <element signature="e#17990#20631#0" expanded="false" />
+            <element signature="e#20684#25186#0" expanded="false" />
+            <element signature="e#25276#28893#0" expanded="false" />
+            <element signature="e#28951#31219#0" expanded="false" />
+            <element signature="e#36353#36694#1" expanded="false" />
+            <element signature="e#36922#37286#1" expanded="false" />
+            <element signature="e#38892#38929#0" expanded="false" />
+            <element signature="e#39742#40910#0" expanded="false" />
+            <element signature="e#40974#42497#0" expanded="false" />
+            <element signature="e#42535#46529#0" expanded="false" />
+            <element signature="e#46569#51546#0" expanded="false" />
+            <element signature="e#51604#57143#0" expanded="false" />
+            <element signature="e#57293#57747#0" expanded="false" />
+            <element signature="e#57808#65433#0" expanded="false" />
+            <element signature="e#65536#71424#0" expanded="false" />
+            <element signature="e#71490#74921#0" expanded="false" />
+            <element signature="e#75025#86022#0" expanded="false" />
           </folding>
         </state>
       </provider>
