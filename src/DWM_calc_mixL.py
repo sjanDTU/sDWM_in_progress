@@ -77,7 +77,7 @@ def DWM_init_calc_mixl(meta,aero,mfor):
     visc_wake2        = np.zeros((len(meta.vz_mixl), len(meta.vr_mixl)),dtype=float )
     One_div_du_dr_DWM = np.zeros((len(meta.vz_mixl), len(meta.vr_mixl)),dtype=float )
 
-    print 'shape(mfor.V)=shape(mfor.U): ', np.shape(mfor.V)      # Example: (306L, 80L)
+    #print 'shape(mfor.V)=shape(mfor.U): ', np.shape(mfor.V)      # Example: (306L, 80L)
     # DWM boundary conditions
 
     # Rotor plane
@@ -231,6 +231,7 @@ def DWM_calc_wake_width(mfor,width,b_loop,meta,j):
     #print 'width: ', width
 
     return width
+
 
 def DWM_eddy_viscosity(mfor,meta,width,visc_wake,visc_wake1,visc_wake2,F1_vector,F2_vector,u_star_DEF,l_star_DEF,One_div_du_dr_DWM,j):
     """Function that calculate the eddy viscosity
@@ -405,6 +406,7 @@ def DWM_velocity_solver(mfor,meta,j):
     # elapsed = time.time() - t
     # print 'New loop', 100.*elapsed
     return HL, mat, HL, mat
+
 
 def DWM_calc_mixL(meta,aero,mfor):
     """ Main Ainslie - mixing length (Keck et al) function that compute the wake defcit as function of downstream

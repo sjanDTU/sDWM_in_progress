@@ -23,7 +23,7 @@ if __name__ == "__main__":
               'R': 46.5,
               'stab': 'N',
               'accum': 'dominant',
-              'optim': True,
+              'optim': False,
               'dynamic': True}
     ##########################################################################
 

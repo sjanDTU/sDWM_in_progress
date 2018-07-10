@@ -15,6 +15,7 @@ with non symmetric inflow conditions (shear and veer) as well as blade structura
 from math import gamma, pi
 import numpy as np
 
+
 class InitRotor:
     """ This class holds rotor related parameters
     """

@@ -21,6 +21,7 @@ from DWM_misc import smooth
 
 import matplotlib.pyplot as plt
 
+
 def DWM_main_field_model(ID_waked,deficits,inlets_ffor,inlets_ffor_deficits,inlets_ffor_turb,turb,DWM,out,**par):
     """Main flow field calculation function, handling all the calls to each sub functions. This function is called for
        each turbine in the wind farm from the most upstream to the most downstream one. The flow field calculations are
@@ -66,8 +67,6 @@ def DWM_main_field_model(ID_waked,deficits,inlets_ffor,inlets_ffor_deficits,inle
         mean thrust coefficient from BEM and from power curve
         ID_waked: dict(nWT) holding list of upstream turbine index for each turbine in the wind farm
     """
-
-    previous_sDWM = True
     ## Create instances of class
     meta=Meta()
     meta.parse(**par)
@@ -78,14 +77,14 @@ def DWM_main_field_model(ID_waked,deficits,inlets_ffor,inlets_ffor_deficits,inle
     ###### Set up MFoR and FFoR streamwise domain properties   #####################################################
     meta                 = DWM_make_grid(meta)
     ###### Load wake meandering properties from meta model: f(stab,hub height,z,TI) ################################
-    if previous_sDWM:
+    if meta.previous_sDWM:
         meand                = DWM_meta_meand(meand,meta)
     else:
         meta, meand = get_Meandering_dynamic(meta, meand)
 
     ###  Run BEM model and create velocity deficit calculations inputs #############################################
     start_time = time.time()
-    if previous_sDWM:
+    if meta.previous_sDWM:
         aero,mfor,out,BEM    = DWM_aero(meta,ffor,aero,deficits,turb,inlets_ffor,inlets_ffor_deficits,out,ID_waked)
     else:
         if meta.steadyBEM_AINSLIE:
@@ -100,14 +99,13 @@ def DWM_main_field_model(ID_waked,deficits,inlets_ffor,inlets_ffor_deficits,inle
     mfor                 = DWM_calc_mixL(meta,aero,mfor)
     print 'Computation Time for Ainslie is: ', time.time()-start_time
     ############## Reconstruct global flow field by applying wake meandering #######################################
-    raw_input('Press Enter to Continue')
-    if previous_sDWM:
+    if meta.previous_sDWM:
         mfor,ffor,meta,meand = DWM_MFOR_to_FFOR(mfor,meta,meand,ffor)
     else:
         mfor, ffor, meta, meand = DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor)
 
     ############### Compute deficit at downstream rotor
-    if previous_sDWM:
+    if meta.previous_sDWM:
         deficits, ID_waked,inlets_ffor,inlets_ffor_deficits   = DWM_get_deficit(ffor,meta,deficits,ID_waked,inlets_ffor,inlets_ffor_deficits)
     else:
         deficits, ID_waked, inlets_ffor, inlets_ffor_deficits  = DWM_get_deficit_FFOR_dynamic(ffor, meta, deficits, ID_waked, inlets_ffor, inlets_ffor_deficits)
@@ -116,7 +114,7 @@ def DWM_main_field_model(ID_waked,deficits,inlets_ffor,inlets_ffor_deficits,inle
     #print inlets_ffor
     ############### Compute turbulence level at downstream rotor
 
-    if previous_sDWM:
+    if meta.previous_sDWM:
         turb,inlets_ffor_turb                 = DWM_get_turb(ffor,meta,turb,inlets_ffor_turb)
     else:
         turb, inlets_ffor_turb = DWM_get_turb_dynamic(ffor, meta, turb, inlets_ffor_turb)
@@ -129,7 +127,6 @@ def DWM_main_field_model(ID_waked,deficits,inlets_ffor,inlets_ffor_deficits,inle
     elapsed = time.time() - t
     print '*********Turbine %i (%i turbine in its wake) produces %4.2f kW at %4.2f m/s completed in %4.2f sec ***********************************' %(meta.wtg_ind[0],len(meta.wtg_ind[1:]),aero.pow_cur,meta.mean_WS_DWM,elapsed)
     print '****Turbine %i (%i turbine in its wake) produces %4.2f kW at %4.2f m/s completed in %4.2f sec **********' %(meta.wtg_ind[0],len(meta.wtg_ind[1:]),aero.Power/1000.,meta.mean_WS_DWM,elapsed)
-    raw_input('end of the iteration in flowfield, press entry')
     return( aero, meta, mfor, ffor, DWM, deficits,inlets_ffor, inlets_ffor_deficits,inlets_ffor_turb,turb, out,ID_waked)
 
 
@@ -198,7 +195,6 @@ def DWM_aero(meta,ffor,aero,deficits,turb,inlets_ffor,inlets_ffor_deficits,out,I
 
     # Run BEM at accumulated deficit
     aero,BEM   =  DWM_rotor_aero(meta,aero,ID_waked)
-
     # domain induction
     a_domain     = np.interp(meta.vr_m,np.hstack(([aero.r_w, aero.r_w[-1]+0.01, aero.r_w[-1]+0.02])), np.hstack((( 1.0 - aero.U_w), [0., 0.])))
 
@@ -259,9 +255,9 @@ def DWM_aero(meta,ffor,aero,deficits,turb,inlets_ffor,inlets_ffor_deficits,out,I
         r_dist_2= np.sqrt(grid_x**2 + grid_y**2 )  #Find distance to centre of wake plane
         ffor.WS_axial_sym      = np.ones((len(np.arange(0,meta.dR+1.,1))))
         ffor.WS_axial_sym[0]=np.nanmean(U_init[r_dist_2 < (1.05*np.amin(r_dist_2))])
-        print 'meta.dR: ', meta.dR
+        #print 'meta.dR: ', meta.dR
         for i_r_pos in np.arange(1,meta.dR+1,1):
-            print 'i_r_pos: ', i_r_pos
+            #print 'i_r_pos: ', i_r_pos
             a=r_dist_2 > ((i_r_pos+1-1.5)*(1.0/meta.dR))# rotor neg boundaries
             bb=r_dist_2 < ((i_r_pos+1-0.5)*(1.0/meta.dR)) #rotor pos boundaries
             c=np.logical_and(a,bb)
@@ -281,6 +277,7 @@ def DWM_aero(meta,ffor,aero,deficits,turb,inlets_ffor,inlets_ffor_deficits,out,I
         mfor.U_init_raw=mfor.U_init
         mfor.U_init[mfor.U_init < 0.0]=0.0 # prevent from negative velocities on linear summation
         mfor.U_init=smooth( mfor.U_init,window_len=5)
+
     if meta.BEM_AINSLIE_plot:
         print 'U_init shape: ', np.shape(mfor.U_init)
         plt.figure('U_init, the Input for Ainslie Coming from BEM')
@@ -312,6 +309,7 @@ def DWM_aero(meta,ffor,aero,deficits,turb,inlets_ffor,inlets_ffor_deficits,out,I
     out[str(meta.wtg_ind[0])].append(float(format(aero.pow_cur, '.2f'))) # based on power curve
     out[str(meta.wtg_ind[0])].append(float(format(aero.ct_cur, '.2f'))) # based on power curve
     return aero, mfor, out, BEM
+
 
 def DWM_rotor_aero(meta,aero,ID_waked, *args):
     """
@@ -377,6 +375,7 @@ def DWM_rotor_aero(meta,aero,ID_waked, *args):
 
     return aero, BEM
 
+
 def DWM_make_inflow_to_mixl(meta,ffor,inlets):
     """
     Function that performs the velocity integration for each downstream rotor of a given upstream turbine.
@@ -441,10 +440,10 @@ def DWM_make_inflow_to_mixl(meta,ffor,inlets):
 
     return ffor,inlets
 
+
 def DWM_get_deficit(ffor,meta,deficits,ID_waked,inlets_ffor,inlets_ffor_deficits):
 
-    raw_input('Begin to get deficit')
-    DEFI=[]
+    #raw_input('Begin to get deficit')
     for i_z in np.arange(0,meta.nz,1):
         # on global frame mesh
         X,Y = np.meshgrid(ffor.x_vec, ffor.y_vec)
@@ -472,8 +471,6 @@ def DWM_get_deficit(ffor,meta,deficits,ID_waked,inlets_ffor,inlets_ffor_deficits
         # disk_area=simps(simps(disk,np.linspace(-0.5,0.5,36*meta.dR),dx=1./(36.*meta.dy)),np.linspace(-0.5,0.5,36*meta.dR),dx=1./(36.*meta.dx))
         # trapz2=simps(simps(wakedefmask,np.linspace(-0.5,0.5,36*meta.dR),dx=1./(36.*meta.dy)),np.linspace(-0.5,0.5,36*meta.dR),dx=1./(36.*meta.dx))
         #
-        #COMPUTING TO PLOT
-        DEFI=DEFI+[trapz2/disk_area]
         #print wakedefmasknancoarse
 
         #Updating
@@ -481,35 +478,42 @@ def DWM_get_deficit(ffor,meta,deficits,ID_waked,inlets_ffor,inlets_ffor_deficits
         ID_waked[str(meta.wtg_ind[i_z])].append(meta.wtg_ind[0])
         inlets_ffor_deficits[str(meta.wtg_ind[i_z])].append(wakedefmasknancoarse)
         inlets_ffor[str(meta.wtg_ind[i_z])].append([np.vstack(((meta.x_vec-meta.hub_x[i_z]),(meta.y_vec-meta.hub_y),ffor.WS_axial_ffor[:,:,i_z]))])
-        print 'inlets_ffor shape (after mean): ', np.shape([np.vstack(((meta.x_vec-meta.hub_x[i_z]),(meta.y_vec-meta.hub_y),ffor.WS_axial_ffor[:,:,i_z]))])
-        print 'inlets_ffor_deficits shape (after mean): ', np.shape(wakedefmasknancoarse)
-    for i_z in range(0, meta.nz):
-        print 'Deficit for WT i_z = ', str(7-i_z), ': ', deficits[str(7-i_z)]
-        print 'inlets ffor Deficit for WT i_z = ', str(7 - i_z), ': ', inlets_ffor_deficits[str(meta.wtg_ind[i_z])]
-        print 'inlets for WT i_z = ', str(7 - i_z), ': ', inlets_ffor[str(meta.wtg_ind[i_z])]
+        #print 'inlets_ffor shape (after mean): ', np.shape([np.vstack(((meta.x_vec-meta.hub_x[i_z]),(meta.y_vec-meta.hub_y),ffor.WS_axial_ffor[:,:,i_z]))])
+        #print 'inlets_ffor_deficits shape (after mean): ', np.shape(wakedefmasknancoarse)
+
+    #for i_z in range(0, meta.nz):
+        #print 'Deficit for WT i_z = ', str(i_z), ': ', deficits[str(i_z)]
+        #print 'inlets ffor Deficit for WT i_z = ', str(i_z), ': ', inlets_ffor_deficits[str(meta.wtg_ind[i_z])]
+        #print 'inlets for WT i_z = ', str(i_z), ': ', inlets_ffor[str(meta.wtg_ind[i_z])]
 
 
     # Plotting
+    # Useless to plot Inlet, it comes directly from WS_axial plotted in meandering part plus some coordinate vector
     """
-    plt.plot(np.arange(0,meta.nz,1),DEFI)
-    plt.title('Average Deficits for each Turbine'),plt.xlabel('Turbine'),plt.ylabel('Deficits')
+    plt.figure('Inlets FFoR')
+    length_ref = (len(deficits[str(0)])-1)
+    plt.title('Inlet generated by the WT'+str(length_ref))
+    #plt.contourf(inlets_ffor[str(meta.wtg_ind[0])][length_ref][0])
+    plt.pcolor(inlets_ffor[str(meta.wtg_ind[0])][length_ref][0])
+    plt.colorbar()
     plt.show()
-        #####Print
-        #print deficits
-        #print inlets_ffor_deficits
-        #print inlets_ffor
     #"""
-    """
-    plt.plot(np.arange(0,meta.nz,1),DEFI)
-    plt.title('Deficits for each Turbine'),plt.xlabel('Turbine'),plt.ylabel('Deficits')
-    plt.show()
-        #####Print
-        #print deficits
-        #print inlets_ffor_deficits
-        #print inlets_ffor
-    #"""
-    raw_input('End of Get_deficit')
+    if meta.DEFICIT_plot:
+        plt.figure('Deficit')
+        plt.title('Deficits generating by each Turbine on other Turbines'), plt.xlabel('WT'), plt.ylabel('Deficit')
+        for i in range(len(deficits[str(0)])):
+            length_ref = (len(deficits[str(0)])-1) + meta.nz - i
+            #print 'i=', i
+            #print 'length ref ', length_ref
+            Deficit_to_plot = [deficits[str(i_z)][i] for i_z in np.arange(0, length_ref, 1)]
+            #print Deficit_to_plot
+            plt.plot(np.arange(0, length_ref, 1), Deficit_to_plot, label='WT'+str(length_ref-1))
+            if i==0:
+                plt.xlim(length_ref-1, 0)
+        plt.legend()
+    #raw_input('End of Get_deficit')
     return deficits, ID_waked,inlets_ffor,inlets_ffor_deficits
+
 
 def DWM_get_turb(ffor,meta,turb,inlets_ffor_turb,):
     """
@@ -528,7 +532,6 @@ def DWM_get_turb(ffor,meta,turb,inlets_ffor_turb,):
     inlets_ffor: dict(nWT) updated list of array containing the flow field in the fixed frame of reference from upstream wakes contributions
     inlets_ffor_turb: dict(nWT) updated list of array containing the turbulence field in the fixed frame of reference from upstream wakes contributions at the rotor position
     """
-    PLOT=[]
     for i_z in np.arange(0,meta.nz,1):
         X, Y = np.meshgrid(ffor.x_vec, ffor.y_vec)
         index_trapz=np.sqrt((X + meta.C2C[i_z]/(2.*meta.WTG_spec.R))**2 + (Y)**2 )>=0.5
@@ -539,19 +542,24 @@ def DWM_get_turb(ffor,meta,turb,inlets_ffor_turb,):
         trapz2=np.trapz(np.trapz(turbmask,dx=1./meta.dy),dx=1./meta.dx)
         turb[str(meta.wtg_ind[i_z])].append(trapz2/disk_area)
         inlets_ffor_turb[str(meta.wtg_ind[i_z])].append(turbmasknan)
-        print 'inlets_ffor_deficits shape (after mean): ', np.shape(turbmasknan)
+        #print 'inlets_ffor_deficits shape (after mean): ', np.shape(turbmasknan)
 
-        #COMPUTING FOR PLOTTING
-        PLOT=PLOT+[trapz2/disk_area]
-    #PLOTTING
-    print 'turb: ', turb
-    """
-    plt.plot(np.arange(0,meta.nz,1),PLOT)
-    plt.title('Average Turbulence for each Turbine'),plt.xlabel('Turbine Location'), plt.ylabel('TI')
-    plt.show()
-    #"""
-    raw_input('Press any key to continue')
+    if meta.DEFICIT_plot:
+        plt.figure('Rotor averaged turbulence intensity')
+        plt.title('Rotor averaged turbulence intensity generating by each Turbine on other Turbines'), plt.xlabel('WT'), plt.ylabel('Deficit')
+        for i in range(len(turb[str(0)])):
+            length_ref = (len(turb[str(0)])-1) + meta.nz - i
+            #print 'i=', i
+            #print 'length ref ', length_ref
+            Turb_to_plot = [turb[str(i_z)][i] for i_z in np.arange(0, length_ref, 1)]
+            #print Deficit_to_plot
+            plt.plot(np.arange(0, length_ref, 1), Turb_to_plot, label='WT'+str(length_ref-1))
+            if i==0:
+                plt.xlim(length_ref-1, 0)
+        plt.legend()
+        plt.show()
     return turb,inlets_ffor_turb
+
 
 def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
     """
@@ -763,6 +771,7 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
 
     return mfor,ffor,meta,meand
 
+
 def DWM_make_grid(meta):
     """
     Function to adapt the grid (polar MFoR and cartesian FFoR) length
@@ -784,9 +793,9 @@ def DWM_make_grid(meta):
     """
 
     meta.vz=meta.hub_z[0:]*meta.dz
-    print 'meta.vz in makegrid(float): ', meta.vz
+    #print 'meta.vz in makegrid(float): ', meta.vz
     meta.vz = np.rint(meta.vz).astype(dtype=int)
-    print 'meta.vz rounded: ', meta.vz
+    #print 'meta.vz rounded: ', meta.vz
     #print 'meta.vz='+str(meta.vz)
     # The mixL domain
     meta.lz_mixl=1.0+2.0*(max(meta.hub_z)) # in R: 1R longer than ffor flow field due to backward diff scheme
@@ -800,6 +809,7 @@ def DWM_make_grid(meta):
     meta.z_vec= meta.vz/meta.dz
 
     return meta
+
 
 def DWM_meta_meand(meand,meta):
     """
@@ -856,31 +866,7 @@ def DWM_meta_meand(meand,meta):
         seed_y=np.random.randn(len(meand.time),1)
     #seed_x=meand.rea.get('realization')
     #seed_y=meand.rea.get('realization')
-    PLOT1=[]
-    PLOT2=[]
-    PLOT3=[]
-    for i_z in np.arange(0,meta.nz,1):
-        meand.meand_pos_x[i_z,:]=(meta.hub_x[0] +  (meand.std_meand_x[i_z] *seed_x)).ravel()
-        meand.meand_pos_y[i_z,:]=(meta.hub_y + (meand.std_meand_y[i_z] * seed_y)).ravel()
-        PLOT1=PLOT1+[meand.meand_pos_x[i_z,0]]
-        PLOT2 = PLOT2 + [meand.meand_pos_x[i_z, :]]
-        #print PLOT2
-        #print len(PLOT2)
-        PLOT3=PLOT3+[meand.std_meand_x[i_z]]
     #####PLOT Meandering####
-    """
-    plt.plot(np.arange(meta.nz-1,-1,-1),PLOT1)
-    plt.show()
-    #"""
-    """
-    plt.plot(np.arange(meta.nz-1,-1,-1),PLOT2)
-    plt.title('Each curves is meand_pos_x(z=turbine location) for one of 100 time_samples')
-    plt.show()
-    #"""
-    """
-    plt.plot(np.arange(meta.nz - 1, -1, -1), PLOT3)
-    plt.show()
-    #"""
     #print seed_x
     #print meta.hub_x[0]
     #print meand.std_meand_x
@@ -895,6 +881,7 @@ def DWM_meta_meand(meand,meta):
             plt.ylim((-2, 8))
         plt.show()
     return meand
+
 
 def meand_table_DWM_method(meta):
     """
@@ -912,10 +899,7 @@ def meand_table_DWM_method(meta):
 
     """
     tmp_TI=np.zeros((1,2)).ravel();tmp_iTI=np.zeros((1,2)).ravel()
-    print 'location = meta.z_vec'
-    print meta.z_vec
-    print '(m) * R'
-    print meta.z_vec * 46.5
+    print 'location = meta.z_vec:' + str(meta.z_vec)+'  [D]'
     location=meta.z_vec
     lloc=len(location)
     print 'number of remaining wind Turbine (lloc): ', lloc   #number of remaining wind Turbine
@@ -923,7 +907,6 @@ def meand_table_DWM_method(meta):
     location=np.sort(location) # sorting for interpolation on continuous function
     Meand = io.loadmat('../data/meand_data.mat')
     #print 'Meand: ', Meand
-    print 'shape(Meand): ', np.shape(Meand)
 
     # TI reference vector for Meand matrix
     TI_vector     = np.array([0.0, 60.0, 100.0, 140.0, 200.0])/1000.0
@@ -997,6 +980,7 @@ def meand_table_DWM_method(meta):
     std_meand_y=std_meand_y[index_orig]
     #print 'Std_meand_y: ', std_meand_y
     #print 'Std_meand_x: ', std_meand_x
+
     if meta.MEANDERING_plot:
         plt.figure('Standard deviation (statistical approach)')
         plt.title('Standard deviation (statistical approach) for each WindTurbines')
@@ -1004,7 +988,9 @@ def meand_table_DWM_method(meta):
         plt.plot(range(meta.nz-1, -1, -1), std_meand_y, 'x', label='Std y')
         plt.xlabel('Downstreamwise'), plt.ylabel('Standard Deviation')
         plt.show()
+
     return std_meand_x, std_meand_y
+
 
 def DWM_outputs(DWM,ffor,mfor,meta, aero,par, BEM):
     """
@@ -1176,6 +1162,7 @@ def get_Meandering_dynamic(meta, meand):
 
 
     return meta, meand
+
 
 def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor):
     """
@@ -1363,6 +1350,7 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor):
 
     return mfor, ffor, meta, meand
 
+
 def DWM_get_deficit_FFOR_dynamic(ffor, meta,deficits,ID_waked,inlets_ffor,inlets_ffor_deficits):
     ###############################################################
     DEFI = []
@@ -1481,6 +1469,7 @@ def DWM_get_deficit_FFOR_dynamic(ffor, meta,deficits,ID_waked,inlets_ffor,inlets
     raw_input('Press any key to continue')
     return deficits, ID_waked, inlets_ffor, inlets_ffor_deficits
 
+
 def DWM_get_turb_dynamic(ffor,meta,turb,inlets_ffor_turb,):
     """
     Function that calculate the rotor turbulence intensity in time
@@ -1548,6 +1537,7 @@ def DWM_get_turb_dynamic(ffor,meta,turb,inlets_ffor_turb,):
     #"""
     raw_input('End of get turb process (press any key to continue)')
     return turb,inlets_ffor_turb
+
 
 def DWM_aero_dynamic(meta,ffor,aero,deficits,turb,inlets_ffor,inlets_ffor_deficits,out,ID_waked):
     """ Aerodynamique module of the DWM. This module contains the wake summation module (deficit and turbulence accumulation)

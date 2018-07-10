@@ -48,7 +48,6 @@ def getInduction(ngrid, sWT, Format, U0, meta, ID_waked, **kwargs):
     # Initialization
     PcDataAll, AeData, Rotor, Env, WT, Spec, State, Algo, Misc = fInitWT(sWT, Format, '../WT-data/')
     Rotor = fSetRotorGrid(ngrid, Rotor, Env, WT, Spec, State, Algo, Misc)
-
     # if derating == 1.:
 
     RPM=np.interp(U0,Spec.WS,Spec.RPM)
@@ -621,6 +620,7 @@ def fInterpRotor(r_mid, Rotor):
 def fInitWT(sWT, Format, pathtowt):
     """Function that initializes the input reader
     """
+
     Rotor = InitRotor()
     Env = InitEnv()
     WT = InitTurbine()
@@ -641,7 +641,6 @@ def fInitWT(sWT, Format, pathtowt):
     AeData = fReadAeFile(AeFileName, pathtowt, sWT, AeSet, 4)
     PcSet = AeData[0, 3]
     PcDataAll, thickness_rel_prof, ndata = fReadPcFile(PcFileName, pathtowt, sWT, PcSet)
-
     Rotor.r = AeData[:, 0] + Rotor.rhub
     Rotor.chord = AeData[:, 1]
     Rotor.thickness_rel_prof = AeData[:, 2]
@@ -698,9 +697,9 @@ def fReadPcFile(PcFileName, pathtowt, sWT, PcSet):
         n = filter(None, n)
         Tempvec = n[2:0:-1]
         Tempvec = [float(l) for l in Tempvec]
-        print 'Tempvec float: ', Tempvec
+        #print 'Tempvec float: ', Tempvec
         Tempvec = [int(l) for l in Tempvec]
-        print 'Tempvec int: ', Tempvec
+        #print 'Tempvec int: ', Tempvec
         PcData = np.zeros((len(np.arange(0, Tempvec[1], 1)), 4))
         thickness_rel_prof[i] = Tempvec[0]
         ndata[i] = Tempvec[1]
@@ -729,10 +728,10 @@ def fReadAeFile(AeFileName, pathtowt, sWT, AeSet, ncol):
     n = filter(None, n)
     Label = n[-1]
     Nr = float(n[1])
-    print 'ncol: ', ncol
-    print 'Nr: ', Nr
+    #print 'ncol: ', ncol
+    #print 'Nr: ', Nr
     Nr = int(Nr)
-    print 'Nr: ', Nr
+    #print 'Nr: ', Nr
     AeData = np.zeros((Nr, ncol))
     if len(Label) == 0:
         Label = None
@@ -764,9 +763,9 @@ def fReadHtcFile(HtcFile, BladeBodyName, ):
             n = line.split(" ");
             n = filter(None, n)
             nsec = float(n[n.index('nsec') + 1])
-            print 'nsec float: ', nsec
+            #print 'nsec float: ', nsec
             nsec = int(n[n.index('nsec') + 1])
-            print 'nsec int: ', nsec
+            #print 'nsec int: ', nsec
             PitchAxis = np.zeros((nsec, 4))
             for i in np.arange(0, nsec, 1):
                 line = fd.readline()
@@ -774,7 +773,7 @@ def fReadHtcFile(HtcFile, BladeBodyName, ):
                 n = line.split(' ')
                 n = filter(None, n)
                 nn = [float(j) for j in n[2:6]]
-                print 'nn float: ', nn
+                #print 'nn float: ', nn
                 #nn = [int(float(j)) for j in n[2:6]]
                 #print 'nn int: ', nn
                 PitchAxis[i] = nn

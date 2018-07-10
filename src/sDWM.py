@@ -72,7 +72,7 @@ def sDWM(derating,kwargs,xind):
     if 'Lill' in WTcoord:
         WF.vectWTtoWT=WF.vectWTtoWT*(WT.R/46.5) # 46.5 is the Lillgrund nominal radius of SWT turbine
         #print WT.R/46.5: 1.0
-        print 'WF.vectWTtoWT: ', WF.vectWTtoWT
+        #print 'WF.vectWTtoWT: ', WF.vectWTtoWT
 
 
     # Compute distance WT to WT in mean flow coordinate system
@@ -96,11 +96,11 @@ def sDWM(derating,kwargs,xind):
         ID_Rw={}
         for i in range(WF.nWT):
             Rw = get_Rw(x=distFlowCoord[0, id0[i], :], R=1. * WF.WT.R, TI=TI, CT=WT.get_CT(WS), pars=[0.435449861, 0.797853685, -0.124807893, 0.136821858, 15.6298, 1.0])
-            print 'Rw: ', Rw
+            #print 'Rw: ', Rw
             ID_wake[id0[i]] = (Rw >np.abs(distFlowCoord[1,id0[i],:])).nonzero()[0]
 
             ID_Rw[id0[i]]   = list(Rw[Rw.nonzero()])
-        print 'ID_Rw {id: Rw}: '
+        #print 'ID_Rw {id: Rw}: '
         print ID_Rw
 
     #"""
@@ -171,6 +171,8 @@ def sDWM(derating,kwargs,xind):
         ID_wake_adj[str(id0[iT])]=row
         #"""
         raw_input('Begin of DWM_main_fiel_model, Press enter to continue')
+        raw_input('Begin of DWM_main_fiel_model, Press enter to continue')
+
         aero, meta, mfor, ffor, DWM, deficits,inlets_ffor,inlets_ffor_deficits, inlets_ffor_turb,turb, out,ID_waked = DWM_main_field_model(ID_waked,deficits,inlets_ffor,inlets_ffor_deficits,inlets_ffor_turb,turb,DWM,out,**par)
         # Farm_p_out= Farm_p_out+out[str(meta.wtg_ind[0])][4] # based on power curve
 

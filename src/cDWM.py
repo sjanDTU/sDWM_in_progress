@@ -34,10 +34,10 @@ class Meta:
         self.nx                    = int(self.lx * self.dx)  # nb points in x (lateral)  direction global flow field
         self.ny                    = int(self.ly * self.dy)  # nb points in x (lateral)  direction global flow field
         self.nz                    = np.asarray([])  # nb points in z (streamwise) direction global flow field
-        print 'nx, ny, nz:'
-        print self.nx
-        print self.ny
-        print self.nz
+        #print 'nx, ny, nz:'
+        #print self.nx
+        #print self.ny
+        #print self.nz
         self.x_vec                 = np.arange(1,self.nx+1,1)*(1.0/self.dx) # grid coordinates in lat. direction [R]
         self.y_vec                 = np.arange(1,self.ny+1,1)*(1.0/self.dy) # grid coordinates in long. direction [R]
         self.z_vec                 = np.asarray([]) # grid coordinates in streamwise. direction [D]
@@ -102,18 +102,22 @@ class Meta:
         # Plot Setting Options
         self.BEM_AINSLIE_plot = False
         self.MEANDERING_plot = False
+        self.DEFICIT_plot = False
 
-        # Model Specification
+        # Model Specification Setting
+        # Put only one True
+        self.previous_sDWM = True
+        # Run the code as before, with a statistical approach of the meandering, no time consideration
+
+        self.steadyBEM_AINSLIE = False  # if True, BEM_Ainslie use the average deficit
         # In the dynamic approach, we can average the deficits (and turbulence) in time,
         # and use this mean for the BEM-Ainslie Computation.
         # That's a drastic reduction of computation time.
         # However we can ask if it is really relevant for a dynamic simulation
-        self.steadyBEM_AINSLIE = True  # if True, BEM_Ainslie use the average deficit
     def parse(self,**par):
         """Parsing data to class holding all meta data for sDWM core model."""
         for key, value in par.iteritems():
             if hasattr(self,key):
-                print key
                 setattr(self, key, value)
             else:
                 raise Exception('Key is not found, check spelling')
@@ -134,10 +138,10 @@ class Meta:
         self.nx                    = int(self.lx * self.dx)  # nb points in x (lateral)  direction global flow field
         self.ny                    = int(self.ly * self.dy)  # nb points in x (lateral)  direction global flow field
         self.nz                    = np.asarray([])  # nb points in z (streamwise) direction global flow field
-        print 'nx, ny, nz:'
-        print self.nx
-        print self.ny
-        print self.nz
+        #print 'nx, ny, nz:'
+        #print self.nx
+        #print self.ny
+        #print self.nz
         self.x_vec                 = np.arange(1,self.nx+1,1)*(1.0/self.dx) # grid coordinates in lat. direction [R]
         self.y_vec                 = np.arange(1,self.ny+1,1)*(1.0/self.dy) # grid coordinates in long. direction [R]
         self.z_vec                 = np.asarray([]) # grid coordinates in streamwise. direction [D]
@@ -149,7 +153,7 @@ class Meta:
         #mixL Domain
         #we can increase self.lr_mixl
         self.lr_mixl               = self.lx+1. # 10 for single wake model, 6 for field model ? domain size in radial direction [R] (Should be about 0.5R wider flow field domain width)
-        print 'self.lr_mixl: ', self.lr_mixl
+        #print 'self.lr_mixl: ', self.lr_mixl
         self.vr_mixl               = np.linspace(0,self.lr_mixl-self.dr,(self.lr_mixl)/self.R_WTG*self.dr_mixl)  # coordinate vector
         self.nr_mixl = 0
         self.vr_m                  = np.arange(1,self.dr_mixl*self.lr_mixl+1,1,dtype=float) / self.dr_mixl  # coordinate vector for polar discretization
