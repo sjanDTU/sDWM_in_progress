@@ -67,22 +67,22 @@ def DWM_main_field_model(ID_waked,deficits,inlets_ffor,inlets_ffor_deficits,inle
         mean thrust coefficient from BEM and from power curve
         ID_waked: dict(nWT) holding list of upstream turbine index for each turbine in the wind farm
     """
-    ## Create instances of class
+    # Create instances of class
     meta=Meta()
     meta.parse(**par)
     meand=Meand()
     ffor =  FFoR()
     aero = Aero(meta.WTG)
     t = time.time()
-    ###### Set up MFoR and FFoR streamwise domain properties   #####################################################
+    # ##### Set up MFoR and FFoR streamwise domain properties   #####################################################
     meta                 = DWM_make_grid(meta)
-    ###### Load wake meandering properties from meta model: f(stab,hub height,z,TI) ################################
+    # ##### Load wake meandering properties from meta model: f(stab,hub height,z,TI) ################################
     if meta.previous_sDWM:
         meand                = DWM_meta_meand(meand,meta)
     else:
         meta, meand = get_Meandering_dynamic(meta, meand)
 
-    ###  Run BEM model and create velocity deficit calculations inputs #############################################
+    # ##  Run BEM model and create velocity deficit calculations inputs #############################################
     start_time = time.time()
     if meta.previous_sDWM:
         aero,mfor,out,BEM    = DWM_aero(meta,ffor,aero,deficits,turb,inlets_ffor,inlets_ffor_deficits,out,ID_waked)
@@ -93,42 +93,47 @@ def DWM_main_field_model(ID_waked,deficits,inlets_ffor,inlets_ffor_deficits,inle
             aero, mfor, out, BEM = DWM_aero_dynamic(meta, ffor, aero, deficits, turb, inlets_ffor, inlets_ffor_deficits, out, ID_waked)
     print 'Computation Time for BEM is: ', time.time() - start_time
 
-    ############### Perform wake velocity calculations in MFoR #####################################################
+    # ############## Perform wake velocity calculations in MFoR #####################################################
 
     start_time = time.time()
     mfor                 = DWM_calc_mixL(meta,aero,mfor)
     print 'Computation Time for Ainslie is: ', time.time()-start_time
-    ############## Reconstruct global flow field by applying wake meandering #######################################
+    # ############# Reconstruct global flow field by applying wake meandering #######################################
     if meta.previous_sDWM:
         mfor,ffor,meta,meand = DWM_MFOR_to_FFOR(mfor,meta,meand,ffor)
     else:
         mfor, ffor, meta, meand = DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor)
 
-    ############### Compute deficit at downstream rotor
+    # ############## Compute deficit at downstream rotor
     if meta.previous_sDWM:
         deficits, ID_waked,inlets_ffor,inlets_ffor_deficits   = DWM_get_deficit(ffor,meta,deficits,ID_waked,inlets_ffor,inlets_ffor_deficits)
     else:
         deficits, ID_waked, inlets_ffor, inlets_ffor_deficits  = DWM_get_deficit_FFOR_dynamic(ffor, meta, deficits, ID_waked, inlets_ffor, inlets_ffor_deficits)
 
-    #print deficits
-    #print inlets_ffor
-    ############### Compute turbulence level at downstream rotor
+    # print deficits
+    # print inlets_ffor
+    # ############## Compute turbulence level at downstream rotor
 
     if meta.previous_sDWM:
-        turb,inlets_ffor_turb                 = DWM_get_turb(ffor,meta,turb,inlets_ffor_turb)
+        turb, inlets_ffor_turb                 = DWM_get_turb(ffor,meta,turb,inlets_ffor_turb)
     else:
         turb, inlets_ffor_turb = DWM_get_turb_dynamic(ffor, meta, turb, inlets_ffor_turb)
 
-    ############## Compute new axisymmetric flow for next turbine ##################################################
+    # ############# Compute new axisymmetric flow for next turbine ##################################################
     # ffor,inlets = DWM_make_inflow_to_mixl(meta,ffor,inlets)
-    ############## Write relevant results in DWM variables #########################################################
-    #if meta.full_output is True:
-    #DWM                  = DWM_outputs(DWM,ffor,mfor,meta,aero,par,BEM)
+    # ############# Write relevant results in DWM variables #########################################################
+    # if meta.full_output is True:
+    # DWM                  = DWM_outputs(DWM,ffor,mfor,meta,aero,par,BEM)
     elapsed = time.time() - t
     print '*********Turbine %i (%i turbine in its wake) produces %4.2f kW at %4.2f m/s completed in %4.2f sec ***********************************' %(meta.wtg_ind[0],len(meta.wtg_ind[1:]),aero.pow_cur,meta.mean_WS_DWM,elapsed)
     print '****Turbine %i (%i turbine in its wake) produces %4.2f kW at %4.2f m/s completed in %4.2f sec **********' %(meta.wtg_ind[0],len(meta.wtg_ind[1:]),aero.Power/1000.,meta.mean_WS_DWM,elapsed)
     return( aero, meta, mfor, ffor, DWM, deficits,inlets_ffor, inlets_ffor_deficits,inlets_ffor_turb,turb, out,ID_waked)
 
+
+########################################################################################################################
+# ***********************************************Previous sDWM**********************************************************
+# *******************************Working with statistical approach of meandering****************************************
+########################################################################################################################
 
 def DWM_aero(meta,ffor,aero,deficits,turb,inlets_ffor,inlets_ffor_deficits,out,ID_waked):
     """ Aerodynamique module of the DWM. This module contains the wake summation module (deficit and turbulence accumulation)
@@ -593,11 +598,11 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
     ffor.TI_axial_ffor_tmp     =  np.zeros((meta.nx, meta.ny, meta.nz))        #X = lateral ,Y = vertical, time ,Z = streamwise
     ffor.WS_axial_ffor_tmp     =  np.zeros((meta.nx, meta.ny, meta.nz))        #X = lateral ,Y = vertical, time ,Z = streamwise
     ffor.ffor_flow_field_ws_tmp2    =  np.zeros((meta.nx, meta.ny, meta.nz))   #X = lateral ,Y = vertical, time ,Z = streamwise
-    print 'shape(ffor.WS_axial_ffor_tmp): ', np.shape(ffor.WS_axial_ffor_tmp)
+    #print 'shape(ffor.WS_axial_ffor_tmp): ', np.shape(ffor.WS_axial_ffor_tmp)
     ffor.TI_meand_axial_ffor    =  np.zeros((meta.nx, meta.ny, meta.nz))
     ffor.WS_axial_ffor =  np.zeros((meta.nx, meta.ny, meta.nz))
     ffor.TI_axial_ffor =  np.zeros((meta.nx, meta.ny, meta.nz))
-    print 'shape(ffor.WS_axial_ffor): ', np.shape(ffor.WS_axial_ffor)
+    #print 'shape(ffor.WS_axial_ffor): ', np.shape(ffor.WS_axial_ffor)
     ffor.x_vec_t            = np.zeros((meta.nx,meta.nz))
     ffor.x_mat_t            = np.zeros((meta.nx,meta.ny,meta.nz))
     # Define radial distance vectors
@@ -608,7 +613,7 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
     # meta.x_mat = np.tile(meta.x_vec.reshape(len(meta.x_vec),1),meta.ny)
     # meta.y_mat = np.tile(meta.y_vec,(meta.nx,1))
     meta.z_mat = np.tile(meta.vz,(meta.nx,1))
-    print 'meta vz: ', meta.vz
+    #print 'meta vz: ', meta.vz
 
     # Store the ffor flow field
     ffor.x_vec = (meta.x_vec - meta.hub_x[0]) / 2.
@@ -1146,8 +1151,10 @@ def DWM_outputs(DWM,ffor,mfor,meta, aero,par, BEM):
     return DWM
 
 
-#################################################################################################
-
+########################################################################################################################
+# ***********************************************Dynamic sDWM**********************************************************
+# *******************************Working with Mann/LES box approach of meandering**************************************
+########################################################################################################################
 
 def get_Meandering_dynamic(meta, meand):
 

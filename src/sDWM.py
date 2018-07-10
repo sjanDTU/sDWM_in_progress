@@ -170,8 +170,8 @@ def sDWM(derating,kwargs,xind):
         }
         ID_wake_adj[str(id0[iT])]=row
         #"""
-        raw_input('Begin of DWM_main_fiel_model, Press enter to continue')
-        raw_input('Begin of DWM_main_fiel_model, Press enter to continue')
+        raw_input('New Iteration of DWM_main_field_model, Press enter to continue ...')
+        print '...'
 
         aero, meta, mfor, ffor, DWM, deficits,inlets_ffor,inlets_ffor_deficits, inlets_ffor_turb,turb, out,ID_waked = DWM_main_field_model(ID_waked,deficits,inlets_ffor,inlets_ffor_deficits,inlets_ffor_turb,turb,DWM,out,**par)
         # Farm_p_out= Farm_p_out+out[str(meta.wtg_ind[0])][4] # based on power curve
