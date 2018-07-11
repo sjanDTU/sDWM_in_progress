@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="b1e85f50-429b-433c-a650-5d1954bfe52d" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/DWM_flowfield_farm.py" afterPath="$PROJECT_DIR$/src/DWM_flowfield_farm.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cDWM.py" afterPath="$PROJECT_DIR$/src/cDWM.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -276,7 +274,14 @@
       <option name="project" value="LOCAL" />
       <updated>1531329651316</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="New Interpreter with updated package.&#10;This Interpreter is not directly compatible with the original sDWM (they used float as index, it's not possible for Numpy 1.14). &#10;This interpreter gives results very close to the original code (with the original interpreter). So we will continue now with this new interpreter. (I saved the old interpreter for the original code).&#10;&#10;- new bug fixed for the meandering plot">
+      <created>1531330017775</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1531330017775</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -314,7 +319,8 @@
     <MESSAGE value="- Versions Package Fixed!&#10;&#10;- Relevant results ( according to the saved_previous_sDWM) reobtained! It was a bug in the meandering part which is fixed now&#10;Example:&#10;result from save sDWM: [ 1386.1 509.59 440.3 491.3 500.98 520.96 522.58 529.82] kW&#10;result from in progress sDWM (in steady part, so with previous_sDWM function):&#10;[1386.1 504.35 435.01 490.39 503.6 517.41 etc...&#10;The difference is maybe because i don't use the same BEM controller." />
     <MESSAGE value="No&#10;there is still a small difference." />
     <MESSAGE value="New Interpreter with updated package.&#10;This Interpreter is not directly compatible with the original sDWM (they used float as index, it's not possible for Numpy 1.14). &#10;This interpreter gives results very close to the original code (with the original interpreter). So we will continue now with this new interpreter. (I saved the old interpreter for the original code)." />
-    <option name="LAST_COMMIT_MESSAGE" value="New Interpreter with updated package.&#10;This Interpreter is not directly compatible with the original sDWM (they used float as index, it's not possible for Numpy 1.14). &#10;This interpreter gives results very close to the original code (with the original interpreter). So we will continue now with this new interpreter. (I saved the old interpreter for the original code)." />
+    <MESSAGE value="New Interpreter with updated package.&#10;This Interpreter is not directly compatible with the original sDWM (they used float as index, it's not possible for Numpy 1.14). &#10;This interpreter gives results very close to the original code (with the original interpreter). So we will continue now with this new interpreter. (I saved the old interpreter for the original code).&#10;&#10;- new bug fixed for the meandering plot" />
+    <option name="LAST_COMMIT_MESSAGE" value="New Interpreter with updated package.&#10;This Interpreter is not directly compatible with the original sDWM (they used float as index, it's not possible for Numpy 1.14). &#10;This interpreter gives results very close to the original code (with the original interpreter). So we will continue now with this new interpreter. (I saved the old interpreter for the original code).&#10;&#10;- new bug fixed for the meandering plot" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
