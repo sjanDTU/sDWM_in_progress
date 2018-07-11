@@ -850,18 +850,18 @@ def DWM_meta_meand(meand,meta):
     #print meta.hub_x[0]
     #print meand.std_meand_x
     #print meand.meand_pos_x[1,0]
+    for i_z in np.arange(0, meta.nz, 1):
+        meand.meand_pos_x[i_z, :] = (meta.hub_x[0] + (meand.std_meand_x[i_z] * seed_x)).ravel()
+        meand.meand_pos_y[i_z, :] = (meta.hub_y + (meand.std_meand_y[i_z] * seed_y)).ravel()
     if meta.MEANDERING_plot:
-        for i_z in np.arange(meta.nz-1, -1, -1):
+        for i_z in np.arange(meta.nz-1, 1, -1):
             plt.figure('Wake Center position (statistical approach) for WT '+str(7-i_z))
             plt.title('Wake Center position (statistical approach) for WT '+str(7-i_z))
-            plt.plot(meand.meand_pos_x[i_z,:], meand.meand_pos_y[i_z,:], 'x')
+            plt.plot(meand.meand_pos_x[i_z, :], meand.meand_pos_y[i_z, :], 'x')
             plt.xlabel('Lateral deviation, x [R]'), plt.ylabel('Longitudinal deviation, y [R]')
             plt.xlim((-6, 9))
             plt.ylim((-2, 8))
         plt.show()
-    for i_z in np.arange(0, meta.nz, 1):
-        meand.meand_pos_x[i_z, :] = (meta.hub_x[0] + (meand.std_meand_x[i_z] * seed_x)).ravel()
-        meand.meand_pos_y[i_z, :] = (meta.hub_y + (meand.std_meand_y[i_z] * seed_y)).ravel()
     return meand
 
 

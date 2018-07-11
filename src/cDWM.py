@@ -100,9 +100,9 @@ class Meta:
         self.iT = 0.
 
         # Plot Setting Options
-        self.BEM_AINSLIE_plot = False
-        self.MEANDERING_plot = False
-        self.DEFICIT_plot = False
+        self.BEM_AINSLIE_plot = True
+        self.MEANDERING_plot = True
+        self.DEFICIT_plot = True
 
         # Model Specification Setting
         # Put only one True
