@@ -18,7 +18,7 @@ import time
 from scipy import io, interpolate
 from DWM_misc import smooth, to_bool
 import matplotlib.pylab as plt
-#import matplotlib._cntr as cntr
+import matplotlib._cntr as cntr
 import multiprocessing
 
 
@@ -60,8 +60,8 @@ def sDWM(derating,kwargs,xind):
         WT.CP3[WT.CP3>(16./27.)]=0
         WT.CP3[np.isnan(WT.CP3)]=0
         WT.CT3[np.isnan(WT.CT3)]=0
-        #WT.CPc = cntr.Cntr(WT.PITCH3,WT.lambdaf3,WT.CP3)
-        #WT.CTc=cntr.Cntr(WT.PITCH3,WT.lambdaf3,WT.CT3)
+        WT.CPc = cntr.Cntr(WT.PITCH3,WT.lambdaf3,WT.CP3)
+        WT.CTc=cntr.Cntr(WT.PITCH3,WT.lambdaf3,WT.CT3)
     elif optim is False:
         print 'Not Performing optimization'
         derating=1.0*np.ones((WF.nWT))

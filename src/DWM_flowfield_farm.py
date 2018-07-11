@@ -667,41 +667,15 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
             ################################################################
             #print 'tmp_index: ', tmp_index
             #raw_input('entry')
-            tmp_field_WS            = np.zeros((meta.nx,meta.ny))
+            tmp_field_WS            = np.ones((meta.nx,meta.ny))
             #print 'tmp_index: ', tmp_index
 
             # it's here that we change the velocity to be in FFOR
             tmp_field_WS[tmp_index] = np.interp(r_dist[tmp_index], meta.vr_m, DWM_WS_DATA)
 
-            """
-            plt.figure()
-            plt.subplot(121)
-            plt.title('DWM_WS_DATA')
-            plt.plot(DWM_WS_DATA, label='DWM_WS_DATA')
-            plt.legend()
-            plt.subplot(122)
-            plt.title('tmp_field_ws')
-            plt.plot(tmp_field_WS)
-            plt.legend()
-            plt.show()
-            #"""
 
             ffor.WS_axial_ffor_tmp[:, :, i_z]  = ffor.WS_axial_ffor_tmp[:, :, i_z] + (tmp_field_WS)
             ffor.ffor_flow_field_ws_tmp2[:, :, i_z] = ffor.ffor_flow_field_ws_tmp2[:, :,i_z] + (tmp_field_WS**2)
-
-            """
-            plt.figure()
-            plt.subplot(121)
-            plt.title('DWM_WS_DATA')
-            plt.plot(DWM_WS_DATA, label='DWM_WS_DATA')
-            plt.legend()
-            plt.subplot(122)
-            plt.title('tmp WS in FFoR')
-            plt.plot(ffor.WS_axial_ffor_tmp[:, :, i_z])
-            plt.legend()
-            plt.show()
-            #"""
-
 
             tmp_field_TI            = meta.TI * np.ones((meta.nx,meta.ny))
             tmp_field_TI[tmp_index] = np.interp( r_dist[tmp_index],meta.vr_m,DWM_TI_DATA)
@@ -885,6 +859,9 @@ def DWM_meta_meand(meand,meta):
             plt.xlim((-6, 9))
             plt.ylim((-2, 8))
         plt.show()
+    for i_z in np.arange(0, meta.nz, 1):
+        meand.meand_pos_x[i_z, :] = (meta.hub_x[0] + (meand.std_meand_x[i_z] * seed_x)).ravel()
+        meand.meand_pos_y[i_z, :] = (meta.hub_y + (meand.std_meand_y[i_z] * seed_y)).ravel()
     return meand
 
 
