@@ -10,8 +10,8 @@ from cBEM import InitBEM
 from DWM_calc_mixL import DWM_calc_mixL
 
 # Choose your Bem calculation code
-#from DWM_main_BEM import getInduction
-from DWM_main_BEM_new_controller import getInduction
+from DWM_main_BEM import getInduction
+#from DWM_main_BEM_new_controller import getInduction
 
 
 from math import pi, sqrt, isnan
