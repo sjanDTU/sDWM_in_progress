@@ -177,7 +177,7 @@ def sDWM(derating,kwargs,xind):
         # Farm_p_out= Farm_p_out+out[str(meta.wtg_ind[0])][4] # based on power curve
 
         # /!\/!\ not put in commentary this  /!\/!\
-        """
+        #"""
         # Total power
         Farm_p_out= Farm_p_out+out[str(meta.wtg_ind[0])][0] # based on BEM
         # Power by each turbine
