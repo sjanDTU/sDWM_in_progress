@@ -100,16 +100,16 @@ class Meta:
         self.iT = 0.
 
         # Plot Setting Options
-        self.BEM_AINSLIE_plot = True
+        self.BEM_AINSLIE_plot = False
         self.MEANDERING_plot = True
-        self.DEFICIT_plot = True
+        self.DEFICIT_plot = False
 
         # Model Specification Setting
         # Put only one True
         self.previous_sDWM = True
         # Run the code as before, with a statistical approach of the meandering, no time consideration
-
-        self.steadyBEM_AINSLIE = False  # if True, BEM_Ainslie use the average deficit
+        if not self.previous_sDWM:
+            self.steadyBEM_AINSLIE = True  # if True, BEM_Ainslie use the average deficit
         # In the dynamic approach, we can average the deficits (and turbulence) in time,
         # and use this mean for the BEM-Ainslie Computation.
         # That's a drastic reduction of computation time.

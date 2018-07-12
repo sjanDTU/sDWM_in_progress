@@ -487,8 +487,8 @@ def DWM_calc_mixL(meta,aero,mfor):
     if meta.BEM_AINSLIE_plot:
         plt.figure('Axial Velocity Output from mixL domain (MFOR)')
         plt.title('Axial Velocity Output from mixL domain (MFOR)')
-        plt.ylabel('vr (polar discretization)[R]')
-        plt.xlabel('U [U0]')
+        #plt.xlim(1.,0.)
+        plt.ylabel('vr (polar discretization)[R]'), plt.xlabel('U [U0]')
         for i_z in np.arange(0, meta.nz, 1):
             plt.plot(mfor.U[meta.vz[i_z], :], meta.vr_mixl, label='at Turbine '+ str(7-i_z))
 
@@ -496,8 +496,8 @@ def DWM_calc_mixL(meta,aero,mfor):
 
         plt.figure('Axial TI Output from mixL domain (MFOR)')
         plt.title('Axial TI Output from mixL domain (MFOR)')
-        plt.xlabel('vr (polar discretization)[R]')
-        plt.ylabel('TI')
+        plt.ylabel('vr (polar discretization)[R]')
+        plt.xlabel('TI')
         for i_z in np.arange(0, meta.nz, 1):
             plt.plot(mfor.TI_DWM[meta.vz[i_z], :], meta.vr_mixl, label='at Turbine '+ str(7-i_z))
 
