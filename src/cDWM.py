@@ -34,10 +34,8 @@ class Meta:
         self.nx                    = int(self.lx * self.dx)  # nb points in x (lateral)  direction global flow field
         self.ny                    = int(self.ly * self.dy)  # nb points in x (lateral)  direction global flow field
         self.nz                    = np.asarray([])  # nb points in z (streamwise) direction global flow field
-        #print 'nx, ny, nz:'
-        #print self.nx
-        #print self.ny
-        #print self.nz
+        self.nt = 0
+        self.time = []
         self.x_vec                 = np.arange(1,self.nx+1,1)*(1.0/self.dx) # grid coordinates in lat. direction [R]
         self.y_vec                 = np.arange(1,self.ny+1,1)*(1.0/self.dy) # grid coordinates in long. direction [R]
         self.z_vec                 = np.asarray([]) # grid coordinates in streamwise. direction [D]
@@ -99,14 +97,16 @@ class Meta:
         # Iterative Progress for the Main Loop
         self.iT = 0.
 
+        # -------------------------------------------------------------------------
         # Plot Setting Options
         self.BEM_AINSLIE_plot = False
-        self.MEANDERING_plot = True
-        self.DEFICIT_plot = False
+        self.MEANDERING_plot = False
+        self.DEFICIT_plot = True
 
+        # --------------------------------------------------------------------------
         # Model Specification Setting
         # Put only one True
-        self.previous_sDWM = True
+        self.previous_sDWM = False
         # Run the code as before, with a statistical approach of the meandering, no time consideration
         if not self.previous_sDWM:
             self.steadyBEM_AINSLIE = True  # if True, BEM_Ainslie use the average deficit

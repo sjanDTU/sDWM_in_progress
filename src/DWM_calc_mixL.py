@@ -409,7 +409,7 @@ def DWM_velocity_solver(mfor,meta,j):
 
 
 def DWM_calc_mixL(meta,aero,mfor):
-    """ Main Ainslie - mixing length (Keck et al) function that compute the wake defcit as function of downstream
+    """ Main Ainslie - mixing length (Keck et al) function that compute the wake deficit as function of downstream
     distance in the meandering frame of reference
 
     (1) Solve the momentum equation for the streamwise velocity component at all radial positions explicitly, by using

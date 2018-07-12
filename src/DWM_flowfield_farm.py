@@ -660,11 +660,17 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
         DWM_TI_DATA = mfor.TI_DWM[meta.vz[i_z],:]
         #print 'DWM_TI_DATA: ', DWM_TI_DATA
 
+        if True:
+            plt.figure()
+            plt.plot( DWM_TI_DATA, meta.vr_mixl, label='from Ainslie')
+
+
         ### Correct DWM_TI_DATA so that no point to have lower TI than "TIamb"
         DWM_TI_DATA[DWM_TI_DATA < np.nanmean(meta.mean_TI_DWM)] = np.nanmean(meta.mean_TI_DWM)
 
-
-
+        if True:
+            plt.plot(DWM_TI_DATA, meta.vr_mixl, label='Corrected for TI amb')
+            plt.legend(), plt.show()
 
 
         #for i_t in np.arange(0, 2, 1):
@@ -696,7 +702,7 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
             ffor.ffor_flow_field_ws_tmp2[:, :, i_z] = ffor.ffor_flow_field_ws_tmp2[:, :,i_z] + (tmp_field_WS**2)
 
             tmp_field_TI            = meta.TI * np.ones((meta.nx,meta.ny))
-            tmp_field_TI[tmp_index] = np.interp( r_dist[tmp_index],meta.vr_m,DWM_TI_DATA)
+            tmp_field_TI[tmp_index] = np.interp( r_dist[tmp_index],meta.vr_m, DWM_TI_DATA)
 
             ffor.ffor_flow_field_TI_tmp_tmp[:, :]      = tmp_field_TI
             ffor.TI_axial_ffor_tmp[:, :, i_z]     = ffor.TI_axial_ffor_tmp[:, :, i_z] + ffor.ffor_flow_field_TI_tmp_tmp**2
@@ -710,15 +716,24 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
                 plt.subplot(132)
                 plt.title('Meandering WS in Time, at WT ' + str(7 - i_z) + ' in FFoR')
                 CF = plt.contourf(ffor.x_mat, ffor.y_mat, tmp_field_WS, np.arange(0.2, 1, .05), extend='both')
+                plt.plot((meta.hub_x[0] + np.cos(np.linspace(-pi, pi))) / 2.,
+                         (meta.hub_y + np.sin(np.linspace(-pi, pi))) / 2., 'r', label='WT emitting')
+                plt.plot((meta.hub_x[i_z] + np.cos(np.linspace(-pi, pi))) / 2.,
+                         (meta.hub_y + np.sin(np.linspace(-pi, pi))) / 2., 'k', label='WT concerned')
                 plt.xlabel('Lateral direction, x [D]'), plt.ylabel('Longitudinal direction, y [D]')
                 plt.colorbar(CF)
 
                 plt.subplot(133)
                 plt.title('Meandering TI in Time, at WT ' + str(7 - i_z) + ' in FFoR')
                 CF = plt.contourf(ffor.x_mat, ffor.y_mat, tmp_field_TI, np.arange(0.08, 0.4, .02), extend='both')
+                plt.plot((meta.hub_x[0] + np.cos(np.linspace(-pi, pi)))/2.,
+                         (meta.hub_y + np.sin(np.linspace(-pi, pi)))/2., 'r', label='WT emitting')
+                plt.plot((meta.hub_x[i_z] + np.cos(np.linspace(-pi, pi)))/2.,
+                         (meta.hub_y + np.sin(np.linspace(-pi, pi)))/2., 'k', label='WT concerned')
                 plt.xlabel('Lateral direction, x [D]'), plt.ylabel('Longitudinal direction, y [D]')
                 plt.colorbar(CF)
 
+                plt.legend()
                 plt.draw()
                 plt.pause(0.1)
                 plt.cla()
@@ -847,27 +862,18 @@ def DWM_meta_meand(meand,meta):
     # seed_x=np.random.randn(len(meand.time),1)
     # seed_y=np.random.randn(len(meand.time),1)
     if meta.optim is True:
+        print 'load seed data for meandering'
         # meand.rea = io.loadmat('realizations_debug/realization.mat')
         # seed_x=meand.rea.get('realization')
         # seed_y=meand.rea.get('realization')
         seed_x=np.load('../data/meand_x.npy')
         seed_y=np.load('../data/meand_y.npy')
 
-
-        #print 'seed_x: ', seed_x
-        #print 'len(seed_x): ', len(seed_x)
-        #print 'seed_y: ', seed_y
-        #print 'len(seed_y): ', len(seed_y)
     elif meta.optim is False:
+        print 'random seed data for meandering'
         seed_x=np.random.randn(len(meand.time),1)
         seed_y=np.random.randn(len(meand.time),1)
-    #seed_x=meand.rea.get('realization')
-    #seed_y=meand.rea.get('realization')
-    #####PLOT Meandering####
-    #print seed_x
-    #print meta.hub_x[0]
-    #print meand.std_meand_x
-    #print meand.meand_pos_x[1,0]
+
     for i_z in np.arange(0, meta.nz, 1):
         meand.meand_pos_x[i_z, :] = (meta.hub_x[0] + (meand.std_meand_x[i_z] * seed_x)).ravel()
         meand.meand_pos_y[i_z, :] = (meta.hub_y + (meand.std_meand_y[i_z] * seed_y)).ravel()
@@ -1159,10 +1165,16 @@ def get_Meandering_dynamic(meta, meand):
             'C:/Users/augus/Documents/Stage/Codes/Mann_Turbulence/Result/Center_Position_in_time_Lillgrund/z_time_center_location.NPY')[meta.iT:]
 
     # /!\ a mieux placer dans le code /!\
-    meand.time = meand.WakesCentersLocations_in_time[0][:, 0]; print 'meand time : ', meand.time
-    meand.nt = len(meand.time); print 'number of time points: ', meand.nt
+    meand.time = meand.WakesCentersLocations_in_time[0][:, 0]#; print 'meand time : ', meand.time
+    meand.nt = len(meand.time)#; print 'number of time points: ', meand.nt
+
+    meta.time = meand.time
     meta.nt = meand.nt
 
+    # Change the referential to FFoR
+    for i_z in np.arange(0, meta.nz, 1):
+        meand.WakesCentersLocations_in_time[i_z][:, 1] = meta.hub_x[0] + meand.WakesCentersLocations_in_time[i_z][:, 1]
+        meand.WakesCentersLocations_in_time[i_z][:, 2] = meta.hub_y + meand.WakesCentersLocations_in_time[i_z][:, 2]
 
     return meta, meand
 
@@ -1277,8 +1289,7 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor):
             #print '(Ro_x,Ro_y): ', [Ro_x, Ro_y]
 
             #print 'meta.x_mat: ', meta.x_mat
-            #r_dist = np.sqrt((meta.x_mat - Ro_x-1.5) ** 2 + (meta.y_mat - Ro_y-1.5) ** 2) # Originally
-            r_dist = np.sqrt((ffor.x_mat - Ro_x -0.75) ** 2 + (ffor.y_mat - Ro_y -0.75) ** 2) # To change
+            r_dist = np.sqrt((meta.x_mat - Ro_x) ** 2 + (meta.y_mat - Ro_y) ** 2) # Originally
             #print 'r_dist: ', r_dist
             # print 'r_dist: ', r_dist
 
@@ -1334,13 +1345,24 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor):
                 plt.clf()
                 plt.subplot(121)
                 CS1 = plt.contourf(X, Y, ffor.WS_axial_ffor[:, :, i_z, i_t], 15)
-                plt.xlabel('x'), plt.ylabel('y'), plt.title('WS FFoR for Turbine ' + str(i_z)) #7-iz
+                plt.xlabel('x'), plt.ylabel('y'), plt.title('Axial WS FFoR for Turbine ' + str(i_z)) #7-iz
+                plt.plot((meta.hub_x[0] + np.cos(np.linspace(-pi, pi))) / 2.,
+                         (meta.hub_y + np.sin(np.linspace(-pi, pi))) / 2., 'r', label='WT emitting')
+                plt.plot((meta.hub_x[i_z] + np.cos(np.linspace(-pi, pi))) / 2.,
+                         (meta.hub_y + np.sin(np.linspace(-pi, pi))) / 2., 'k', label='WT concerned')
+                plt.legend()
                 plt.colorbar(CS1)
 
                 plt.subplot(122)
                 CS1 = plt.contourf(X, Y, ffor.TI_axial_ffor[:, :, i_z, i_t], 15)
-                plt.xlabel('x'), plt.ylabel('y'), plt.title('TI FFoR for Turbine ' + str(i_z))  # 7-iz
+                plt.xlabel('x'), plt.ylabel('y'), plt.title('Axial TI FFoR for Turbine ' + str(i_z))  # 7-iz
+                plt.plot((meta.hub_x[0] + np.cos(np.linspace(-pi, pi))) / 2.,
+                         (meta.hub_y + np.sin(np.linspace(-pi, pi))) / 2., 'r', label='WT emitting')
+                plt.plot((meta.hub_x[i_z] + np.cos(np.linspace(-pi, pi))) / 2.,
+                         (meta.hub_y + np.sin(np.linspace(-pi, pi))) / 2., 'k', label='WT concerned')
+                plt.legend()
                 plt.colorbar(CS1)
+
                 plt.draw()
                 plt.pause(0.001)
 
@@ -1351,7 +1373,6 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor):
 
 def DWM_get_deficit_FFOR_dynamic(ffor, meta,deficits,ID_waked,inlets_ffor,inlets_ffor_deficits):
     ###############################################################
-    DEFI = []
     if meta.steadyBEM_AINSLIE:
         deficits_in_time =  {'1': [], '0': [], '3': [], '2': [], '5': [], '4': [], '7': [], '6': []}
 
@@ -1395,7 +1416,6 @@ def DWM_get_deficit_FFOR_dynamic(ffor, meta,deficits,ID_waked,inlets_ffor,inlets
             # trapz2=simps(simps(wakedefmask,np.linspace(-0.5,0.5,36*meta.dR),dx=1./(36.*meta.dy)),np.linspace(-0.5,0.5,36*meta.dR),dx=1./(36.*meta.dx))
             #
             # COMPUTING TO PLOT
-            DEFI = DEFI + [trapz2 / disk_area]
 
             deficits_tmp.append(trapz2 / disk_area)
             inlets_ffor_deficits_tmp.append(wakedefmasknancoarse)
@@ -1408,63 +1428,58 @@ def DWM_get_deficit_FFOR_dynamic(ffor, meta,deficits,ID_waked,inlets_ffor,inlets
             deficits_in_time[str(meta.wtg_ind[i_z])].append(deficits_tmp)
             inlets_ffor_deficits_in_time[str(meta.wtg_ind[i_z])].append(inlets_ffor_deficits_tmp)
             inlets_ffor_in_time[str(meta.wtg_ind[i_z])].append(inlets_ffor_tmp)
-            print 'inlets_ffor_tmp shape: ', np.shape(inlets_ffor_tmp)
-            print 'inlets_ffor_deficits_tmp shape: ', np.shape(inlets_ffor_deficits_tmp)
+            #print 'inlets_ffor_tmp shape: ', np.shape(inlets_ffor_tmp)
+            #print 'inlets_ffor_deficits_tmp shape: ', np.shape(inlets_ffor_deficits_tmp)
             # Average in time
             deficits_tmp = np.mean(deficits_tmp)
             inlets_ffor_deficits_tmp = np.mean(inlets_ffor_deficits_tmp, axis=0)
             inlets_ffor_tmp = np.mean(inlets_ffor_tmp, axis=0)
-            print 'inlets_ffor_deficits shape (after mean): ', np.shape(inlets_ffor_tmp)
-            print 'inlets_ffor_deficits_tmp shape (after mean): ', np.shape(inlets_ffor_deficits_tmp)
+            #print 'inlets_ffor_deficits shape (after mean): ', np.shape(inlets_ffor_tmp)
+            #print 'inlets_ffor_deficits_tmp shape (after mean): ', np.shape(inlets_ffor_deficits_tmp)
 
         # Updating
 
         deficits[str(meta.wtg_ind[i_z])].append(deficits_tmp)
-        inlets_ffor_deficits[str(meta.wtg_ind[i_z])].append(inlets_ffor_deficits_tmp) #conatained NaN value
+        inlets_ffor_deficits[str(meta.wtg_ind[i_z])].append(inlets_ffor_deficits_tmp) #contained NaN value
         inlets_ffor[str(meta.wtg_ind[i_z])].append(inlets_ffor_tmp)
 
         ID_waked[str(meta.wtg_ind[i_z])].append(meta.wtg_ind[0])
-    print 'deficits dict: ', deficits
-    """
-    if not meta.steadyBEM_AINSLIE:
-        i_z = 1
-        plt.figure()
-        plt.title('WT' + str(i_z) + ' deficits in time')
-        plt.plot(range(0, meta.nt),deficits[str(meta.wtg_ind[i_z])][0])
-        plt.xlabel('Simulation time iteration, Nt'), plt.ylabel('Deficit')
-        plt.show()
-    if meta.steadyBEM_AINSLIE:
-        i_z = 1
-        plt.figure()
-        plt.title('WT' + str(i_z) + ' deficits in time')
-        plt.plot(range(0, meta.nt), deficits_in_time[str(meta.wtg_ind[i_z])][0], label='temporal data')
-        plt.plot(range(0,meta.nt), [deficits[str(meta.wtg_ind[i_z])][0] for i_t in range(0, meta.nt)], label='Average deficit in time')
-        plt.xlabel('Simulation time iteration, Nt'), plt.ylabel('Deficit'), plt.legend()
-        plt.show()
     #"""
-    # Plotting
-    """
+    if meta.DEFICIT_plot:
+        if not meta.steadyBEM_AINSLIE:
+            i_z = 1
+            plt.figure()
+            plt.title('WT' + str(i_z) + ' deficits in time')
+            plt.plot(range(0, meta.nt),deficits[str(meta.wtg_ind[i_z])][0])
+            plt.xlabel('Simulation time iteration, Nt'), plt.ylabel('Deficit')
+            plt.show()
+        if meta.steadyBEM_AINSLIE:
 
-        print trapz2 / disk_area
-    plt.plot(np.arange(0,meta.nz,1),DEFI)
-    plt.title('Average Deficits for each Turbine'),plt.xlabel('Turbine'),plt.ylabel('Deficits')
-    plt.show()
-        #####Print
-        #print deficits
-        #print inlets_ffor_deficits
-        #print inlets_ffor
-    """
-    """
-        print wakedefmasknancoarse
-    plt.plot(np.arange(0,meta.nz,1),DEFI)
-    plt.title('Deficits for each Turbine'),plt.xlabel('Turbine'),plt.ylabel('Deficits')
-    plt.show()
-        #####Print
-        #print deficits
-        #print inlets_ffor_deficits
-        #print inlets_ffor
-    """
-    raw_input('Press any key to continue')
+            # DATA in TIME
+            for i_z in np.arange(0, meta.nz, 1):
+                plt.figure(i_z)
+                plt.title('WT' + str(meta.wtg_ind[i_z]) + ' deficits in time')
+                plt.plot(meta.time, deficits_in_time[str(meta.wtg_ind[i_z])][-1], label='temporal data')
+                plt.plot(meta.time, [deficits[str(meta.wtg_ind[i_z])][-1] for i_t in meta.time], label='Average deficit in time')
+                plt.ylim(0.35, 1.)
+                plt.xlabel('Simulation time t [s]'), plt.ylabel('Deficit'), plt.legend()
+            plt.show()
+
+            # Averaged DATA
+            plt.figure('Averaged by time Deficit')
+            plt.title('Averaged Deficits generating by each Turbine on other Turbines'), plt.xlabel('WT'), plt.ylabel('Deficit')
+            for i in range(len(deficits[str(0)])):
+                length_ref = (len(deficits[str(0)]) - 1) + meta.nz - i
+                # print 'i=', i
+                # print 'length ref ', length_ref
+                Deficit_to_plot = [deficits[str(i_z)][i] for i_z in np.arange(0, length_ref, 1)]
+                # print Deficit_to_plot
+                plt.plot(np.arange(0, length_ref, 1), Deficit_to_plot, label='WT' + str(length_ref - 1))
+                if i == 0:
+                    plt.xlim(length_ref - 1, 0)
+            plt.legend()
+            plt.show()
+
     return deficits, ID_waked, inlets_ffor, inlets_ffor_deficits
 
 
@@ -1485,7 +1500,6 @@ def DWM_get_turb_dynamic(ffor,meta,turb,inlets_ffor_turb,):
     inlets_ffor: dict(nWT) updated list of array containing the flow field in the fixed frame of reference from upstream wakes contributions
     inlets_ffor_turb: dict(nWT) updated list of array containing the turbulence field in the fixed frame of reference from upstream wakes contributions at the rotor position
     """
-    PLOT=[]
     if meta.steadyBEM_AINSLIE:
         turb_in_time =  {'1': [], '0': [], '3': [], '2': [], '5': [], '4': [], '7': [], '6': []}
         inlets_ffor_turb_in_time =  {'1': [], '0': [], '3': [], '2': [], '5': [], '4': [], '7': [], '6': []}
@@ -1512,28 +1526,49 @@ def DWM_get_turb_dynamic(ffor,meta,turb,inlets_ffor_turb,):
             # think a way to save the dynamic DATA
             turb_in_time[str(meta.wtg_ind[i_z])].append(turb_tmp)
             inlets_ffor_turb_in_time[str(meta.wtg_ind[i_z])].append(inlets_ffor_turb_tmp)
-            print 'inlets_ffor_turb_tmp shape: ', np.shape(inlets_ffor_turb_tmp)
+            #print 'inlets_ffor_turb_tmp shape: ', np.shape(inlets_ffor_turb_tmp)
             # Average in time
             turb_tmp = np.mean(turb_tmp)
             inlets_ffor_turb_tmp = np.mean(inlets_ffor_turb_tmp, axis=0)
-            print 'inlets_ffor_turb_tmp shape (after mean): ', np.shape(inlets_ffor_turb_tmp)
+            #print 'inlets_ffor_turb_tmp shape (after mean): ', np.shape(inlets_ffor_turb_tmp)
         turb[str(meta.wtg_ind[i_z])].append(turb_tmp)
         inlets_ffor_turb[str(meta.wtg_ind[i_z])].append(inlets_ffor_turb_tmp)
 
     #PLOTTING
-    """
-    plt.plot(np.arange(0,meta.nz,1),PLOT)
-    plt.title('Average Turbulence for each Turbine'),plt.xlabel('Turbine Location'), plt.ylabel('TI')
-    plt.show()
-    #"""
-    """
-    i_z = 1
-    plt.figure()
-    plt.title('WT' + str(i_z) + ' turb in time')
-    plt.plot(range(0, meta.nt), turb[str(meta.wtg_ind[i_z])][0])
-    plt.show()
-    #"""
-    raw_input('End of get turb process (press any key to continue)')
+    if meta.DEFICIT_plot:
+        if not meta.steadyBEM_AINSLIE:
+            i_z = 1
+            plt.figure()
+            plt.title('WT' + str(i_z) + ' Axial TI in time')
+            plt.plot(meta.time,turb[str(meta.wtg_ind[i_z])][0])
+            plt.xlabel('Simulation time t [s]'), plt.ylabel('Axial TI')
+            plt.show()
+        if meta.steadyBEM_AINSLIE:
+
+            # DATA in TIME
+            for i_z in np.arange(0, meta.nz, 1):
+                plt.figure(i_z)
+                plt.title('WT' + str(meta.wtg_ind[i_z]) + ' Axial TI in time')
+                plt.plot(meta.time, turb_in_time[str(meta.wtg_ind[i_z])][-1], label='temporal data')
+                plt.plot(meta.time, [turb[str(meta.wtg_ind[i_z])][-1] for i_t in meta.time], label='Average Axial TI in time')
+                plt.ylim(0., .02)
+                plt.xlabel('Simulation time t [s]'), plt.ylabel('Axial TI'), plt.legend()
+            plt.show()
+
+            # Averaged DATA
+            plt.figure('Axial TI Averaged by time')
+            plt.title('Axial TI Averaged generating by each Turbine on other Turbines'), plt.xlabel('WT'), plt.ylabel('Axial TI')
+            for i in range(len(turb[str(0)])):
+                length_ref = (len(turb[str(0)]) - 1) + meta.nz - i
+                # print 'i=', i
+                # print 'length ref ', length_ref
+                Deficit_to_plot = [turb[str(i_z)][i] for i_z in np.arange(0, length_ref, 1)]
+                # print Deficit_to_plot
+                plt.plot(np.arange(0, length_ref, 1), Deficit_to_plot, label='WT' + str(length_ref - 1))
+                if i == 0:
+                    plt.xlim(length_ref - 1, 0)
+            plt.legend()
+            plt.show()
     return turb,inlets_ffor_turb
 
 
