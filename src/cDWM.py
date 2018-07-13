@@ -103,11 +103,21 @@ class Meta:
         self.MEANDERING_plot = False
         self.DEFICIT_plot = True
 
+        if self.MEANDERING_plot:
+            self.MEANDERING_WS_plot = True
+            self.MEANDERING_TI_plot = False
+
         # --------------------------------------------------------------------------
         # Model Specification Setting
         # Put only one True
         self.previous_sDWM = False
+
+        # Not implemented for the moment
+        self.meandering_data_from_Turbulent_box = False # we not use the original Meand matrix but data
+        # from the meandering part for dynamic
         # Run the code as before, with a statistical approach of the meandering, no time consideration
+
+
         if not self.previous_sDWM:
             self.steadyBEM_AINSLIE = True  # if True, BEM_Ainslie use the average deficit
         # In the dynamic approach, we can average the deficits (and turbulence) in time,

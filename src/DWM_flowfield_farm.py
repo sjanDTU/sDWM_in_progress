@@ -454,7 +454,6 @@ def DWM_get_deficit(ffor,meta,deficits,ID_waked,inlets_ffor,inlets_ffor_deficits
      - linear
      - quadratic
      - dominant
-     - ewna (not implemented for the moment, I don't know what does it correspond?)
     :param ffor:
     :param meta:
     :param deficits:
@@ -1160,13 +1159,16 @@ def DWM_outputs(DWM,ffor,mfor,meta, aero,par, BEM):
 
 def get_Meandering_dynamic(meta, meand):
 
+    # old version for One wake meandering
+    #meand.WakesCentersLocations_in_time = np.load(
+    #       'C:/Users/augus/Documents/Stage/Codes/Mann_Turbulence/Result/Center_Position_in_time_Lillgrund/z_time_center_location.NPY')[meta.iT:]
 
+    # New Version for Multiple wake meandering
     meand.WakesCentersLocations_in_time = np.load(
-            'C:/Users/augus/Documents/Stage/Codes/Mann_Turbulence/Result/Center_Position_in_time_Lillgrund/z_time_center_location.NPY')[meta.iT:]
-
+          'C:/Users/augus/Documents/Stage/Codes/Mann_Turbulence/Result/Center_Position_in_time_Lillgrund/z_time_center_location.NPY')[meta.iT]
     # /!\ a mieux placer dans le code /!\
-    meand.time = meand.WakesCentersLocations_in_time[0][:, 0]#; print 'meand time : ', meand.time
-    meand.nt = len(meand.time)#; print 'number of time points: ', meand.nt
+    meand.time = meand.WakesCentersLocations_in_time[0][:, 0]; print 'meand time : ', meand.time
+    meand.nt = len(meand.time); print 'number of time points: ', meand.nt
 
     meta.time = meand.time
     meta.nt = meand.nt
@@ -1331,6 +1333,7 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor):
 
 
     if meta.MEANDERING_plot:
+
         plt.ion()
         plt.figure('Meandering draw in time for each turbine in the wake')
 
@@ -1338,33 +1341,34 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor):
         y = ffor.y_vec
         #X, Y = np.meshgrid(x, y)
         X, Y = ffor.x_mat, ffor.y_mat
-
+        ref_rotor_x_emitting = (meta.hub_x[0] + np.cos(np.linspace(-pi, pi))) / 2.
+        ref_rotor_y_emitting =(meta.hub_y + np.sin(np.linspace(-pi, pi))) / 2.
         for i_z in np.arange(0, meta.nz):
+            ref_rotor_x_concerned = (meta.hub_x[i_z] + np.cos(np.linspace(-pi, pi))) / 2.
+            ref_rotor_y_concerned =(meta.hub_y + np.sin(np.linspace(-pi, pi))) / 2.
             for i_t in np.arange(0, meand.nt, 1):
                 plt.cla()
                 plt.clf()
-                plt.subplot(121)
-                CS1 = plt.contourf(X, Y, ffor.WS_axial_ffor[:, :, i_z, i_t], 15)
-                plt.xlabel('x'), plt.ylabel('y'), plt.title('Axial WS FFoR for Turbine ' + str(i_z)) #7-iz
-                plt.plot((meta.hub_x[0] + np.cos(np.linspace(-pi, pi))) / 2.,
-                         (meta.hub_y + np.sin(np.linspace(-pi, pi))) / 2., 'r', label='WT emitting')
-                plt.plot((meta.hub_x[i_z] + np.cos(np.linspace(-pi, pi))) / 2.,
-                         (meta.hub_y + np.sin(np.linspace(-pi, pi))) / 2., 'k', label='WT concerned')
-                plt.legend()
-                plt.colorbar(CS1)
+                if meta.MEANDERING_WS_plot:
+                    plt.subplot(121)
+                    CS1 = plt.contourf(X, Y, ffor.WS_axial_ffor[:, :, i_z, i_t], np.linspace(0.,1.,20))
+                    plt.xlabel('x'), plt.ylabel('y'), plt.title('Axial WS FFoR for Turbine ' + str(meta.wtg_ind[i_z])) #7-iz
+                    plt.plot(ref_rotor_x_emitting, ref_rotor_y_emitting, 'r', label='WT emitting')
+                    plt.plot(ref_rotor_x_concerned, ref_rotor_y_concerned, 'k', label='WT concerned')
+                    plt.legend()
+                    plt.colorbar(CS1)
 
-                plt.subplot(122)
-                CS1 = plt.contourf(X, Y, ffor.TI_axial_ffor[:, :, i_z, i_t], 15)
-                plt.xlabel('x'), plt.ylabel('y'), plt.title('Axial TI FFoR for Turbine ' + str(i_z))  # 7-iz
-                plt.plot((meta.hub_x[0] + np.cos(np.linspace(-pi, pi))) / 2.,
-                         (meta.hub_y + np.sin(np.linspace(-pi, pi))) / 2., 'r', label='WT emitting')
-                plt.plot((meta.hub_x[i_z] + np.cos(np.linspace(-pi, pi))) / 2.,
-                         (meta.hub_y + np.sin(np.linspace(-pi, pi))) / 2., 'k', label='WT concerned')
-                plt.legend()
-                plt.colorbar(CS1)
+                if meta.MEANDERING_TI_plot:
+                    plt.subplot(122)
+                    CS1 = plt.contourf(X, Y, ffor.TI_axial_ffor[:, :, i_z, i_t], 15)
+                    plt.xlabel('x'), plt.ylabel('y'), plt.title('Axial TI FFoR for Turbine ' + str(meta.wtg_ind[i_z]))  # 7-iz
+                    plt.plot(ref_rotor_x_emitting, ref_rotor_y_emitting, 'r', label='WT emitting')
+                    plt.plot(ref_rotor_x_concerned, ref_rotor_y_concerned, 'k', label='WT concerned')
+                    plt.legend()
+                    plt.colorbar(CS1)
 
                 plt.draw()
-                plt.pause(0.001)
+                plt.pause(0.0001)
 
         plt.ioff()
 
@@ -1528,11 +1532,11 @@ def DWM_get_turb_dynamic(ffor,meta,turb,inlets_ffor_turb,):
             inlets_ffor_turb_in_time[str(meta.wtg_ind[i_z])].append(inlets_ffor_turb_tmp)
             #print 'inlets_ffor_turb_tmp shape: ', np.shape(inlets_ffor_turb_tmp)
             # Average in time
-            turb_tmp = np.mean(turb_tmp)
-            inlets_ffor_turb_tmp = np.mean(inlets_ffor_turb_tmp, axis=0)
+            turb_tmpp = np.mean(turb_tmp)
+            inlets_ffor_turb_tmpp = np.mean(inlets_ffor_turb_tmp, axis=0)
             #print 'inlets_ffor_turb_tmp shape (after mean): ', np.shape(inlets_ffor_turb_tmp)
-        turb[str(meta.wtg_ind[i_z])].append(turb_tmp)
-        inlets_ffor_turb[str(meta.wtg_ind[i_z])].append(inlets_ffor_turb_tmp)
+        turb[str(meta.wtg_ind[i_z])].append(turb_tmpp)
+        inlets_ffor_turb[str(meta.wtg_ind[i_z])].append(inlets_ffor_turb_tmpp)
 
     #PLOTTING
     if meta.DEFICIT_plot:
