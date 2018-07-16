@@ -168,7 +168,7 @@ class InitAlgo:
         self.bSwirl = True  # swirl flow model enabled / disabled
         self.SwirlMethod = 'HAWC' # type of swirl model
         self.bTipLoss = True # enable / disable tip loss model
-        self.bHubLoss = False # enable / disable hub loss model
+        self.bHubLoss = True # enable / disable hub loss model
         self.bTipLossCl = False # enable / disable Cl loss model
         self.TipLossMethod = 'Prandtl'  # type of tip loss model  # I change it to Prandtl (originally Glauert)
         self.bDynaStall = 0 # dynamic stall model

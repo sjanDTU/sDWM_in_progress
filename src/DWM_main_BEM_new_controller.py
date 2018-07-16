@@ -256,6 +256,7 @@ def getInduction(ngrid, sWT, Format, U0, meta, ID_waked, **kwargs):
     # print 'float("{0:.2f}".format(meta.WTG_spec.P_rated *derating))',float("{0:.2f}".format(meta.WTG_spec.P_rated *derating))
     # print 'float("{0:.2f}".format(BEM.Power/1000.)', float("{0:.2f}".format(BEM.Power/1000.))
     if float("{0:.2f}".format(meta.WTG_spec.P_rated *derating))  >=  float("{0:.2f}".format(BEM.Power/1000.)):
+        print 'TIC'
         BEM.derated=False
         pass
         # print 'You have demanded a derating but I produce less anyway'
@@ -304,6 +305,7 @@ def getInduction(ngrid, sWT, Format, U0, meta, ID_waked, **kwargs):
 
         print 'Matlab pitch', BEM.PITCH
         print 'Matlab RPM', BEM.RPM
+
     elif opt == 'python':
         Pd=meta.WTG_spec.P_rated *derating*1000.
         # derated RPM calculation
@@ -318,6 +320,9 @@ def getInduction(ngrid, sWT, Format, U0, meta, ID_waked, **kwargs):
         RPMcurve=Spec.RPM
         Ud   = np.interp(Pd*0.001,Powcurve,WScurve)
         #print 'Ud is', Ud
+        print 'Ud shape: ', np.shape(Ud)
+        print 'WScurve shape: ', np.shape(WScurve)
+        print 'RPMcurve shape: ', np.shape(RPMcurve)
         RPMd = np.interp(Ud,WScurve,RPMcurve)
         Sim.RPM= RPMd
         #print 'Python Pitch RPMd is', RPMd
@@ -419,6 +424,7 @@ def fBEMsteady(WT, Sim, Wind, Algo, Rotor, PcDataAll, Env, Spec, State, Misc):
             # --------------------------------------------------------------------------------
             Ftip = a * 0. + 1.
             Fperf = a * 0. + 1.
+            print 'e:', e
             if Algo.bTipLoss:
                 if Algo.TipLossMethod == 'Prandtl':  # originally written Glauert but it's Prandtl
                     if (sin(phi * pi / 180.) > 0.01):
@@ -427,7 +433,16 @@ def fBEMsteady(WT, Sim, Wind, Algo, Rotor, PcDataAll, Env, Spec, State, Misc):
                 elif Algo.TipLossMethod == 'Prandtl....':
                     Ftip = 2. / pi * acos(exp(-nB / 2. * (1. - lambda_r[e] / lambda_) * sqrt(1. + lambda_ ** 2)))
             # here will be implemented Hub losses in the future
-            F = Ftip
+            # Implemented by augr
+            #print r
+            #raw_input('...')
+            # CHECK if r[0] correspond to the root radius
+            if Algo.bHubLoss:
+                #q = B / 2. * (r[k]-R_end_cylinder_according_chord) / (R_end_cylinder_according_chord * np.sin(phi[k])) # my BEM
+                Fhub = 2. / pi * acos(exp(-nB / 2. * (r[e]-r[0]) / (r[0] * sin(phi * pi / 180.))))
+                F = Ftip * Fhub
+            else:
+                F = Ftip
             # --------------------------------------------------------------------------------
             # --- Step 3: Angle of attack
             # --------------------------------------------------------------------------------
