@@ -62,13 +62,13 @@ class Meta:
 
         ## Model inputs calibrated constant
         self.Model                 = 'mixL' # Eddy viscosity model as per Keck et al. [2]
-        # self.fU                    = 1.10 # fU = 1.1 & fR = 0.98 yields the best fit to AL calibration data according to Keck et al. [5].
-        # self.fR                    = 0.98 #
+        #self.fU                    = 1.10 # fU = 1.1 & fR = 0.98 yields the best fit to AL calibration data according to Keck et al. [5].
+        #self.fR                    = 0.98 #
         self.fU                    = 1. #Madsen et al [2].
         self.fR                    = 1.
         self.atmo_stab             = 'N'
         self.k1                    = 0.0919 # k1 = 0.0919 & k2 = 0.0178 yields the best fit to AL calibration data according to Keck et al. [5].
-        self.k2                    = 0.0178
+        self.k2                    = 0.0178  # in Keck we can compare with k1 0.914 and k2 = 0.0216
 
         ## Model flags
         self.Tbuildup_setting      = 1 # 1 = on # flag to control the buildup of turbulence along turbine rows, if disabled TI is equal to free stream TI
@@ -99,10 +99,14 @@ class Meta:
 
         # -------------------------------------------------------------------------
         # Plot Setting Options
-        self.BEM_AINSLIE_plot = False
+        self.BEM_plot = True
+        self.AINSLIE_plot = True
+        self.BEM_AINSLIE_plot = True
         self.MEANDERING_plot = False
-        self.DEFICIT_plot = True
+        self.DEFICIT_plot = False
 
+        if self.BEM_AINSLIE_plot:
+            self.AINSLIE_Keck_details = True
         if self.MEANDERING_plot:
             self.MEANDERING_WS_plot = True
             self.MEANDERING_TI_plot = False
@@ -110,7 +114,7 @@ class Meta:
         # --------------------------------------------------------------------------
         # Model Specification Setting
         # Put only one True
-        self.previous_sDWM = False
+        self.previous_sDWM = True
 
         # Not implemented for the moment
         self.meandering_data_from_Turbulent_box = False # we not use the original Meand matrix but data
@@ -354,7 +358,7 @@ class Aero:
         """ Initializing the data ."""
         self.name=name
         self.a=np.array([])
-        self.r_t=np.array([])
+        self.r_t=np.array([])     # BEM radial discretization at rotor plane
         self.CP=np.array([])
         self.CPloc=np.array([]) # local CP on BEM grid
         self.Power=np.array([])

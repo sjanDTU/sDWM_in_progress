@@ -63,6 +63,16 @@ def DWM_init_calc_mixl(meta,aero,mfor):
     F2_z_vec   = np.arange(2+1./meta.dz,(len(F1_vector)+1)*(1./meta.dz),1./meta.dz)
     F2_vector  = np.hstack((np.linspace(meta.f2[0],meta.f2[0],2*meta.dz), 1.-(1.-meta.f2[0])*np.exp(-meta.f2[1]*(F2_z_vec-2.))))
 
+    if meta.AINSLIE_Keck_details:
+        print "Initial lenghts of F1 and F2 don't correspond to vz_mixl"
+        print "Plot: We restricted the plot to vz_mixl domain"
+        plt.figure('Filter Function')
+        plt.title('Filter Function for Ainslie Calculations')
+        plt.plot(meta.vz_mixl, F1_vector[:len(meta.vz_mixl)], label='F1')
+        plt.plot(meta.vz_mixl, F2_vector[:len(meta.vz_mixl)], label='F2')
+        plt.xlabel('Dowstream position z (Mixl Domain) [R]'), plt.ylabel('[-]')
+        plt.legend(), plt.show()
+
     # initiate the U, V, visc etc... matrices
     print 'Initiate Ainslie matrices for Ainslie'
     mfor.V                 = np.zeros((len(meta.vz_mixl), len(meta.vr_mixl)),dtype=float)
@@ -266,14 +276,15 @@ def DWM_eddy_viscosity(mfor,meta,width,visc_wake,visc_wake1,visc_wake2,F1_vector
     ## The largest eddy viscosity at each point is applied.
     # Calculate mean flow gradient - du/dr is created with CDS (apart from 1st and last point)
     mfor.du_dr_DWM[j-1,0]                  = (mfor.U[j-1,1] - mfor.U[j-1,0])/meta.dr
-    mfor.du_dr_DWM[j-1,1: meta.nr_mixl-2]  = (mfor.U[j-1,2:(meta.nr_mixl-2)+1] \
-    - mfor.U[j-1,0:(meta.nr_mixl-2)-1])/(2*meta.dr)
-    mfor.du_dr_DWM[j-1,meta.nr_mixl-1]      = (mfor.U[j-1, meta.nr_mixl-1] \
-    - mfor.U[j-1, meta.nr_mixl-2])/meta.dr
+    mfor.du_dr_DWM[j-1,1: meta.nr_mixl-2]  = (mfor.U[j-1,2:(meta.nr_mixl-2)+1] - mfor.U[j-1,0:(meta.nr_mixl-2)-1])/(2*meta.dr)
+    mfor.du_dr_DWM[j-1,meta.nr_mixl-1]      = (mfor.U[j-1, meta.nr_mixl-1] - mfor.U[j-1, meta.nr_mixl-2])/meta.dr
 
     # Blend of mixL and Ainslie eddy visc
+    # Keck Visc
     visc_wake1[j-1,:]     = F2_vector[j-1]* meta.k2 *( meta.vr_mixl[width[j-1]-1]/meta.R_WTG )**2 * np.abs(mfor.du_dr_DWM[j-1,:])
+    # Ainslie Visc
     visc_wake2[j-1,:]     = F2_vector[j-1]* meta.k2 *( meta.vr_mixl[width[j-1]-1]/meta.R_WTG )   * (1.0 - np.min(mfor.U[j-1,:]) )
+    # Take the max of two
     visc_wake[j-1,:]      = np.maximum(visc_wake1[j-1,:],visc_wake2[j-1,:])
     #max operator is included in the eddy viscosity formulation to avoid underestimating the
     #turbulent stresses at locations where the velocity gradient of the deficit du_dr approaches zero
@@ -502,5 +513,33 @@ def DWM_calc_mixL(meta,aero,mfor):
             plt.plot(mfor.TI_DWM[meta.vz[i_z], :], meta.vr_mixl, label='at Turbine '+ str(7-i_z))
 
         plt.legend(), plt.show()
+
+        if meta.AINSLIE_Keck_details:
+            print 'Plot: We restrict the x abscisse to 2.5'
+            plt.figure()
+            plt.title('Eddy Viscosity in DWM')
+            k=15
+            for i_z in np.arange(0, len(meta.vz_mixl), k):
+                z = meta.vz_mixl[i_z]
+                plt.plot(meta.vr_mixl, mfor.visc[i_z, :], label=str(z)[:3]+'R')
+
+                # Stop the plot at 30R so 15D as in Keck
+                if z>=12:
+                    i_z = i_z + k
+                    z = meta.vz_mixl[i_z]
+                    plt.plot(meta.vr_mixl, mfor.visc[i_z, :], label=str(z)[:3] + 'R')
+
+                    i_z = 2*i_z
+                    z = meta.vz_mixl[i_z]
+                    plt.plot(meta.vr_mixl, mfor.visc[i_z, :], label=str(z)[:3] + 'R')
+                    break
+
+            # To plot before last point in Dowstream at [60R]
+            z = meta.vz_mixl[-2]
+            plt.plot(meta.vr_mixl, mfor.visc[i_z, :], label=str(z)[:3] + 'R')
+
+            plt.xlabel('Radial position [R]'), plt.ylabel('eddy viscosity [-]')
+            plt.xlim(0., 2.5)
+            plt.legend(), plt.show()
 
     return mfor

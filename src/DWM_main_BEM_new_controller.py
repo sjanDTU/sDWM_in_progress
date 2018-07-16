@@ -776,7 +776,7 @@ def fReadPcFile(PcFileName, pathtowt, sWT, PcSet):
         n = line.split(" ");
         n = filter(None, n)
         Tempvec = n[2:0:-1]
-        Tempvec = [float(l) for l in Tempvec]
+        Tempvec = [int(l) for l in Tempvec]
         PcData = np.zeros((len(np.arange(0, Tempvec[1], 1)), 4))
         thickness_rel_prof[i] = Tempvec[0]
         ndata[i] = Tempvec[1]
@@ -803,6 +803,7 @@ def fReadAeFile(AeFileName, pathtowt, sWT, AeSet, ncol):
     n = filter(None, n)
     Label = n[-1]
     Nr = float(n[1])
+    Nr = int(Nr)
     AeData = np.zeros((Nr, ncol))
     if len(Label) == 0:
         Label = None
@@ -831,9 +832,10 @@ def fReadHtcFile(HtcFile, BladeBodyName, ):
             line=line.replace('\t', ' ')
             n = line.split(" ");
             n = filter(None, n)
-            nsec = float(n[n.index('nsec') + 1])
+            nsec = int(n[n.index('nsec') + 1])
+            print nsec
             PitchAxis = np.zeros((nsec, 4))
-            for i in np.arange(0, float(nsec), 1):
+            for i in np.arange(0, nsec, 1):
                 line = fd.readline()
                 line=line.replace('\t', ' ')
                 n = line.split(' ')
