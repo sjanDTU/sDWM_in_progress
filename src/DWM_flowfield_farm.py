@@ -85,7 +85,10 @@ def DWM_main_field_model(ID_waked,deficits,inlets_ffor,inlets_ffor_deficits,inle
         else:
             meand                = DWM_meta_meand(meand,meta)
     else:
-        meta, meand = get_Meandering_dynamic(meta, meand)
+        if meta.working_with_meandering_statistical_data: # For fair comparison with previous sDWM
+            meand = DWM_meta_meand(meand, meta)
+        else:
+            meta, meand = get_Meandering_dynamic(meta, meand)
 
 
 
@@ -1270,13 +1273,19 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor):
         TI_axial_ffor (nx,ny,nz): apparent turbulence in global coordinate system see Madsen et al [2]
     meta (instance of class)
     """
-    plot_bool = True
 
     ##############################################################################################################
     # recalculate into Cartesian grid
     # initiate/reset Cartesian flow field
 
-    DATA_from_Meandering_part = meand.WakesCentersLocations_in_time
+    if not meta.working_with_meandering_statistical_data:
+        DATA_from_Meandering_part = meand.WakesCentersLocations_in_time
+    else:
+        meand.nt = len(meand.time);
+        print 'number of time points: ', meand.nt
+
+        meta.time = meand.time
+        meta.nt = meand.nt
 
 
     print 'Performing MFoR to FFoR Computation'
@@ -1331,10 +1340,12 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor):
         DWM_TI_DATA[DWM_TI_DATA < np.nanmean(meta.mean_TI_DWM)] = np.nanmean(meta.mean_TI_DWM)
 
         for i_t in np.arange(0, len(meand.time), 1):
-            #Ro_x = meand.meand_pos_x[i_z, i_t]
-            #Ro_y = meand.meand_pos_y[i_z, i_t]
-            Ro_x = DATA_from_Meandering_part[i_z][i_t, 1]
-            Ro_y = DATA_from_Meandering_part[i_z][i_t, 2]
+            if meta.working_with_meandering_statistical_data:
+                Ro_x = meand.meand_pos_x[i_z, i_t]
+                Ro_y = meand.meand_pos_y[i_z, i_t]
+            else:
+                Ro_x = DATA_from_Meandering_part[i_z][i_t, 1]
+                Ro_y = DATA_from_Meandering_part[i_z][i_t, 2]
 
             #print '(Ro_x,Ro_y): ', [Ro_x, Ro_y]
 
