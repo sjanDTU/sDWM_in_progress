@@ -256,7 +256,6 @@ def getInduction(ngrid, sWT, Format, U0, meta, ID_waked, **kwargs):
     # print 'float("{0:.2f}".format(meta.WTG_spec.P_rated *derating))',float("{0:.2f}".format(meta.WTG_spec.P_rated *derating))
     # print 'float("{0:.2f}".format(BEM.Power/1000.)', float("{0:.2f}".format(BEM.Power/1000.))
     if float("{0:.2f}".format(meta.WTG_spec.P_rated *derating))  >=  float("{0:.2f}".format(BEM.Power/1000.)):
-        print 'TIC'
         BEM.derated=False
         pass
         # print 'You have demanded a derating but I produce less anyway'
@@ -306,7 +305,8 @@ def getInduction(ngrid, sWT, Format, U0, meta, ID_waked, **kwargs):
         print 'Matlab pitch', BEM.PITCH
         print 'Matlab RPM', BEM.RPM
 
-    elif opt == 'python':
+
+    elif opt == 'python':  # Data problem???
         Pd=meta.WTG_spec.P_rated *derating*1000.
         # derated RPM calculation
         iP=np.argmin(abs(meta.WTG_spec.ref_P-meta.WTG_spec.P_rated))
@@ -424,7 +424,6 @@ def fBEMsteady(WT, Sim, Wind, Algo, Rotor, PcDataAll, Env, Spec, State, Misc):
             # --------------------------------------------------------------------------------
             Ftip = a * 0. + 1.
             Fperf = a * 0. + 1.
-            print 'e:', e
             if Algo.bTipLoss:
                 if Algo.TipLossMethod == 'Prandtl':  # originally written Glauert but it's Prandtl
                     if (sin(phi * pi / 180.) > 0.01):
@@ -432,17 +431,17 @@ def fBEMsteady(WT, Sim, Wind, Algo, Rotor, PcDataAll, Env, Spec, State, Misc):
                         Ftip = 2. / pi * acos(exp(-nB / 2. * (R - r[e]) / (r[e] * sin(phi * pi / 180.))))
                 elif Algo.TipLossMethod == 'Prandtl....':
                     Ftip = 2. / pi * acos(exp(-nB / 2. * (1. - lambda_r[e] / lambda_) * sqrt(1. + lambda_ ** 2)))
+                F = Ftip
             # here will be implemented Hub losses in the future
             # Implemented by augr
-            #print r
-            #raw_input('...')
-            # CHECK if r[0] correspond to the root radius
             if Algo.bHubLoss:
                 #q = B / 2. * (r[k]-R_end_cylinder_according_chord) / (R_end_cylinder_according_chord * np.sin(phi[k])) # my BEM
-                Fhub = 2. / pi * acos(exp(-nB / 2. * (r[e]-r[0]) / (r[0] * sin(phi * pi / 180.))))
-                F = Ftip * Fhub
-            else:
-                F = Ftip
+                Fhub = 2. / pi * acos(exp(-nB / 2. * (r[e]-rhub) / (rhub * sin(phi * pi / 180.))))
+                if Algo.bTipLoss:
+                    F = Fhub * Ftip
+                else:
+                    F = Fhub
+
             # --------------------------------------------------------------------------------
             # --- Step 3: Angle of attack
             # --------------------------------------------------------------------------------

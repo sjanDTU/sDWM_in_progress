@@ -200,8 +200,16 @@ def fBEMsteady(WT, Sim, Wind, Algo, Rotor, PcDataAll, Env, Spec, State, Misc):
                 #elif Algo.TipLossMethod == 'Prandtl':    # I think it's not Prandlt
                 else:     #Where does it come from? Is it another formula for Prandtl? I don't think so (no relation with phi)
                     Ftip = 2. / pi * acos(exp(-nB / 2. * (1. - lambda_r[e] / lambda_) * sqrt(1. + lambda_ ** 2)))
-            # here will be implemented Hub losses in the future
             F = Ftip
+            # here will be implemented Hub losses in the future
+                    # Implemented by augr
+            if Algo.bHubLoss:
+                # q = B / 2. * (r[k]-R_end_cylinder_according_chord) / (R_end_cylinder_according_chord * np.sin(phi[k])) # my BEM
+                Fhub = 2. / pi * acos(exp(-nB / 2. * (r[e] - rhub) / (rhub * sin(phi * pi / 180.))))
+                if Algo.bTipLoss:
+                    F = Fhub * Ftip
+                else:
+                    F = Fhub
             # --------------------------------------------------------------------------------
             # --- Step 3: Angle of attack
             # --------------------------------------------------------------------------------

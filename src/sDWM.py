@@ -107,7 +107,7 @@ def sDWM(derating,kwargs,xind):
     if dynamic is False:
         print "Not Performing Dynamic"
         ID_wake = {id0[i]:(get_Rw(x=distFlowCoord[0,id0[i],:],\
-                                  R=1.*WF.WT.R,TI=TI,CT=WT.get_CT(WS),pars=[0.435449861,0.797853685,-0.124807893,0.136821858,15.6298,1.0])>\
+                                  R=2.*WF.WT.R,TI=TI,CT=WT.get_CT(WS),pars=[0.435449861,0.797853685,-0.124807893,0.136821858,15.6298,1.0])>\
                                   np.abs(distFlowCoord[1,id0[i],:])).nonzero()[0] \
                    for i in range(WF.nWT)}
     #"""

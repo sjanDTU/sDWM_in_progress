@@ -10,8 +10,8 @@ from cBEM import InitBEM
 from DWM_calc_mixL import DWM_calc_mixL
 
 # Choose your Bem calculation code
-#from DWM_main_BEM import getInduction
-from DWM_main_BEM_new_controller import getInduction
+from DWM_main_BEM import getInduction
+#from DWM_main_BEM_new_controller import getInduction
 
 
 from math import pi, sqrt, isnan
@@ -220,7 +220,6 @@ def DWM_aero(meta,ffor,aero,deficits,turb,inlets_ffor,inlets_ffor_deficits,out,I
         # mfor.U_init =   None # set to none for further initialization
         radial=np.hstack((aero.r_w[0:-2],aero.r_w.max(0)+0.01,meta.vr_mixl[-1]))
         vel=np.hstack((aero.U_w[0:-2],0.99, 1.))
-        raw_input('We need to investigate on why the last two points from BEM are taken off')
         f3=interpolate.InterpolatedUnivariateSpline(radial,vel,  k=1)
         mfor.U_init=f3(meta.vr_mixl)
         mfor.U_init=smooth( mfor.U_init,window_len=5)
@@ -229,7 +228,8 @@ def DWM_aero(meta,ffor,aero,deficits,turb,inlets_ffor,inlets_ffor_deficits,out,I
             plt.figure('mfor.U_init')
             plt.title('U initialization for Ainslie (WT in Freestream)')
             plt.plot(mfor.U_init, meta.vr_mixl, label='U init (smooth)'), plt.plot(aero.U_w, aero.r_w, label='U_w')
-            plt.xlabel('U [U0]'), plt.ylabel('r [R]'), plt.xlim(1., 0.), plt.legend()
+            plt.xlabel('U [U0]'), plt.ylabel('r [R]')#, plt.xlim(1., 0.)
+            plt.legend()
             plt.show()
 
     elif meta.accu_inlet is False:
@@ -244,7 +244,8 @@ def DWM_aero(meta,ffor,aero,deficits,turb,inlets_ffor,inlets_ffor_deficits,out,I
             plt.figure('mfor.U_init')
             plt.title('U initialization for Ainslie (no accumulation)')
             plt.plot(mfor.U_init, meta.vr_mixl, label='U init (smooth)'), plt.plot(aero.U_w, aero.r_w, label='U_w')
-            plt.xlabel('U [U0]'), plt.ylabel('r [R]'), plt.xlim(1., 0.), plt.legend()
+            plt.xlabel('U [U0]'), plt.ylabel('r [R]')#, plt.xlim(1., 0.)
+            plt.legend()
             plt.show()
 
     else:   # if turbine not in the freestream, we need to compute the proper accumulated inlet to the turbine
@@ -339,7 +340,7 @@ def DWM_rotor_aero(meta,aero,ID_waked, *args):
     """
     Function that calls the BEM calculation and calculate the corrected initial wake radius
     (boundary condition to Ainslie model ref [2])
-    Compute the near Wake !!!
+    Compute the near Wake  and expand it to the Far Wake to be computed for Ainslie!!!
     Parameters
     ----------
     aero    class holding the aero parameters to the Ainslie model
@@ -392,32 +393,33 @@ def DWM_rotor_aero(meta,aero,ID_waked, *args):
         plt.figure('BEM')
         plt.title('Local axial velocity in the wake from Momemtum theory')
         plt.plot((1-2*aero.a), aero.r_t, label='U')
-        plt.xlabel('U [U0]'), plt.ylabel('r [R]'), plt.xlim(1., 0.)
-        plt.legend(), plt.show()
+        plt.xlabel('U [U0]'), plt.ylabel('r [R]')#, plt.xlim(1., 0.)
+        plt.legend()
+        plt.figure('BEM2')
+        plt.title('Axial Induction Factor from BEM')
+        plt.plot(aero.a, aero.r_t, label='a (BEM)')
+        plt.xlabel('a [-]'), plt.ylabel('r [R]'), plt.xlim(0., 1.)
+
+        plt.show()
+
+    # COMPUTE BOUNDARY CONDITIONS FOR AINSLIE
     # Boundary conditions for the r_w
     aero.dA = np.concatenate(([0], (pi*aero.r_t [1:]**2 - pi*aero.r_t [0:-1]**2)), axis=0)
     aero.mean_a= np.sum(aero.a*aero.dA)/pi
     # Uniform expansion
-    aero.f_w        = sqrt( (1.0-aero.mean_a) / (1.0- ((1.0+meta.fR) * aero.mean_a))  )  # Expansion factor for the wake
+    aero.f_w        = sqrt( (1.0-aero.mean_a) / (1.0- ((1.0+meta.fR) * aero.mean_a))  )  # Expansion factor for the wake # eq (7) in sDWM validation
     aero.r_w = np.dot(aero.r_t, aero.f_w)   # New radial discretization for ainslie after the near wake expansion
-    print 'aero.r_t: ', aero.r_t
-    print 'aero.f_w: ', aero.f_w
-    print 'aero.r_w: ', aero.r_w
-
-    # Boundary conditions for U_w
+    # Boundary conditions for U_w #(U_BC(r_BC) in Keck Validation of sDWM # Eq (6)
     aero.U_w     = 1.0-(aero.a * (1.0 + meta.fU))
-
-    print 'aero.U_w', aero.U_w
-    raw_input('Learn more for Wake Expansion Madsen/Keck Calibration')
     if meta.BEM_plot:
         plt.figure('BEM')
         plt.title('Local axial velocity in the wake from Momemtum theory')
         plt.plot(aero.U_w, aero.r_w, label='U_w')
-        plt.xlabel('U [U0]'), plt.ylabel('r [R]'), plt.xlim(1.,0.)
+        plt.xlabel('U [U0]'), plt.ylabel('r [R]')#, plt.xlim(1.,0.)
         plt.legend(), plt.show()
     return aero, BEM
 
-
+# Not needed???
 def DWM_make_inflow_to_mixl(meta,ffor,inlets):
     """
     Function that performs the velocity integration for each downstream rotor of a given upstream turbine.
@@ -695,17 +697,17 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
         DWM_TI_DATA = mfor.TI_DWM[meta.vz[i_z],:]
         #print 'DWM_TI_DATA: ', DWM_TI_DATA
 
-        if True:
-            plt.figure()
-            plt.plot( DWM_TI_DATA, meta.vr_mixl, label='from Ainslie')
+        if meta.AINSLIE_Keck_details:
+            plt.figure('Turbulence Intensity Correction')
+            plt.plot( DWM_TI_DATA, meta.vr_mixl, label='DWM TI at WT'+str(meta.wtg_ind[i_z]))
 
 
         ### Correct DWM_TI_DATA so that no point to have lower TI than "TIamb"
         DWM_TI_DATA[DWM_TI_DATA < np.nanmean(meta.mean_TI_DWM)] = np.nanmean(meta.mean_TI_DWM)
 
-        if True:
+        if meta.AINSLIE_Keck_details:
             plt.plot(DWM_TI_DATA, meta.vr_mixl, label='Corrected for TI amb')
-            plt.legend(), plt.show()
+            plt.legend()
 
 
         #for i_t in np.arange(0, 2, 1):
@@ -775,9 +777,10 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
                 plt.clf()
         #plt.plot([0,100],[0,1],ffor.WS_axial_ffor_tmp[:, :, i_z])
         # """
-
+    plt.show()
     if meta.MEANDERING_plot:
         plt.ioff()
+
 
         #"""
         #"""

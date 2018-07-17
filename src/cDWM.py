@@ -105,11 +105,10 @@ class Meta:
         self.MEANDERING_plot = False
         self.DEFICIT_plot = False
 
-        if self.BEM_AINSLIE_plot:
-            self.AINSLIE_Keck_details = True
-        if self.MEANDERING_plot:
-            self.MEANDERING_WS_plot = True
-            self.MEANDERING_TI_plot = False
+        self.AINSLIE_Keck_details = True
+
+        self.MEANDERING_WS_plot = False
+        self.MEANDERING_TI_plot = False
 
         # --------------------------------------------------------------------------
         # Model Specification Setting
