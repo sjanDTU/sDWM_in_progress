@@ -74,13 +74,20 @@ def DWM_main_field_model(ID_waked,deficits,inlets_ffor,inlets_ffor_deficits,inle
     ffor =  FFoR()
     aero = Aero(meta.WTG)
     t = time.time()
+
+
     # ##### Set up MFoR and FFoR streamwise domain properties   #####################################################
     meta                 = DWM_make_grid(meta)
     # ##### Load wake meandering properties from meta model: f(stab,hub height,z,TI) ################################
     if meta.previous_sDWM:
-        meand                = DWM_meta_meand(meand,meta)
+        if meta.previous_sDWM_working_with_a_MannBox:
+            meta, meand = get_Meandering_dynamic(meta, meand)
+        else:
+            meand                = DWM_meta_meand(meand,meta)
     else:
         meta, meand = get_Meandering_dynamic(meta, meand)
+
+
 
     # ##  Run BEM model and create velocity deficit calculations inputs #############################################
     start_time = time.time()
@@ -89,20 +96,29 @@ def DWM_main_field_model(ID_waked,deficits,inlets_ffor,inlets_ffor_deficits,inle
     else:
         if meta.steadyBEM_AINSLIE:
             aero, mfor, out, BEM = DWM_aero(meta, ffor, aero, deficits, turb, inlets_ffor,inlets_ffor_deficits,out,ID_waked)
+
+        # NOT IMPLEMENTED
         elif not meta.steadyBEM_AINSLIE:
             aero, mfor, out, BEM = DWM_aero_dynamic(meta, ffor, aero, deficits, turb, inlets_ffor, inlets_ffor_deficits, out, ID_waked)
     print 'Computation Time for BEM is: ', time.time() - start_time
+
+
 
     # ############## Perform wake velocity calculations in MFoR #####################################################
 
     start_time = time.time()
     mfor                 = DWM_calc_mixL(meta,aero,mfor)
     print 'Computation Time for Ainslie is: ', time.time()-start_time
+
+
+
     # ############# Reconstruct global flow field by applying wake meandering #######################################
     if meta.previous_sDWM:
         mfor,ffor,meta,meand = DWM_MFOR_to_FFOR(mfor,meta,meand,ffor)
     else:
         mfor, ffor, meta, meand = DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor)
+
+
 
     # ############## Compute deficit at downstream rotor
     if meta.previous_sDWM:
@@ -112,6 +128,9 @@ def DWM_main_field_model(ID_waked,deficits,inlets_ffor,inlets_ffor_deficits,inle
 
     # print deficits
     # print inlets_ffor
+
+
+
     # ############## Compute turbulence level at downstream rotor
 
     if meta.previous_sDWM:
@@ -648,6 +667,10 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
     ##############################################################################################################
     # recalculate into Cartesian grid
     # initiate/reset Cartesian flow field
+    if meta.previous_sDWM_working_with_a_MannBox:
+        DATA_from_Meandering_part = meand.WakesCentersLocations_in_time
+
+
     print 'Performing MFoR to FFoR Computation'
     ffor.ffor_flow_field_TI_tmp_tmp =  meta.TI * np.ones((meta.nx, meta.ny))  #X = lateral ,Y = vertical, time ,Z = streamwise
     ffor.TI_axial_ffor_tmp     =  np.zeros((meta.nx, meta.ny, meta.nz))        #X = lateral ,Y = vertical, time ,Z = streamwise
@@ -712,8 +735,12 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
 
         #for i_t in np.arange(0, 2, 1):
         for i_t in np.arange(0,len(meand.time),1):
-            Ro_x                    = meand.meand_pos_x[i_z,i_t]
-            Ro_y                    = meand.meand_pos_y[i_z,i_t]
+            if meta.previous_sDWM_working_with_a_MannBox:
+                Ro_x = DATA_from_Meandering_part[i_z][i_t, 1]
+                Ro_y = DATA_from_Meandering_part[i_z][i_t, 2]
+            else:
+                Ro_x                    = meand.meand_pos_x[i_z,i_t]
+                Ro_y                    = meand.meand_pos_y[i_z,i_t]
 
             #print '(Ro_x,Ro_y): ', [Ro_x, Ro_y]
             #print 'meta.x_mat: ', meta.x_mat
@@ -1287,13 +1314,6 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor):
         # print 'meta.vz[iz]: ', meta.vz[i_z]
         # EXTRACT TI_DWM AND WS_DWM IN MFoR
         # Plot deficit MFOR
-        """
-        plt.plot(meta.vr_mixl,mfor.U[meta.vz[i_z], :])
-        plt.title('Deficit in MFoR at Turbine '+str(7-i_z)+' Location')
-        plt.xlabel('vr (polar discretization)')
-        plt.ylabel('U (axial velocitie in MFoR)')
-        plt.show()
-        """
 
         # After the first Iteration DWM WS DATA need a time dimension, because Ainslie is computed for deficits in time
         #
@@ -1306,17 +1326,6 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor):
         except:
             print 'Fatal error, possibly due to a too low turbulence intensity with respect to the demanded mean wind speed, try increase the input TI'
         DWM_TI_DATA = mfor.TI_DWM[meta.vz[i_z], :]
-        # print 'DWM_TI_DATA: ', DWM_TI_DATA
-
-        # Plot TI MFOR
-
-        """
-        plt.plot(meta.vr_mixl,mfor.TI_DWM[meta.vz[i_z], :])
-        plt.title('TI in MFoR at Turbine '+str(7-i_z)+' Location')
-        plt.xlabel('vr (polar discretization)')
-        plt.ylabel('TI (Turbulence Intensity in MFoR)')
-        plt.show()
-        """
 
         ### Correct DWM_TI_DATA so that no point to have lower TI than "TIamb"
         DWM_TI_DATA[DWM_TI_DATA < np.nanmean(meta.mean_TI_DWM)] = np.nanmean(meta.mean_TI_DWM)

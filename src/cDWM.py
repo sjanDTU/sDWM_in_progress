@@ -99,13 +99,13 @@ class Meta:
 
         # -------------------------------------------------------------------------
         # Plot Setting Options
-        self.BEM_plot = True
-        self.AINSLIE_plot = True
-        self.BEM_AINSLIE_plot = True
+        self.BEM_plot = False
+        self.AINSLIE_plot = False
+        self.BEM_AINSLIE_plot = False
         self.MEANDERING_plot = False
         self.DEFICIT_plot = False
 
-        self.AINSLIE_Keck_details = True
+        self.AINSLIE_Keck_details = False
 
         self.MEANDERING_WS_plot = False
         self.MEANDERING_TI_plot = False
@@ -113,10 +113,10 @@ class Meta:
         # --------------------------------------------------------------------------
         # Model Specification Setting
         # Put only one True
-        self.previous_sDWM = True
+        self.previous_sDWM = False
 
         # Not implemented for the moment
-        self.meandering_data_from_Turbulent_box = False # we not use the original Meand matrix but data
+        self.previous_sDWM_working_with_a_MannBox = True # we not use the original Meand matrix but data
         # from the meandering part for dynamic
         # Run the code as before, with a statistical approach of the meandering, no time consideration
 
