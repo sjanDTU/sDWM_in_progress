@@ -1236,8 +1236,8 @@ def get_Meandering_dynamic(meta, meand):
     meand.WakesCentersLocations_in_time = np.load(
           'C:/Users/augus/Documents/Stage/Codes/Mann_Turbulence/Result/Center_Position_in_time_Lillgrund/z_time_center_location.NPY')[meta.iT]
     # /!\ a mieux placer dans le code /!\
-    meand.time = meand.WakesCentersLocations_in_time[0][:, 0]; print 'meand time : ', meand.time
-    meand.nt = len(meand.time); print 'number of time points: ', meand.nt
+    meand.time = meand.WakesCentersLocations_in_time[0][:, 0]#; print 'meand time : ', meand.time
+    meand.nt = len(meand.time)#; print 'number of time points: ', meand.nt
 
     meta.time = meand.time
     meta.nt = meand.nt

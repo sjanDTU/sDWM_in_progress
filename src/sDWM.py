@@ -221,4 +221,5 @@ def sDWM(derating,kwargs,xind):
     plt.show()
     """
     print 'The farm production is: %4.2f kW, where each turbine is: %s' %(Farm_p_out,np.array_str(WT_p_out))
+    print 'Vel_out:', Vel_out
     return Farm_p_out, WT_p_out[id0] ,WT_pitch_out[id0] ,WT_RPM_out[id0] ,Vel_out[id0], id0
