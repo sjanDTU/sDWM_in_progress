@@ -101,11 +101,17 @@ class Meta:
         # Plot Setting Options
         self.BEM_plot = False
         self.AINSLIE_plot = False
+        self.AINSLIE_Keck_details = True
         self.BEM_AINSLIE_plot = False
-        self.MEANDERING_plot = False
-        self.DEFICIT_plot = False
 
-        self.AINSLIE_Keck_details = False
+        self.MEANDERING_plot = False
+        self.MEANDERING_detail_plot = False
+        self.MEANDERING_WS_plot = False
+        self.MEANDERING_TI_plot = False
+
+        self.DEFICIT_plot = True
+        self.DEFICIT_details = False # For Dynamic, it gives result in time
+
 
         self.MEANDERING_WS_plot = False
         self.MEANDERING_TI_plot = False
