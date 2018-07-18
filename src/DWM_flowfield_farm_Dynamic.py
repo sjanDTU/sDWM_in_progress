@@ -182,7 +182,7 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor):
             tmp_field_TI[tmp_index] = np.interp(r_dist[tmp_index], meta.vr_m, DWM_TI_DATA)
 
             ffor.ffor_flow_field_TI_tmp_tmp[:, :] = tmp_field_TI
-            ffor.TI_axial_ffor[:, :, i_z, i_t] = ffor.ffor_flow_field_TI_tmp_tmp ** 2
+            ffor.TI_axial_ffor[:, :, i_z, i_t] = ffor.ffor_flow_field_TI_tmp_tmp# ** 2
 
 
 
