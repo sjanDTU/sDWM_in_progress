@@ -735,7 +735,6 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
 
         ### Correct DWM_TI_DATA so that no point to have lower TI than "TIamb"
         DWM_TI_DATA[DWM_TI_DATA < np.nanmean(meta.mean_TI_DWM)] = np.nanmean(meta.mean_TI_DWM)
-        print 'meta.mean_TI_DWM: ', meta.mean_TI_DWM
 
         if meta.AINSLIE_Keck_details:
             plt.plot(DWM_TI_DATA, meta.vr_mixl, label='Corrected for TI amb')

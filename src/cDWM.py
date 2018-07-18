@@ -101,7 +101,7 @@ class Meta:
         # Plot Setting Options
         self.BEM_plot = False
         self.AINSLIE_plot = False
-        self.AINSLIE_Keck_details = True
+        self.AINSLIE_Keck_details = False
         self.BEM_AINSLIE_plot = False
 
         self.MEANDERING_plot = False
@@ -109,7 +109,7 @@ class Meta:
         self.MEANDERING_WS_plot = False
         self.MEANDERING_TI_plot = False
 
-        self.DEFICIT_plot = True
+        self.DEFICIT_plot = False
         self.DEFICIT_details = False # For Dynamic, it gives result in time
 
 
@@ -119,7 +119,7 @@ class Meta:
         # --------------------------------------------------------------------------
         # Model Specification Setting
         # Put only one True
-        self.previous_sDWM = False
+        self.previous_sDWM = True
 
         # Not implemented for the moment
         self.previous_sDWM_working_with_a_MannBox = False # we not use the original Meand matrix but data
