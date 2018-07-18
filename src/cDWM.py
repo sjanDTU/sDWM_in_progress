@@ -71,7 +71,7 @@ class Meta:
         self.k2                    = 0.0178  # in Keck we can compare with k1 0.914 and k2 = 0.0216
 
         ## Model flags
-        self.Tbuildup_setting      = 1 # 1 = on # flag to control the buildup of turbulence along turbine rows, if disabled TI is equal to free stream TI
+        self.Tbuildup_setting      = 0 # 1 = on # flag to control the buildup of turbulence along turbine rows, if disabled TI is equal to free stream TI
         self.wake_ind_setting      = 1 # 1 = on # flag to control the wake accumulation along turbine rows, if disabled U is equal to free stream velocity
         self.accu                  = 'dominant' # accumulation model
         self.accu_inlet            = True # accumulation of inlet velocity field. If enabled, the inflow flow field to each turbine is computed as the aggregated upstream flow field. If disabled, the model behaves like the HAWC2-DWM model [2] and [4]
