@@ -10,7 +10,7 @@ import numpy as np
 import WindFarm as wf
 import WindTurbine as wt
 #import matplotlib.pyplot as plt
-from DWM_flowfield_farm import DWM_main_field_model
+from DWM_flowfield_farm import DWM_main_field_model, DWM_main_field_model_partly_dynamic
 from math import pi, sqrt, isnan
 from DWM_GClarsenPicks import get_Rw
 from DWM_init_dict import init
@@ -47,7 +47,7 @@ def sDWM(derating,kwargs,xind):
     WF = wf.WindFarm('Windfarm',WTcoord,WT)
 
     #########################################################################################################
-    if False:
+    if dynamic:
         filename = '1028'  # must come from sDWM Input
         #R_wt = 46.5  # can come from sDWM
         #WTG = 'NY2'  # can come from sDWM
@@ -62,7 +62,7 @@ def sDWM(derating,kwargs,xind):
         # WindFarm.lenght = 4000.
 
         WT = wt.WindTurbine('Windturbine', '../WT-data/' + WTG + '/' + WTG + '_PC.dat', HH, WT.R)  # already present in sDWM
-        pre_init_turb(filename, WF, WT)
+        TurBox, WF = pre_init_turb(filename, WF, WT)
         TI = WF.TI
 
     ####################################################################################################################
@@ -159,6 +159,8 @@ def sDWM(derating,kwargs,xind):
         C2C=C2C[index_orig]
 
         print 'row', row
+        print C2C
+        raw_input('...')
         # Wrapping the DWM core model with I/O
         par={
          'WS':WS,
@@ -182,8 +184,10 @@ def sDWM(derating,kwargs,xind):
         }
         ID_wake_adj[str(id0[iT])]=row
         #"""
-
-        aero, meta, mfor, ffor, DWM, deficits,inlets_ffor,inlets_ffor_deficits, inlets_ffor_turb,turb, out,ID_waked = DWM_main_field_model(ID_waked,deficits,inlets_ffor,inlets_ffor_deficits,inlets_ffor_turb,turb,DWM,out,**par)
+        if dynamic:
+            aero, meta, mfor, ffor, DWM, deficits, inlets_ffor, inlets_ffor_deficits, inlets_ffor_turb, turb, out, ID_waked = DWM_main_field_model_partly_dynamic(ID_waked,deficits,inlets_ffor,inlets_ffor_deficits,inlets_ffor_turb,turb,DWM,out, TurBox, WF,**par)
+        else:
+            aero, meta, mfor, ffor, DWM, deficits,inlets_ffor,inlets_ffor_deficits, inlets_ffor_turb,turb, out,ID_waked = DWM_main_field_model(ID_waked,deficits,inlets_ffor,inlets_ffor_deficits,inlets_ffor_turb,turb,DWM,out,**par)
         # Farm_p_out= Farm_p_out+out[str(meta.wtg_ind[0])][4] # based on power curve
 
         # /!\/!\ not put in commentary this  /!\/!\

@@ -21,7 +21,7 @@ from DWM_misc import smooth
 
 import matplotlib.pyplot as plt
 
-from DWM_flowfield_farm_Dynamic import get_Meandering_dynamic, DWM_get_turb_dynamic, DWM_MFOR_to_FFOR_dynamic, DWM_get_deficit_FFOR_dynamic, DWM_aero_steady
+from DWM_flowfield_farm_Dynamic import get_Meandering_dynamic, get_Meandering_dynamic_V2, DWM_get_turb_dynamic, DWM_MFOR_to_FFOR_dynamic, DWM_get_deficit_FFOR_dynamic, DWM_aero_steady
 
 # DO A DWM MAIN FIELD MODEL FOR TEST AND ONE FOR THE FINAL IMPLEMENTATION (WELL STRUCTURED)
 def DWM_main_field_model(ID_waked,deficits,inlets_ffor,inlets_ffor_deficits,inlets_ffor_turb,turb,DWM,out,**par):
@@ -1240,4 +1240,100 @@ def DWM_outputs(DWM,ffor,mfor,meta, aero,par, BEM):
 # ***********************************************Dynamic sDWM**********************************************************
 # *******************************Working with Mann/LES box approach of meandering**************************************
 ########################################################################################################################
+def DWM_main_field_model_partly_dynamic(ID_waked,deficits,inlets_ffor,inlets_ffor_deficits,inlets_ffor_turb,turb,DWM,out, TurbBox, WF,**par):
+    """Main flow field calculation function, handling all the calls to each sub functions. This function is called for
+       each turbine in the wind farm from the most upstream to the most downstream one. The flow field calculations are
+       carried out at the downstream distance of interest, i.e., where downstream rotors are partially or fully in the
+       wake of the upstream turbine.
+
+        Inputs
+        ----------
+        ID_waked: dict(nWT) holding list of upstream turbine index for each turbine in the wind farm
+        deficits: dict(nWT) holding a list of the mean rotor averaged deficit from upstream wakes
+        turb:  dict(nWT) holding a list of mean turbulence intensities contributions from upstream wakes
+        inlets_ffor: dict(nWT) holding a list of array containing the flow field in the fixed frame of reference from
+        upstream wakes contributions
+        inlets_ffor_deficits: dict(nWT) holding a list of array containing the flow field in the fixed frame of
+        reference from upstream wakes contributions at the rotor position
+        inlets_ffor_turb: dict(nWT) holding a list of array containing the turbulence field in the fixed frame of
+        reference from upstream wakes contributions at the rotor position
+        out: dict(nWT),holding the main sDWM model outputs i.e mean power from BEM, mean power estimated from powercurve,
+        mean rotor averaged wind speed, mean rotor average turbulence intensity, mean thrust coefficient from BEM and
+        from power curve
+        par: dict(nWT) holding the DWM cylindrical and cartesian grid coordinates as well as turbine and ambient conditions
+
+        Outputs
+        ----------
+        meta (instance of class): Instance of class Meta holding DWM core variables
+        aero (instance of class): Instance of class Aero holding BEM-aero core variables
+        mfor (instance of class): Instance of class Mfor holding the meandering frame of reference scalars used by the
+        Ainslie model in local Mixl coordinates
+        ffor:(instance of class): Instance of class Ffor holding the fixed frame of reference velocity field in global
+        WF coordinates
+        DWM: dict(nWT) list containing full outputs of the sDWM (including flow field in ffor and mfor) See description
+        of DWM_outputs for more details
+        deficits: dict(nWT) update list of deficits contributions from upstream wakes
+        inlets_ffor: dict(nWT) updated list of array containing the flow field in the fixed frame of reference from
+        upstream wakes contributions
+        inlets_ffor_deficits: dict(nWT) updated list of array containing the flow field in the fixed frame of reference
+        from upstream wakes contributions at the rotor position
+        inlets_ffor_turb: dict(nWT) updated list of array containing the turbulence field in the fixed frame of
+        reference from upstream wakes contributions at the rotor position
+        turb:dict(nWT) updated list of mean turbulence intensities contributions from upstream wakes
+        out: returns the mean power from BEM, mean power estimated from power curve,mean rotor averaged wind speed, mean
+        rotor average turbulence intensity,
+        mean thrust coefficient from BEM and from power curve
+        ID_waked: dict(nWT) holding list of upstream turbine index for each turbine in the wind farm
+    """
+    # Create instances of class
+    meta=Meta()
+    meta.parse(**par)
+    meand=Meand()
+    ffor =  FFoR()
+    aero = Aero(meta.WTG)
+    t = time.time()
+
+
+    # ##### Set up MFoR and FFoR streamwise domain properties   #####################################################
+    meta                 = DWM_make_grid(meta)
+
+    # ##### Load/Compute wake meandering properties from meta model################################
+    meta, meand = get_Meandering_dynamic_V2(meta, meand,TurbBox, WF)
+
+    # ##  Run BEM model and create velocity deficit calculations inputs #############################################
+    start_time = time.time()
+    if meta.steadyBEM_AINSLIE:
+            aero, mfor, out, BEM = DWM_aero(meta, ffor, aero, deficits, turb, inlets_ffor,inlets_ffor_deficits,out,ID_waked)
+
+        # NOT IMPLEMENTED
+    elif not meta.steadyBEM_AINSLIE:
+        raise('Method not implemented')
+        #aero, mfor, out, BEM = DWM_aero_steady(meta, ffor, aero, deficits, turb, inlets_ffor, inlets_ffor_deficits, out, ID_waked)
+    print 'Computation Time for BEM is: ', time.time() - start_time
+
+    # ############## Perform wake velocity calculations in MFoR #####################################################
+
+    start_time = time.time()
+    mfor                 = DWM_calc_mixL(meta,aero,mfor)
+    print 'Computation Time for Ainslie is: ', time.time()-start_time
+
+    # ############# Reconstruct global flow field by applying wake meandering #######################################
+    mfor, ffor, meta, meand = DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor)
+
+    # ############## Compute deficit at downstream rotor
+    deficits, ID_waked, inlets_ffor, inlets_ffor_deficits  = DWM_get_deficit_FFOR_dynamic(ffor, meta, deficits, ID_waked, inlets_ffor, inlets_ffor_deficits)
+
+    # ############## Compute turbulence level at downstream rotor
+    turb, inlets_ffor_turb = DWM_get_turb_dynamic(ffor, meta, turb, inlets_ffor_turb)
+
+    # ############# Compute new axisymmetric flow for next turbine ##################################################
+    #ffor,inlets = DWM_make_inflow_to_mixl(meta,ffor,inlets)
+    # ############# Write relevant results in DWM variables #########################################################
+    # if meta.full_output is True:
+    # DWM                  = DWM_outputs(DWM,ffor,mfor,meta,aero,par,BEM)
+    elapsed = time.time() - t
+    print '*********Turbine %i (%i turbine in its wake) produces %4.2f kW at %4.2f m/s completed in %4.2f sec ***********************************' %(meta.wtg_ind[0],len(meta.wtg_ind[1:]),aero.pow_cur,meta.mean_WS_DWM,elapsed)
+    print '****Turbine %i (%i turbine in its wake) produces %4.2f kW at %4.2f m/s completed in %4.2f sec **********' %(meta.wtg_ind[0],len(meta.wtg_ind[1:]),aero.Power/1000.,meta.mean_WS_DWM,elapsed)
+    return( aero, meta, mfor, ffor, DWM, deficits,inlets_ffor, inlets_ffor_deficits,inlets_ffor_turb,turb, out,ID_waked)
+
 

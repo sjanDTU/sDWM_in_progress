@@ -24,7 +24,7 @@ if __name__ == "__main__":
               'stab': 'N',
               'accum': 'dominant',
               'optim': False,
-              'dynamic': False}
+              'dynamic': True}
     ##########################################################################
 
     WT = wt.WindTurbine('Windturbine','../WT-data/'+inputs['WTG']+'/'+inputs['WTG']+'_PC.dat',inputs['HH'],inputs['R'])

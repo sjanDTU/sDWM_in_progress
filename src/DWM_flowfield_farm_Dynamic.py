@@ -9,23 +9,45 @@ import numpy as np
 import matplotlib.pyplot as plt
 from math import pi, sqrt, isnan
 from scipy import io, interpolate
+from Meandering_Main import DWM_extract_meandering_from_TurbBox
+
 
 
 def get_Meandering_dynamic(meta, meand):
+    if meta.use_saved_data:
+        # New Version for Multiple wake meandering
+        meand.WakesCentersLocations_in_time = np.load(
+              'C:/Users/augus/Documents/Stage/Codes/Mann_Turbulence/Result/Center_Position_in_time_Lillgrund/z_time_center_location.NPY')[meta.iT]
+        # /!\ a mieux placer dans le code /!\
+        meand.time = meand.WakesCentersLocations_in_time[0][:, 0]#; print 'meand time : ', meand.time
+        meand.nt = len(meand.time)#; print 'number of time points: ', meand.nt
 
-    # old version for One wake meandering
-    #meand.WakesCentersLocations_in_time = np.load(
-    #       'C:/Users/augus/Documents/Stage/Codes/Mann_Turbulence/Result/Center_Position_in_time_Lillgrund/z_time_center_location.NPY')[meta.iT:]
+        meta.time = meand.time
+        meta.nt = meand.nt
 
-    # New Version for Multiple wake meandering
-    meand.WakesCentersLocations_in_time = np.load(
-          'C:/Users/augus/Documents/Stage/Codes/Mann_Turbulence/Result/Center_Position_in_time_Lillgrund/z_time_center_location.NPY')[meta.iT]
-    # /!\ a mieux placer dans le code /!\
-    meand.time = meand.WakesCentersLocations_in_time[0][:, 0]#; print 'meand time : ', meand.time
-    meand.nt = len(meand.time)#; print 'number of time points: ', meand.nt
+    # Change the referential to FFoR
+    for i_z in np.arange(0, meta.nz, 1):
+        meand.WakesCentersLocations_in_time[i_z][:, 1] = meta.hub_x[0] + meand.WakesCentersLocations_in_time[i_z][:, 1]
+        meand.WakesCentersLocations_in_time[i_z][:, 2] = meta.hub_y + meand.WakesCentersLocations_in_time[i_z][:, 2]
 
-    meta.time = meand.time
-    meta.nt = meand.nt
+    return meta, meand
+
+def get_Meandering_dynamic_V2(meta, meand, TurBox, WF):
+    if meta.use_saved_data:
+        # New Version for Multiple wake meandering
+        meand.WakesCentersLocations_in_time = np.load(
+              'C:/Users/augus/Documents/Stage/Codes/Mann_Turbulence/Result/Center_Position_in_time_Lillgrund/z_time_center_location.NPY')[meta.iT]
+        # /!\ a mieux placer dans le code /!\
+        meand.time = meand.WakesCentersLocations_in_time[0][:, 0]#; print 'meand time : ', meand.time
+        meand.nt = len(meand.time)#; print 'number of time points: ', meand.nt
+
+        meta.time = meand.time
+        meta.nt = meand.nt
+    else:
+        if meta.iT==0:
+            WF.stream_location_z = meta.z_vec
+            DWM_extract_meandering_from_TurbBox(TurBox, WF)
+        meand.WakesCentersLocations_in_time = np.load('WAKES.NPY')[meta.iT]
 
     # Change the referential to FFoR
     for i_z in np.arange(0, meta.nz, 1):

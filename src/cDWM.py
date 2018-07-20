@@ -120,7 +120,7 @@ class Meta:
         # --------------------------------------------------------------------------
         # Model Specification Setting
         # Put only one True
-        self.previous_sDWM = True
+        self.previous_sDWM = False
 
         # Not implemented for the moment
         self.previous_sDWM_working_with_a_MannBox = False # we not use the original Meand matrix but data
@@ -131,8 +131,9 @@ class Meta:
         if not self.previous_sDWM:
             self.steadyBEM_AINSLIE = True  # if True, BEM_Ainslie use the average deficit
             if self.steadyBEM_AINSLIE:
+                self.use_saved_data = False
                 # Could be used for fair comparison with previous sDWM
-                self.working_with_meandering_statistical_data = True
+                self.working_with_meandering_statistical_data = False
         # In the dynamic approach, we can average the deficits (and turbulence) in time,
         # and use this mean for the BEM-Ainslie Computation.
         # That's a drastic reduction of computation time.
