@@ -80,6 +80,7 @@ def DWM_main_field_model(ID_waked,deficits,inlets_ffor,inlets_ffor_deficits,inle
 
     # ##### Set up MFoR and FFoR streamwise domain properties   #####################################################
     meta                 = DWM_make_grid(meta)
+
     # ##### Load wake meandering properties from meta model: f(stab,hub height,z,TI) ################################
     if meta.previous_sDWM:
         if meta.previous_sDWM_working_with_a_MannBox:
@@ -91,7 +92,6 @@ def DWM_main_field_model(ID_waked,deficits,inlets_ffor,inlets_ffor_deficits,inle
             meand = DWM_meta_meand(meand, meta)
         else:
             meta, meand = get_Meandering_dynamic(meta, meand)
-
 
 
     # ##  Run BEM model and create velocity deficit calculations inputs #############################################
@@ -108,14 +108,11 @@ def DWM_main_field_model(ID_waked,deficits,inlets_ffor,inlets_ffor_deficits,inle
     print 'Computation Time for BEM is: ', time.time() - start_time
 
 
-
     # ############## Perform wake velocity calculations in MFoR #####################################################
 
     start_time = time.time()
     mfor                 = DWM_calc_mixL(meta,aero,mfor)
     print 'Computation Time for Ainslie is: ', time.time()-start_time
-
-
 
     # ############# Reconstruct global flow field by applying wake meandering #######################################
     if meta.previous_sDWM:
@@ -709,7 +706,7 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
     ffor.z_mat = meta.z_mat / meta.dz  # [D]
 
 
-    if meta.MEANDERING_plot:
+    if meta.MEANDERING_detail_plot:
         plt.ion()
         plt.figure()
 
@@ -777,7 +774,9 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
             tmp_field_TI[tmp_index] = np.interp( r_dist[tmp_index],meta.vr_m, DWM_TI_DATA)
 
             ffor.ffor_flow_field_TI_tmp_tmp[:, :]      = tmp_field_TI
-            ffor.TI_axial_ffor_tmp[:, :, i_z]     = ffor.TI_axial_ffor_tmp[:, :, i_z] + ffor.ffor_flow_field_TI_tmp_tmp**2
+            #TI_tot_FFoR(t)**2 = (0) + TI_DWM_FFoR(t)**2
+            print ffor.TI_axial_ffor_tmp[:, :, i_z]
+            ffor.TI_axial_ffor_tmp[:, :, i_z]     = ffor.TI_axial_ffor_tmp[:, :, i_z] + ffor.ffor_flow_field_TI_tmp_tmp**2  # TI_M**2 + TI_DWM_FFoR
 
             if meta.MEANDERING_detail_plot:
                 plt.subplot(131)
@@ -812,9 +811,10 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
                 plt.clf()
         #plt.plot([0,100],[0,1],ffor.WS_axial_ffor_tmp[:, :, i_z])
         # """
-    plt.show()
-    if meta.MEANDERING_plot:
+    if meta.MEANDERING_detail_plot:
+        plt.show()
         plt.ioff()
+
 
 
         #"""
@@ -823,12 +823,16 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
     for i_z in np.arange(0,meta.nz,1):
         #### Here we average all time related data along the z-axis
         # don't keep this part for dynamic
+        #TI_M_FFoR?
         ffor.TI_meand_axial_ffor[:, :, i_z]=np.sqrt(abs(ffor.ffor_flow_field_ws_tmp2[:, :, i_z] - ((ffor.WS_axial_ffor_tmp[:, :, i_z]**2)/len(meand.time)) )/ (len(meand.time)-1.0))
         ffor.WS_axial_ffor[:, :, i_z]      = (ffor.WS_axial_ffor_tmp[:, :, i_z]  / len(meand.time))
+        # TI_tot_FFoR? TI_DWM_FFOR averaged and used to get turb /!\
         ffor.TI_axial_ffor[:, :, i_z]      = (ffor.TI_axial_ffor_tmp[:, :, i_z]  / len(meand.time))**(1.0/2.0)
 
         ffor.x_vec_t[:, i_z]               = (meta.x_vec-meta.hub_x[i_z])/2.
         ffor.x_mat_t[:, :, i_z]              = np.tile(ffor.x_vec_t[:, i_z] .reshape(len(ffor.x_vec_t[:, i_z]),1),meta.ny)/2.
+    #Personal add
+    TI_tot_FFoR = np.sqrt(ffor.TI_meand_axial_ffor**2 + ffor.TI_axial_ffor**2)
     if meta.MEANDERING_plot:
         for i_z in np.arange(0, meta.nz, 1):
             if meta.MEANDERING_WS_plot:
@@ -838,20 +842,29 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
                 plt.xlabel('Lateral direction, x [D]'), plt.ylabel('Longitudinal direction, y [D]')
                 plt.colorbar(CF1)
 
-            if meta.MEANDERING_TI_plot:
+            if True:
                 plt.figure('Averaged Meandering TI for statistical approach (FFoR) at WT' + str(7 - i_z))
-                plt.subplot(121)
+                plt.subplot(131)
                 plt.title('Averaged axial TI at WT' + str(7 - i_z))
                 CF2 = plt.contourf(ffor.x_mat, ffor.y_mat, ffor.TI_axial_ffor[:, :, i_z])
                 plt.xlabel('Lateral direction, x [D]'), plt.ylabel('Longitudinal direction, y [D]')
                 plt.colorbar(CF2)
 
-                plt.subplot(122)
+                plt.subplot(132)
                 plt.title('Averaged axial meandering TI at WT' + str(7 - i_z))
                 CF3 = plt.contourf(ffor.x_mat, ffor.y_mat, ffor.TI_meand_axial_ffor[:, :, i_z])
                 plt.xlabel('Lateral direction, x [D]'), plt.ylabel('Longitudinal direction, y [D]')
                 plt.colorbar(CF3)
-        plt.show()
+
+                plt.subplot(133)
+                plt.title('TI_tot_FFoR at WT' + str(7 - i_z))
+                CF4 = plt.contourf(ffor.x_mat, ffor.y_mat, TI_tot_FFoR[:, :, i_z])
+                plt.xlabel('Lateral direction, x [D]'), plt.ylabel('Longitudinal direction, y [D]')
+                plt.colorbar(CF4)
+                plt.show()
+                raw_input('MEANDERING_TI_plot')
+            raw_input('meta.MEANDERING_plot')
+        raw_input(';;;;;')
 
     return mfor,ffor,meta,meand
 
