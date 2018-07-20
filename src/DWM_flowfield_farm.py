@@ -141,7 +141,7 @@ def DWM_main_field_model(ID_waked,deficits,inlets_ffor,inlets_ffor_deficits,inle
         turb, inlets_ffor_turb = DWM_get_turb_dynamic(ffor, meta, turb, inlets_ffor_turb)
 
     # ############# Compute new axisymmetric flow for next turbine ##################################################
-    # ffor,inlets = DWM_make_inflow_to_mixl(meta,ffor,inlets)
+    #ffor,inlets = DWM_make_inflow_to_mixl(meta,ffor,inlets)
     # ############# Write relevant results in DWM variables #########################################################
     # if meta.full_output is True:
     # DWM                  = DWM_outputs(DWM,ffor,mfor,meta,aero,par,BEM)
@@ -730,7 +730,7 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
             plt.plot( DWM_TI_DATA, meta.vr_mixl, label='DWM TI at WT'+str(meta.wtg_ind[i_z]))
 
 
-        ### Correct DWM_TI_DATA so that no point to have lower TI than "TIamb"
+        ### Correct DWM_TI_DATA so that no point to have lower TI than "TIamb DWM"
         DWM_TI_DATA[DWM_TI_DATA < np.nanmean(meta.mean_TI_DWM)] = np.nanmean(meta.mean_TI_DWM)
 
         if meta.AINSLIE_Keck_details:
@@ -775,7 +775,6 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
 
             ffor.ffor_flow_field_TI_tmp_tmp[:, :]      = tmp_field_TI
             #TI_tot_FFoR(t)**2 = (0) + TI_DWM_FFoR(t)**2
-            print ffor.TI_axial_ffor_tmp[:, :, i_z]
             ffor.TI_axial_ffor_tmp[:, :, i_z]     = ffor.TI_axial_ffor_tmp[:, :, i_z] + ffor.ffor_flow_field_TI_tmp_tmp**2  # TI_M**2 + TI_DWM_FFoR
 
             if meta.MEANDERING_detail_plot:
@@ -832,9 +831,10 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
         ffor.x_vec_t[:, i_z]               = (meta.x_vec-meta.hub_x[i_z])/2.
         ffor.x_mat_t[:, :, i_z]              = np.tile(ffor.x_vec_t[:, i_z] .reshape(len(ffor.x_vec_t[:, i_z]),1),meta.ny)/2.
     #Personal add
-    TI_tot_FFoR = np.sqrt(ffor.TI_meand_axial_ffor**2 + ffor.TI_axial_ffor**2)
+    TI_tot_FFoR = (ffor.TI_meand_axial_ffor**2 + ffor.TI_axial_ffor**2)**0.5
     if meta.MEANDERING_plot:
         for i_z in np.arange(0, meta.nz, 1):
+
             if meta.MEANDERING_WS_plot:
                 plt.figure('Averaged Meandering WS for statistical approach (FFoR) at WT'+str(7-i_z))
                 plt.title('Averaged axial WS Field at WT' + str(7 - i_z))
@@ -842,29 +842,27 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
                 plt.xlabel('Lateral direction, x [D]'), plt.ylabel('Longitudinal direction, y [D]')
                 plt.colorbar(CF1)
 
-            if True:
+            if meta.MEANDERING_TI_plot:
                 plt.figure('Averaged Meandering TI for statistical approach (FFoR) at WT' + str(7 - i_z))
                 plt.subplot(131)
                 plt.title('Averaged axial TI at WT' + str(7 - i_z))
-                CF2 = plt.contourf(ffor.x_mat, ffor.y_mat, ffor.TI_axial_ffor[:, :, i_z])
+                plt.contourf(ffor.x_mat, ffor.y_mat, ffor.TI_axial_ffor[:, :, i_z])
                 plt.xlabel('Lateral direction, x [D]'), plt.ylabel('Longitudinal direction, y [D]')
-                plt.colorbar(CF2)
+                plt.colorbar()
 
                 plt.subplot(132)
                 plt.title('Averaged axial meandering TI at WT' + str(7 - i_z))
-                CF3 = plt.contourf(ffor.x_mat, ffor.y_mat, ffor.TI_meand_axial_ffor[:, :, i_z])
+                plt.contourf(ffor.x_mat, ffor.y_mat, ffor.TI_meand_axial_ffor[:, :, i_z])
                 plt.xlabel('Lateral direction, x [D]'), plt.ylabel('Longitudinal direction, y [D]')
-                plt.colorbar(CF3)
+                plt.colorbar()
 
                 plt.subplot(133)
                 plt.title('TI_tot_FFoR at WT' + str(7 - i_z))
-                CF4 = plt.contourf(ffor.x_mat, ffor.y_mat, TI_tot_FFoR[:, :, i_z])
+                plt.contourf(ffor.x_mat, ffor.y_mat, TI_tot_FFoR[:, :, i_z])
                 plt.xlabel('Lateral direction, x [D]'), plt.ylabel('Longitudinal direction, y [D]')
-                plt.colorbar(CF4)
-                plt.show()
-                raw_input('MEANDERING_TI_plot')
-            raw_input('meta.MEANDERING_plot')
-        raw_input(';;;;;')
+                plt.colorbar()
+        plt.show(block=True)
+
 
     return mfor,ffor,meta,meand
 

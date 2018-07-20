@@ -21,6 +21,8 @@ import matplotlib.pylab as plt
 import matplotlib._cntr as cntr
 import multiprocessing
 
+from ReadTurbulence import pre_init_turb
+
 
 ###########################################################################
 
@@ -44,6 +46,26 @@ def sDWM(derating,kwargs,xind):
     WT = wt.WindTurbine('Windturbine','../WT-data/'+WTG+'/'+WTG+'_PC.dat',HH,R)
     WF = wf.WindFarm('Windfarm',WTcoord,WT)
 
+    #########################################################################################################
+    if False:
+        filename = '1028'  # must come from sDWM Input
+        #R_wt = 46.5  # can come from sDWM
+        #WTG = 'NY2'  # can come from sDWM
+        #HH = 90.  # Hub height    # can come from sDWM
+
+        Rw = 1.  # try with no expansion
+
+
+        WF.U_mean = WS
+        WF.WT_R = WT.R
+        WF.WT_Rw = Rw
+        # WindFarm.lenght = 4000.
+
+        WT = wt.WindTurbine('Windturbine', '../WT-data/' + WTG + '/' + WTG + '_PC.dat', HH, WT.R)  # already present in sDWM
+        pre_init_turb(filename, WF, WT)
+        TI = WF.TI
+
+    ####################################################################################################################
     if optim is True:
         print 'Performing optimization'
         WT.CP = np.load('../WT-data/'+WTG+'/'+WTG+'_CP.npy')
@@ -90,30 +112,20 @@ def sDWM(derating,kwargs,xind):
 
     # Extreme wake to define WT's in each wake, including partial wakes
     # but it doesn't keep Rw, however Rw is an important quantity used to model Meandering Dynamic!
-    if dynamic is True:
-        print "Performing Dynamic"
-        ID_wake={}
-        ID_Rw={}
-        for i in range(WF.nWT):
-            Rw = get_Rw(x=distFlowCoord[0, id0[i], :], R=1. * WF.WT.R, TI=TI, CT=WT.get_CT(WS), pars=[0.435449861, 0.797853685, -0.124807893, 0.136821858, 15.6298, 1.0])
-            #print 'Rw: ', Rw
-            ID_wake[id0[i]] = (Rw >np.abs(distFlowCoord[1,id0[i],:])).nonzero()[0]
+    # I don't really understant what is following. (it comes from 2009 simple analytical wake model Glarsen)
+    # it seems to show wich wake we need for each iteration?
+    # To keep the thoughts of ewma I keep this part but I am not sure about this...
+    # For this reason we have to know TI from the turbulent box before this step.
 
-            ID_Rw[id0[i]]   = list(Rw[Rw.nonzero()])
-        #print 'ID_Rw {id: Rw}: '
-        print ID_Rw
-
-    #"""
-    if dynamic is False:
-        print "Not Performing Dynamic"
-        ID_wake = {id0[i]:(get_Rw(x=distFlowCoord[0,id0[i],:],\
-                                  R=2.*WF.WT.R,TI=TI,CT=WT.get_CT(WS),pars=[0.435449861,0.797853685,-0.124807893,0.136821858,15.6298,1.0])>\
+    ID_wake = {id0[i]:(get_Rw(x=distFlowCoord[0,id0[i],:],
+                                  R=2*WF.WT.R,TI=TI,CT=WT.get_CT(WS),pars=[0.435449861,0.797853685,-0.124807893,0.136821858,15.6298,1.0])>\
                                   np.abs(distFlowCoord[1,id0[i],:])).nonzero()[0] \
                    for i in range(WF.nWT)}
     #"""
-    #print 'ID_wake {id: id with a wake}: '
-    #print ID_wake
-
+    print 'ID_wake {id: id with a wake}: '
+    print ID_wake
+    print ID_wake[1]
+    #raw_input(';;;')
     # Power output list
     Farm_p_out=0.
     WT_p_out=np.zeros((WF.nWT))
@@ -160,7 +172,7 @@ def sDWM(derating,kwargs,xind):
          'C2C': C2C, # center 2 center distances between hubs
          'lx':np.ceil((2.*(max(abs(C2C))+WF.WT.R))/WF.WT.R), # length of the domain in lateral
          'ly':np.ceil((2.*(max(abs(C2C))+WF.WT.R))/WF.WT.R),  # length of the domain in longitudinal in D
-         # 'wake_ind_setting':1,
+         'wake_ind_setting':1,
          'accu_inlet': True,
          'derating': derating[row[0]],
          'optim': optim,

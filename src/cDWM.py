@@ -104,17 +104,18 @@ class Meta:
         self.AINSLIE_Keck_details = False
         self.BEM_AINSLIE_plot = False
 
-        self.MEANDERING_plot = True
+        self.MEANDERING_plot = False
         self.MEANDERING_detail_plot = False
         self.MEANDERING_WS_plot = False
-        self.MEANDERING_TI_plot = True
+        self.MEANDERING_TI_plot = False
+
+        self.TI_Dynamic_for_Loads_plot = False  # According to Keck Atmospheric shear and wake ... 2013-2015
 
         self.DEFICIT_plot = False
         self.DEFICIT_details = False # For Dynamic, it gives result in time
 
 
-        self.MEANDERING_WS_plot = False
-        self.MEANDERING_TI_plot = False
+
 
         # --------------------------------------------------------------------------
         # Model Specification Setting

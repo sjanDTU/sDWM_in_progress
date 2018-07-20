@@ -31,6 +31,23 @@ class WindFarm:
         self.vectWTtoWT=np.swapaxes([self.pos-np.repeat(np.atleast_2d \
             (self.pos[:,i]).T,self.nWT,axis=1) for i in range(self.nWT)],0,1)
 
+        ############################################################################
+        # Add for Turbulent analysis
+        self.U_mean = 0.
+
+        self.WT_R = 0.  # List of radius, but i think for the moment we should work with just one size, so a float!
+
+        self.WT_Rw = []  # for each WT, handle the list of Rw according to the distance in the flowcoord
+        # but for init we should work with a float!
+        self.lenght = 0.
+
+        self.TI = 0.
+        self.CT = 0.  # One value for all the wind Farm
+
+        self.stream_location_z = []
+        self.nodim_lenght = 0.
+        self.Rw_Max = 0.
+
     def __repr__(self):
         print "-------------------------------------------------------------"
         print "%s has %s %s wind turbines " %(self.name,self.nWT,self.WT.name)

@@ -184,7 +184,8 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor):
             ffor.ffor_flow_field_TI_tmp_tmp[:, :] = tmp_field_TI
             ffor.TI_axial_ffor[:, :, i_z, i_t] = ffor.ffor_flow_field_TI_tmp_tmp# ** 2
 
-
+    # Extract TI M and Construct TI_tot_FFoR in Time?
+    # Determine PDF(x_m,y_m)
 
     if meta.MEANDERING_plot:
 
