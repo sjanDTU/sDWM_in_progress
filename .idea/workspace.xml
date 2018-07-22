@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b1e85f50-429b-433c-a650-5d1954bfe52d" name="Default" comment="">
+    <list default="true" id="b1e85f50-429b-433c-a650-5d1954bfe52d" name="Default" comment="Meandering fully implemented:">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/DWM_flowfield_farm.py" afterPath="$PROJECT_DIR$/src/DWM_flowfield_farm.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/DWM_flowfield_farm_Dynamic.py" afterPath="$PROJECT_DIR$/src/DWM_flowfield_farm_Dynamic.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/RUN_sDWM_tests.py" afterPath="$PROJECT_DIR$/src/RUN_sDWM_tests.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cDWM.py" afterPath="$PROJECT_DIR$/src/cDWM.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sDWM.py" afterPath="$PROJECT_DIR$/src/sDWM.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -20,28 +17,27 @@
     <window id="4">
       <content type="file-editors">
         <state>
-          <leaf>
+          <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
             <file leaf-file-name="DWM_flowfield_farm_Dynamic.py" pinned="false" current-in-tab="true">
               <entry file="file://$PROJECT_DIR$/src/DWM_flowfield_farm_Dynamic.py">
                 <provider selected="true" editor-type-id="text-editor">
-                  <state relative-caret-position="306">
-                    <caret line="51" column="36" lean-forward="true" selection-start-line="51" selection-start-column="36" selection-end-line="51" selection-end-column="36" />
+                  <state relative-caret-position="357">
+                    <caret line="54" column="8" lean-forward="false" selection-start-line="54" selection-start-column="8" selection-end-line="54" selection-end-column="8" />
                     <folding>
                       <element signature="e#159#177#0" expanded="true" />
-                      <element signature="e#2532#11193#0" expanded="false" />
-                      <element signature="e#8252#8593#1" expanded="false" />
-                      <element signature="e#9171#11157#0" expanded="false" />
-                      <element signature="e#11297#17446#0" expanded="false" />
-                      <element signature="e#15614#17380#0" expanded="false" />
-                      <element signature="e#15657#15928#0" expanded="false" />
-                      <element signature="e#15977#17380#0" expanded="false" />
-                      <element signature="e#16045#16602#0" expanded="false" />
-                      <element signature="e#17513#22283#0" expanded="false" />
-                      <element signature="e#20520#22250#0" expanded="false" />
-                      <element signature="e#20563#20815#0" expanded="false" />
-                      <element signature="e#20864#22250#0" expanded="false" />
-                      <element signature="e#20932#21482#0" expanded="false" />
-                      <element signature="e#22387#33384#0" expanded="false" />
+                      <element signature="e#8548#8889#1" expanded="false" />
+                      <element signature="e#9467#11453#0" expanded="false" />
+                      <element signature="e#11593#17742#0" expanded="false" />
+                      <element signature="e#15910#17676#0" expanded="false" />
+                      <element signature="e#15953#16224#0" expanded="false" />
+                      <element signature="e#16273#17676#0" expanded="false" />
+                      <element signature="e#16341#16898#0" expanded="false" />
+                      <element signature="e#17809#22579#0" expanded="false" />
+                      <element signature="e#20816#22546#0" expanded="false" />
+                      <element signature="e#20859#21111#0" expanded="false" />
+                      <element signature="e#21160#22546#0" expanded="false" />
+                      <element signature="e#21228#21778#0" expanded="false" />
+                      <element signature="e#22683#33680#0" expanded="false" />
                     </folding>
                   </state>
                 </provider>
@@ -67,8 +63,8 @@
       <file leaf-file-name="Polar_Interpolate_Data_Plan.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Polar_Interpolate_Data_Plan.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="18" column="25" lean-forward="true" selection-start-line="18" selection-start-column="25" selection-end-line="18" selection-end-column="25" />
+            <state relative-caret-position="187">
+              <caret line="18" column="25" lean-forward="false" selection-start-line="18" selection-start-column="25" selection-end-line="18" selection-end-column="25" />
               <folding>
                 <element signature="e#9#27#0" expanded="true" />
               </folding>
@@ -79,45 +75,32 @@
       <file leaf-file-name="WindTurbine.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/WindTurbine.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
-              <caret line="109" column="18" lean-forward="true" selection-start-line="109" selection-start-column="18" selection-end-line="109" selection-end-column="18" />
+            <state relative-caret-position="1819">
+              <caret line="109" column="18" lean-forward="false" selection-start-line="109" selection-start-column="18" selection-end-line="109" selection-end-column="18" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Meandering_Main.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Meandering_Main.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Meandering_Main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="287" column="0" lean-forward="true" selection-start-line="287" selection-start-column="0" selection-end-line="287" selection-end-column="0" />
+            <state relative-caret-position="1997">
+              <caret line="287" column="0" lean-forward="false" selection-start-line="287" selection-start-column="0" selection-end-line="287" selection-end-column="0" />
               <folding>
                 <element signature="e#363#381#0" expanded="true" />
                 <element signature="e#2188#2668#1" expanded="false" />
                 <element signature="e#2829#5813#1" expanded="false" />
                 <element signature="e#5899#7837#1" expanded="false" />
                 <element signature="e#11391#13860#0" expanded="false" />
+                <element signature="e#12946#13830#1" expanded="false" />
                 <element signature="e#13919#16147#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Plot_Function.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Plot_Function.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding>
-                <element signature="e#218#1184#0" expanded="false" />
-                <element signature="e#1227#1612#0" expanded="false" />
-                <element signature="e#1662#2234#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="cTurb.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="cTurb.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/cTurb.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="136">
@@ -135,7 +118,7 @@
       <file leaf-file-name="DWM_flowfield_farm.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/DWM_flowfield_farm.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="235">
+            <state relative-caret-position="184">
               <caret line="83" column="117" lean-forward="false" selection-start-line="83" selection-start-column="117" selection-end-line="83" selection-end-column="117" />
               <folding>
                 <element signature="e#136#154#0" expanded="true" />
@@ -167,9 +150,25 @@
       <file leaf-file-name="sDWM.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/sDWM.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="293">
-              <caret line="162" column="22" lean-forward="false" selection-start-line="162" selection-start-column="22" selection-end-line="162" selection-end-column="22" />
+            <state relative-caret-position="531">
+              <caret line="65" column="19" lean-forward="false" selection-start-line="65" selection-start-column="19" selection-end-line="65" selection-end-column="19" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ReadTurbulence.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/ReadTurbulence.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-64">
+              <caret line="232" column="16" lean-forward="true" selection-start-line="232" selection-start-column="16" selection-end-line="232" selection-end-column="16" />
+              <folding>
+                <element signature="e#78#96#0" expanded="true" />
+                <element signature="e#242#1408#0" expanded="false" />
+                <element signature="e#1444#1959#0" expanded="false" />
+                <element signature="e#2005#3492#0" expanded="false" />
+                <element signature="e#3584#7407#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -232,15 +231,15 @@
         <option value="$PROJECT_DIR$/src/ReadTurbulence.py" />
         <option value="$PROJECT_DIR$/src/Polar_Interpolate_Data_Plan.py" />
         <option value="$PROJECT_DIR$/src/cDWM.py" />
-        <option value="$PROJECT_DIR$/src/sDWM.py" />
         <option value="$PROJECT_DIR$/src/DWM_flowfield_farm.py" />
-        <option value="$PROJECT_DIR$/src/DWM_flowfield_farm_Dynamic.py" />
         <option value="$PROJECT_DIR$/src/RUN_sDWM_tests.py" />
         <option value="$PROJECT_DIR$/src/cTurb.py" />
+        <option value="$PROJECT_DIR$/src/sDWM.py" />
+        <option value="$PROJECT_DIR$/src/DWM_flowfield_farm_Dynamic.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="653" />
     <option name="y" value="14" />
     <option name="width" value="700" />
@@ -486,13 +485,12 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="653" y="14" width="700" height="775" extended-state="0" />
-    <editor active="true" />
+    <frame x="-8" y="-8" width="1382" height="784" extended-state="6" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.36789772" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.21752267" sideWeight="0.5053476" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2839879" sideWeight="0.49465242" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28315946" sideWeight="0.49465242" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -578,14 +576,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="136">
           <caret line="8" column="0" lean-forward="false" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
-          <folding>
-            <element signature="e#334#10876#0" expanded="false" />
-            <element signature="e#4029#4517#0" expanded="false" />
-            <element signature="e#10934#13910#0" expanded="false" />
-            <element signature="e#14052#19645#0" expanded="false" />
-            <element signature="e#27467#27805#0" expanded="false" />
-            <element signature="e#27986#29879#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -593,9 +583,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
           <caret line="25" column="28" lean-forward="false" selection-start-line="25" selection-start-column="28" selection-end-line="25" selection-end-column="28" />
-          <folding>
-            <element signature="e#0#18#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -647,9 +635,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#18#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -708,9 +694,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#18#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -769,9 +753,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#18#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -830,9 +812,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#18#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -891,9 +871,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#18#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -952,9 +930,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#18#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1051,48 +1027,83 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/Program Files/RetroFlow Chart/RetroFlow.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://C:/Program Files/RetroFlow Chart/RetroFlow.py" />
     <entry file="file://$PROJECT_DIR$/src/DWM_calc_mixL.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="89">
           <caret line="12" column="39" lean-forward="false" selection-start-line="12" selection-start-column="39" selection-end-line="12" selection-end-column="39" />
-          <folding>
-            <element signature="e#334#10876#0" expanded="false" />
-            <element signature="e#4029#4517#0" expanded="false" />
-            <element signature="e#10934#13910#0" expanded="false" />
-            <element signature="e#14052#19645#0" expanded="false" />
-            <element signature="e#27467#27805#0" expanded="false" />
-            <element signature="e#27986#29879#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/cMann.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cMann.py" />
     <entry file="file://$PROJECT_DIR$/src/WindFarm.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="327">
           <caret line="48" column="24" lean-forward="false" selection-start-line="48" selection-start-column="24" selection-end-line="48" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DWM_GClarsenPicks.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1479">
+          <caret line="87" column="0" lean-forward="false" selection-start-line="87" selection-start-column="0" selection-end-line="87" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Polar_Interpolate_Data_Plan.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="18" column="25" lean-forward="false" selection-start-line="18" selection-start-column="25" selection-end-line="18" selection-end-column="25" />
+          <folding>
+            <element signature="e#9#27#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/WindTurbine.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1819">
+          <caret line="109" column="18" lean-forward="false" selection-start-line="109" selection-start-column="18" selection-end-line="109" selection-end-column="18" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/RUN_sDWM_tests.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="26" column="29" lean-forward="false" selection-start-line="26" selection-start-column="29" selection-end-line="26" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Plot_Function.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#218#1184#0" expanded="false" />
+            <element signature="e#1227#1612#0" expanded="false" />
+            <element signature="e#1662#2234#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cTurb.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="14" lean-forward="false" selection-start-line="8" selection-start-column="14" selection-end-line="8" selection-end-column="14" />
+          <folding>
+            <element signature="e#152#1856#0" expanded="false" />
+            <element signature="e#1890#3076#0" expanded="false" />
+            <element signature="e#3103#3499#0" expanded="false" />
+            <element signature="e#3523#4217#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/ReadTurbulence.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="395">
+        <state relative-caret-position="-64">
           <caret line="232" column="16" lean-forward="true" selection-start-line="232" selection-start-column="16" selection-end-line="232" selection-end-column="16" />
           <folding>
             <element signature="e#78#96#0" expanded="true" />
@@ -1101,14 +1112,6 @@
             <element signature="e#2005#3492#0" expanded="false" />
             <element signature="e#3584#7407#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/DWM_GClarsenPicks.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1479">
-          <caret line="87" column="0" lean-forward="false" selection-start-line="87" selection-start-column="0" selection-end-line="87" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1128,15 +1131,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sDWM.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="293">
-          <caret line="162" column="22" lean-forward="false" selection-start-line="162" selection-start-column="22" selection-end-line="162" selection-end-column="22" />
+        <state relative-caret-position="531">
+          <caret line="65" column="19" lean-forward="false" selection-start-line="65" selection-start-column="19" selection-end-line="65" selection-end-column="19" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/DWM_flowfield_farm.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="235">
+        <state relative-caret-position="184">
           <caret line="83" column="117" lean-forward="false" selection-start-line="83" selection-start-column="117" selection-end-line="83" selection-end-column="117" />
           <folding>
             <element signature="e#136#154#0" expanded="true" />
@@ -1166,90 +1169,39 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/DWM_flowfield_farm_Dynamic.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="51" column="36" lean-forward="true" selection-start-line="51" selection-start-column="36" selection-end-line="51" selection-end-column="36" />
+        <state relative-caret-position="357">
+          <caret line="54" column="8" lean-forward="false" selection-start-line="54" selection-start-column="8" selection-end-line="54" selection-end-column="8" />
           <folding>
             <element signature="e#159#177#0" expanded="true" />
-            <element signature="e#2532#11193#0" expanded="false" />
-            <element signature="e#8252#8593#1" expanded="false" />
-            <element signature="e#9171#11157#0" expanded="false" />
-            <element signature="e#11297#17446#0" expanded="false" />
-            <element signature="e#15614#17380#0" expanded="false" />
-            <element signature="e#15657#15928#0" expanded="false" />
-            <element signature="e#15977#17380#0" expanded="false" />
-            <element signature="e#16045#16602#0" expanded="false" />
-            <element signature="e#17513#22283#0" expanded="false" />
-            <element signature="e#20520#22250#0" expanded="false" />
-            <element signature="e#20563#20815#0" expanded="false" />
-            <element signature="e#20864#22250#0" expanded="false" />
-            <element signature="e#20932#21482#0" expanded="false" />
-            <element signature="e#22387#33384#0" expanded="false" />
+            <element signature="e#8548#8889#1" expanded="false" />
+            <element signature="e#9467#11453#0" expanded="false" />
+            <element signature="e#11593#17742#0" expanded="false" />
+            <element signature="e#15910#17676#0" expanded="false" />
+            <element signature="e#15953#16224#0" expanded="false" />
+            <element signature="e#16273#17676#0" expanded="false" />
+            <element signature="e#16341#16898#0" expanded="false" />
+            <element signature="e#17809#22579#0" expanded="false" />
+            <element signature="e#20816#22546#0" expanded="false" />
+            <element signature="e#20859#21111#0" expanded="false" />
+            <element signature="e#21160#22546#0" expanded="false" />
+            <element signature="e#21228#21778#0" expanded="false" />
+            <element signature="e#22683#33680#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Polar_Interpolate_Data_Plan.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="18" column="25" lean-forward="true" selection-start-line="18" selection-start-column="25" selection-end-line="18" selection-end-column="25" />
-          <folding>
-            <element signature="e#9#27#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/WindTurbine.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="109" column="18" lean-forward="true" selection-start-line="109" selection-start-column="18" selection-end-line="109" selection-end-column="18" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/RUN_sDWM_tests.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="26" column="29" lean-forward="false" selection-start-line="26" selection-start-column="29" selection-end-line="26" selection-end-column="29" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Meandering_Main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="287" column="0" lean-forward="true" selection-start-line="287" selection-start-column="0" selection-end-line="287" selection-end-column="0" />
+        <state relative-caret-position="1997">
+          <caret line="287" column="0" lean-forward="false" selection-start-line="287" selection-start-column="0" selection-end-line="287" selection-end-column="0" />
           <folding>
             <element signature="e#363#381#0" expanded="true" />
             <element signature="e#2188#2668#1" expanded="false" />
             <element signature="e#2829#5813#1" expanded="false" />
             <element signature="e#5899#7837#1" expanded="false" />
             <element signature="e#11391#13860#0" expanded="false" />
+            <element signature="e#12946#13830#1" expanded="false" />
             <element signature="e#13919#16147#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Plot_Function.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#218#1184#0" expanded="false" />
-            <element signature="e#1227#1612#0" expanded="false" />
-            <element signature="e#1662#2234#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cTurb.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" column="14" lean-forward="false" selection-start-line="8" selection-start-column="14" selection-end-line="8" selection-end-column="14" />
-          <folding>
-            <element signature="e#152#1856#0" expanded="false" />
-            <element signature="e#1890#3076#0" expanded="false" />
-            <element signature="e#3103#3499#0" expanded="false" />
-            <element signature="e#3523#4217#0" expanded="false" />
           </folding>
         </state>
       </provider>

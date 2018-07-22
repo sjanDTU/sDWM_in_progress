@@ -63,7 +63,7 @@ def sDWM(derating,kwargs,xind):
 
         WT = wt.WindTurbine('Windturbine', '../WT-data/' + WTG + '/' + WTG + '_PC.dat', HH, WT.R)  # already present in sDWM
         TurBox, WF = pre_init_turb(filename, WF, WT)
-        TI = WF.TI
+        TI = TurBox.TI
 
     ####################################################################################################################
     if optim is True:

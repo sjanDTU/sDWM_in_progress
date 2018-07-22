@@ -48,6 +48,11 @@ def get_Meandering_dynamic_V2(meta, meand, TurBox, WF):
             WF.stream_location_z = meta.z_vec
             DWM_extract_meandering_from_TurbBox(TurBox, WF)
         meand.WakesCentersLocations_in_time = np.load('WAKES.NPY')[meta.iT]
+        meand.time = meand.WakesCentersLocations_in_time[0][:, 0]  # ; print 'meand time : ', meand.time
+        meand.nt = len(meand.time)  # ; print 'number of time points: ', meand.nt
+
+        meta.time = meand.time
+        meta.nt = meand.nt
 
     # Change the referential to FFoR
     for i_z in np.arange(0, meta.nz, 1):
@@ -86,6 +91,7 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor):
     # initiate/reset Cartesian flow field
 
     if not meta.working_with_meandering_statistical_data:
+        print 'number of time points: ', meand.nt
         DATA_from_Meandering_part = meand.WakesCentersLocations_in_time
     else:
         meand.nt = len(meand.time);
