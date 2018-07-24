@@ -69,7 +69,8 @@ class Meta:
         self.atmo_stab             = 'N'
         self.k1                    = 0.0919 # k1 = 0.0919 & k2 = 0.0178 yields the best fit to AL calibration data according to Keck et al. [5].
         self.k2                    = 0.0178  # in Keck we can compare with k1 0.914 and k2 = 0.0216
-
+        self.k_amb_Madsen = 0.07          # Madsen eddy viscosity for F1
+        self.k2_Madsen = 0.008            # for F2
         ## Model flags
         self.Tbuildup_setting      = 1 # 1 = on # flag to control the buildup of turbulence along turbine rows, if disabled TI is equal to free stream TI
         self.wake_ind_setting      = 1 # 1 = on # flag to control the wake accumulation along turbine rows, if disabled U is equal to free stream velocity
@@ -101,13 +102,14 @@ class Meta:
         # Plot Setting Options
         self.BEM_plot = False
         self.AINSLIE_plot = False
-        self.AINSLIE_Keck_details = False
+        self.AINSLIE_Keck_details = True
         self.BEM_AINSLIE_plot = False
 
-        self.MEANDERING_plot = False
+        self.MEANDERING_plot = True
+        self.MEANDERING_Total_plot = True
         self.MEANDERING_detail_plot = False
         self.MEANDERING_WS_plot = False
-        self.MEANDERING_TI_plot = False
+        self.MEANDERING_TI_plot = True
 
         self.TI_Dynamic_for_Loads_plot = False  # According to Keck Atmospheric shear and wake ... 2013-2015
 
@@ -120,18 +122,25 @@ class Meta:
         # --------------------------------------------------------------------------
         # Model Specification Setting
         # Put only one True
-        self.previous_sDWM = False
+        self.previous_sDWM = True
 
         # Not implemented for the moment
-        self.previous_sDWM_working_with_a_MannBox = False # we not use the original Meand matrix but data
+        self.previous_sDWM_working_with_a_MannBox = True # we not use the original Meand matrix but data
         # from the meandering part for dynamic
         # Run the code as before, with a statistical approach of the meandering, no time consideration
-
-
+        if self.previous_sDWM:
+            self.steadyBEM_AINSLIE=False
+            self.use_saved_data = False
+            self.working_with_meandering_statistical_data = False
+            self.Keck= True
+            self.Madsen = False
         if not self.previous_sDWM:
             self.steadyBEM_AINSLIE = True  # if True, BEM_Ainslie use the average deficit
+
+            self.Keck = False
+            self.Madsen = True
             if self.steadyBEM_AINSLIE:
-                self.use_saved_data = False
+                self.use_saved_data = True
                 # Could be used for fair comparison with previous sDWM
                 self.working_with_meandering_statistical_data = False
         # In the dynamic approach, we can average the deficits (and turbulence) in time,

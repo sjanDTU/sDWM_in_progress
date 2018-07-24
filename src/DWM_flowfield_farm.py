@@ -720,22 +720,43 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
             #print 'DWM_WS_DATA: ', DWM_WS_DATA
 
 
+
         except:
             print 'Fatal error, possibly due to a too low turbulence intensity with respect to the demanded mean wind speed, try increase the input TI'
-        DWM_TI_DATA = mfor.TI_DWM[meta.vz[i_z],:]
-        #print 'DWM_TI_DATA: ', DWM_TI_DATA
 
+        if not meta.Madsen:
+            km_r = 1
+
+        if meta.Madsen or True:
+            #print 'DWM_TI_DATA: ', DWM_TI_DATA
+            # MADSEN Scaling for Turbulence:
+            km1 = 0.6
+            km2 = 0.035
+            Udef = 1 - DWM_WS_DATA
+            # derive U by r:
+            dUdef_dr_r = [0] + [(Udef[i_r + 1] - Udef[i_r]) / (meta.vr_mixl[i_r + 1] - meta.vr_mixl[i_r]) for i_r
+                             in range(len(meta.vr_mixl) - 1)]
+            dU_dr_r = np.array(dUdef_dr_r)
+
+            km_r = np.abs(1-Udef) * km1 + np.abs(dUdef_dr_r) * km2
+        DWM_TI_DATA = mfor.TI_DWM[meta.vz[i_z], :]
         if meta.AINSLIE_Keck_details:
+            plt.figure()
+            plt.plot(km_r, meta.vr_mixl, label='km_r')
+            plt.plot(DWM_WS_DATA, meta.vr_mixl, label='WS profile')
+            plt.legend()
+            plt.show()
             plt.figure('Turbulence Intensity Correction')
             plt.plot( DWM_TI_DATA, meta.vr_mixl, label='DWM TI at WT'+str(meta.wtg_ind[i_z]))
-
 
         ### Correct DWM_TI_DATA so that no point to have lower TI than "TIamb DWM"
         DWM_TI_DATA[DWM_TI_DATA < np.nanmean(meta.mean_TI_DWM)] = np.nanmean(meta.mean_TI_DWM)
 
         if meta.AINSLIE_Keck_details:
+            plt.plot(km_r/10, meta.vr_mixl, label='km_r')
             plt.plot(DWM_TI_DATA, meta.vr_mixl, label='Corrected for TI amb')
             plt.legend()
+            plt.show()
 
 
         #for i_t in np.arange(0, 2, 1):
@@ -775,7 +796,8 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
 
             ffor.ffor_flow_field_TI_tmp_tmp[:, :]      = tmp_field_TI
             #TI_tot_FFoR(t)**2 = (0) + TI_DWM_FFoR(t)**2
-            ffor.TI_axial_ffor_tmp[:, :, i_z]     = ffor.TI_axial_ffor_tmp[:, :, i_z] + ffor.ffor_flow_field_TI_tmp_tmp**2  # TI_M**2 + TI_DWM_FFoR
+            ffor.TI_axial_ffor_tmp[:, :, i_z]     = ffor.TI_axial_ffor_tmp[:, :, i_z] + ffor.ffor_flow_field_TI_tmp_tmp**2
+            # (0...) + TI_DWM_FFoR ( don't carry TI_m for Turb, 'Apparent TI')
 
             if meta.MEANDERING_detail_plot:
                 plt.subplot(131)
@@ -822,7 +844,7 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
     for i_z in np.arange(0,meta.nz,1):
         #### Here we average all time related data along the z-axis
         # don't keep this part for dynamic
-        #TI_M_FFoR?
+        #TI_M_FFoR?  abs( on the mean of the square + square of the mean)
         ffor.TI_meand_axial_ffor[:, :, i_z]=np.sqrt(abs(ffor.ffor_flow_field_ws_tmp2[:, :, i_z] - ((ffor.WS_axial_ffor_tmp[:, :, i_z]**2)/len(meand.time)) )/ (len(meand.time)-1.0))
         ffor.WS_axial_ffor[:, :, i_z]      = (ffor.WS_axial_ffor_tmp[:, :, i_z]  / len(meand.time))
         # TI_tot_FFoR? TI_DWM_FFOR averaged and used to get turb /!\
@@ -830,10 +852,14 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
 
         ffor.x_vec_t[:, i_z]               = (meta.x_vec-meta.hub_x[i_z])/2.
         ffor.x_mat_t[:, :, i_z]              = np.tile(ffor.x_vec_t[:, i_z] .reshape(len(ffor.x_vec_t[:, i_z]),1),meta.ny)/2.
+
     #Personal add
     TI_tot_FFoR = (ffor.TI_meand_axial_ffor**2 + ffor.TI_axial_ffor**2)**0.5
+
     if meta.MEANDERING_plot:
         for i_z in np.arange(0, meta.nz, 1):
+            TI_MAX = np.nanmax(TI_tot_FFoR[:, :, i_z])
+            TI_MIN = np.nanmin([np.nanmin(ffor.TI_axial_ffor[:, :, i_z]), np.nanmin(ffor.TI_meand_axial_ffor[:, :, i_z])])
 
             if meta.MEANDERING_WS_plot:
                 plt.figure('Averaged Meandering WS for statistical approach (FFoR) at WT'+str(7-i_z))
@@ -846,19 +872,19 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
                 plt.figure('Averaged Meandering TI for statistical approach (FFoR) at WT' + str(7 - i_z))
                 plt.subplot(131)
                 plt.title('Averaged axial TI at WT' + str(7 - i_z))
-                plt.contourf(ffor.x_mat, ffor.y_mat, ffor.TI_axial_ffor[:, :, i_z])
+                plt.contourf(ffor.x_mat, ffor.y_mat, ffor.TI_axial_ffor[:, :, i_z], np.linspace(TI_MIN,TI_MAX,30))
                 plt.xlabel('Lateral direction, x [D]'), plt.ylabel('Longitudinal direction, y [D]')
                 plt.colorbar()
 
                 plt.subplot(132)
                 plt.title('Averaged axial meandering TI at WT' + str(7 - i_z))
-                plt.contourf(ffor.x_mat, ffor.y_mat, ffor.TI_meand_axial_ffor[:, :, i_z])
+                plt.contourf(ffor.x_mat, ffor.y_mat, ffor.TI_meand_axial_ffor[:, :, i_z], np.linspace(TI_MIN,TI_MAX,30))
                 plt.xlabel('Lateral direction, x [D]'), plt.ylabel('Longitudinal direction, y [D]')
                 plt.colorbar()
 
                 plt.subplot(133)
                 plt.title('TI_tot_FFoR at WT' + str(7 - i_z))
-                plt.contourf(ffor.x_mat, ffor.y_mat, TI_tot_FFoR[:, :, i_z])
+                plt.contourf(ffor.x_mat, ffor.y_mat, TI_tot_FFoR[:, :, i_z], np.linspace(TI_MIN,TI_MAX,30))
                 plt.xlabel('Lateral direction, x [D]'), plt.ylabel('Longitudinal direction, y [D]')
                 plt.colorbar()
         plt.show(block=True)

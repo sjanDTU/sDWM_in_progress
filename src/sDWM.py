@@ -139,6 +139,7 @@ def sDWM(derating,kwargs,xind):
     RPM_plot=[]
     PITCH_plot=[]
     ## Main DWM loop over turbines
+    FFOR_result = []
     for iT in range(WF.nWT):
         # Define flow case geometry
         cWT = id0[iT]
@@ -160,7 +161,7 @@ def sDWM(derating,kwargs,xind):
 
         print 'row', row
         print C2C
-        raw_input('...')
+        #raw_input('...')
         # Wrapping the DWM core model with I/O
         par={
          'WS':WS,
@@ -186,8 +187,80 @@ def sDWM(derating,kwargs,xind):
         #"""
         if dynamic:
             aero, meta, mfor, ffor, DWM, deficits, inlets_ffor, inlets_ffor_deficits, inlets_ffor_turb, turb, out, ID_waked = DWM_main_field_model_partly_dynamic(ID_waked,deficits,inlets_ffor,inlets_ffor_deficits,inlets_ffor_turb,turb,DWM,out, TurBox, WF,**par)
+            if meta.iT == 0:
+                FFOR_result = ffor.WS_axial_ffor
+            else:
+                FFOR_result[:,:,meta.iT:,:] = FFOR_result[:,:,meta.iT:,:] + ffor.WS_axial_ffor
+            #raw_input('....')
+            if meta.MEANDERING_Total_plot:
+
+                plt.ion()
+                plt.figure('Meandering draw in time for each turbine in the wake')
+
+                x = ffor.x_vec
+                y = ffor.y_vec
+                # X, Y = np.meshgrid(x, y)
+                X, Y = ffor.x_mat, ffor.y_mat
+                ref_rotor_x_emitting = (meta.hub_x[0] + np.cos(np.linspace(-pi, pi))) / 2.
+                ref_rotor_y_emitting = (meta.hub_y + np.sin(np.linspace(-pi, pi))) / 2.
+                for i_z in np.arange(0, 3):
+                    # for i_z in np.arange(0, meta.nz):
+                    ref_rotor_x_concerned = (meta.hub_x[i_z] + np.cos(np.linspace(-pi, pi))) / 2.
+                    ref_rotor_y_concerned = (meta.hub_y + np.sin(np.linspace(-pi, pi))) / 2.
+                    for i_t in np.arange(0, meta.nt, 2):
+                        plt.cla()
+                        plt.clf()
+                        print 'i_t = ', i_t
+                        if True:
+                            plt.subplot(121)
+                            CS1 = plt.contourf(X, Y, FFOR_result[:, :, i_z, i_t], np.linspace(0., 1., 20))
+                            plt.xlabel('x'), plt.ylabel('y'), plt.title(
+                                'Axial WS FFoR for Turbine ' + str(meta.wtg_ind[i_z]))  # 7-iz
+                            plt.plot(ref_rotor_x_emitting, ref_rotor_y_emitting, 'r', label='WT emitting')
+                            plt.plot(ref_rotor_x_concerned, ref_rotor_y_concerned, 'k', label='WT concerned')
+                            plt.legend()
+                            plt.colorbar(CS1)
+                            plt.draw()
+                            plt.pause(0.0001)
         else:
             aero, meta, mfor, ffor, DWM, deficits,inlets_ffor,inlets_ffor_deficits, inlets_ffor_turb,turb, out,ID_waked = DWM_main_field_model(ID_waked,deficits,inlets_ffor,inlets_ffor_deficits,inlets_ffor_turb,turb,DWM,out,**par)
+            if meta.steadyBEM_AINSLIE:
+                if meta.iT == 0:
+                    FFOR_result = ffor.WS_axial_ffor
+                else:
+                    FFOR_result[:, :, meta.iT:, :] = FFOR_result[:, :, meta.iT:, :] + ffor.WS_axial_ffor
+                # raw_input('....')
+                if meta.MEANDERING_Total_plot:
+
+                    plt.ion()
+                    plt.figure('Meandering draw in time for each turbine in the wake')
+
+                    x = ffor.x_vec
+                    y = ffor.y_vec
+                    # X, Y = np.meshgrid(x, y)
+                    X, Y = ffor.x_mat, ffor.y_mat
+                    ref_rotor_x_emitting = (meta.hub_x[0] + np.cos(np.linspace(-pi, pi))) / 2.
+                    ref_rotor_y_emitting = (meta.hub_y + np.sin(np.linspace(-pi, pi))) / 2.
+                    for i_z in np.arange(0, 3):
+                        # for i_z in np.arange(0, meta.nz):
+                        ref_rotor_x_concerned = (meta.hub_x[i_z] + np.cos(np.linspace(-pi, pi))) / 2.
+                        ref_rotor_y_concerned = (meta.hub_y + np.sin(np.linspace(-pi, pi))) / 2.
+                        for i_t in np.arange(0, meta.nt, 4):
+                            plt.cla()
+                            plt.clf()
+                            print 'i_t = ', i_t
+                            if True:
+                                plt.subplot(121)
+                                CS1 = plt.contourf(X, Y, FFOR_result[:, :, i_z, i_t])#, np.linspace(0., 1., 20))
+                                plt.xlabel('x'), plt.ylabel('y'), plt.title(
+                                    'Axial WS FFoR for Turbine ' + str(meta.wtg_ind[i_z]))  # 7-iz
+                                plt.plot(ref_rotor_x_emitting, ref_rotor_y_emitting, 'r', label='WT emitting')
+                                plt.plot(ref_rotor_x_concerned, ref_rotor_y_concerned, 'k', label='WT concerned')
+                                plt.legend()
+                                plt.colorbar(CS1)
+                                plt.draw()
+                                plt.pause(0.0001)
+                    plt.ioff()
         # Farm_p_out= Farm_p_out+out[str(meta.wtg_ind[0])][4] # based on power curve
 
         # /!\/!\ not put in commentary this  /!\/!\

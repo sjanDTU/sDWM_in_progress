@@ -289,9 +289,16 @@ def DWM_eddy_viscosity(mfor,meta,width,visc_wake,visc_wake1,visc_wake2,F1_vector
     #max operator is included in the eddy viscosity formulation to avoid underestimating the
     #turbulent stresses at locations where the velocity gradient of the deficit du_dr approaches zero
     # Atmospheric eddy visc as u*l*, yields total eddy viscosity
-    visc_norm_factor      = 6.3918 # Applied to use Keck et al. [3] calibration
-    mfor.visc[j-1,:]           = F1_vector[j-1]*meta.k1*visc_norm_factor*u_star_DEF*l_star_DEF + visc_wake[j-1,:]
 
+    if meta.Keck or meta.previous_sDWM:
+        visc_norm_factor      = 6.3918 # Applied to use Keck et al. [3] calibration
+        mfor.visc[j-1,:]           = F1_vector[j-1]*meta.k1*visc_norm_factor*u_star_DEF*l_star_DEF + visc_wake[j-1,:]
+
+    if meta.Madsen:
+        visc_wake[j - 1, :] = F2_vector[j-1]* meta.k2_Madsen *( meta.vr_mixl[width[j-1]-1]/meta.R_WTG )   * (1.0 - np.min(mfor.U[j-1,:]) )
+        mfor.visc[j-1,:] = F1_vector[j-1] * meta.k_amb_Madsen * meta.mean_TI_DWM+ visc_wake[j - 1,:]
+        # Madsen visc presented November 2010 'Calibration and Validation of DWM for implementation in an aero code'
+        #raise Exception('Eddy Visc Not Implemented for now')
     ## Include contribution from atmospheric boundary layer on DWM
     ##  turbulent stresses. This effect is taken into account by:
     # 1. Calculate the azimuthally averaged local gradient (du/dr tot) acting of the eddy viscosity as a combination of du/dr in the DWM model and du/dz from ABL

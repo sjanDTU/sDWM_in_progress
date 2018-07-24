@@ -14,7 +14,7 @@ from Meandering_Main import DWM_extract_meandering_from_TurbBox
 
 
 def get_Meandering_dynamic(meta, meand):
-    if meta.use_saved_data:
+    if meta.use_saved_data or meta.previous_sDWM_working_with_a_MannBox:
         # New Version for Multiple wake meandering
         meand.WakesCentersLocations_in_time = np.load(
               'C:/Users/augus/Documents/Stage/Codes/Mann_Turbulence/Result/Center_Position_in_time_Lillgrund/z_time_center_location.NPY')[meta.iT]
@@ -107,7 +107,7 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor):
     ffor.WS_axial_ffor_tmp = np.zeros((meta.nx, meta.ny, meta.nz, meta.nt))  # X = lateral ,Y = vertical, time ,Z = streamwise, t = time
     ffor.ffor_flow_field_ws_tmp2 = np.zeros((meta.nx, meta.ny, meta.nz, meta.nt))  # X = lateral ,Y = vertical, time ,Z = streamwise, t=time
 
-    ffor.TI_meand_axial_ffor = np.zeros((meta.nx, meta.ny, meta.nz))
+    ffor.TI_meand_axial_ffor = np.zeros((meta.nx, meta.ny, meta.nz, meta.nt))
     ffor.WS_axial_ffor = np.zeros((meta.nx, meta.ny, meta.nz, meta.nt))
     ffor.TI_axial_ffor = np.zeros((meta.nx, meta.ny, meta.nz, meta.nt))
 
@@ -213,7 +213,8 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor):
             ffor.TI_axial_ffor[:, :, i_z, i_t] = ffor.ffor_flow_field_TI_tmp_tmp# ** 2
 
     # Extract TI M and Construct TI_tot_FFoR in Time?
-    # Determine PDF(x_m,y_m)
+    #ffor.TI_meand_axial_ffor = #???
+    # Determine PDF(x_m,y_m), should be not considered in not statistical study
 
     if meta.MEANDERING_plot:
 
@@ -226,7 +227,7 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor):
         X, Y = ffor.x_mat, ffor.y_mat
         ref_rotor_x_emitting = (meta.hub_x[0] + np.cos(np.linspace(-pi, pi))) / 2.
         ref_rotor_y_emitting =(meta.hub_y + np.sin(np.linspace(-pi, pi))) / 2.
-        for i_z in np.arange(1, 3):
+        for i_z in np.arange(0, 3):
         #for i_z in np.arange(0, meta.nz):
             ref_rotor_x_concerned = (meta.hub_x[i_z] + np.cos(np.linspace(-pi, pi))) / 2.
             ref_rotor_y_concerned =(meta.hub_y + np.sin(np.linspace(-pi, pi))) / 2.
@@ -351,8 +352,8 @@ def DWM_get_deficit_FFOR_dynamic(ffor, meta,deficits,ID_waked,inlets_ffor,inlets
                     plt.title('WT' + str(meta.wtg_ind[i_z]) + ' deficits in time')
                     plt.plot(meta.time, deficits_in_time[str(meta.wtg_ind[i_z])][-1], label='temporal data')
                     plt.plot(meta.time, [deficits[str(meta.wtg_ind[i_z])][-1] for i_t in meta.time], label='Average deficit in time')
-                    plt.ylim(0.35, 1.)
-                    plt.xlabel('Simulation time t [s]'), plt.ylabel('Deficit'), plt.legend()
+                    plt.ylim(0., 1.)
+                    plt.xlabel('Simulation time t [s]'), plt.ylabel('WS'), plt.legend()
                 plt.show()
 
             # Averaged DATA
@@ -442,7 +443,7 @@ def DWM_get_turb_dynamic(ffor,meta,turb,inlets_ffor_turb,):
                     plt.title('WT' + str(meta.wtg_ind[i_z]) + ' Axial TI in time')
                     plt.plot(meta.time, turb_in_time[str(meta.wtg_ind[i_z])][-1], label='temporal data')
                     plt.plot(meta.time, [turb[str(meta.wtg_ind[i_z])][-1] for i_t in meta.time], label='Average Axial TI in time')
-                    plt.ylim(0., .02)
+                    plt.ylim(0., .2)
                     plt.xlabel('Simulation time t [s]'), plt.ylabel('Axial TI'), plt.legend()
                 plt.show()
 
