@@ -3,12 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="b1e85f50-429b-433c-a650-5d1954bfe52d" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/DWM_calc_mixL.py" afterPath="$PROJECT_DIR$/src/DWM_calc_mixL.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/DWM_flowfield_farm.py" afterPath="$PROJECT_DIR$/src/DWM_flowfield_farm.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/DWM_flowfield_farm_Dynamic.py" afterPath="$PROJECT_DIR$/src/DWM_flowfield_farm_Dynamic.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/RUN_sDWM_tests.py" afterPath="$PROJECT_DIR$/src/RUN_sDWM_tests.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cDWM.py" afterPath="$PROJECT_DIR$/src/cDWM.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sDWM.py" afterPath="$PROJECT_DIR$/src/sDWM.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -429,7 +423,14 @@
       <option name="project" value="LOCAL" />
       <updated>1532253403356</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="Several Changes because of misUnderstanding for GitHub&#10;&#10;This commit complete the full implementation of meandering with the unversionned program.&#10;&#10;+&#10;&#10;Some Calculations on eddy viscosity based on Madsen 2010&#10;Calibration of DWM for Aeroelastic.&#10;&#10;The following commit add 2 programs for wake added Turbulence (equivalent in Meandering part)">
+      <created>1532448863515</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1532448863515</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -479,7 +480,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Plot Option added (in progress):&#10;Meandering part added&#10;Still deficit part to add." />
     <MESSAGE value="Previous sDWM&#10;Plot Option added (in progress):&#10;Meandering part added (ended for the moment)&#10;Still deficit part to add." />
     <MESSAGE value="Previous sDWM&#10;&#10;Plot Option added (ended for the moment):&#10;- Meandering part added&#10;- Still deficit part added.&#10;&#10;- a few CodeText shaped&#10;- Put in commentaries the integer check (done)&#10;&#10;in Future:&#10;add some plot options specifically in BEM (blade shape, power etc)&#10;Understand the raw input problem..." />
     <MESSAGE value="Previous sDWM&#10;&#10;Raw_input fixed" />
@@ -504,7 +504,8 @@
     <MESSAGE value="First part of the meandering implementation:&#10;&#10;pre-init-turb implemented in sDWM" />
     <MESSAGE value="Second part of the Implementation:&#10;Not correctly implemented. Error occurs in Ainslie part.&#10;I don't know why for the moment." />
     <MESSAGE value="Meandering fully implemented:&#10;The farm production is: 16008.80 kW, where each turbine is: [4963.7  1373.63 1431.71 1569.77 1691.21 1631.13 1669.02 1678.63]&#10;Vel_out: [11.    7.38  7.47  7.66  7.83  7.74  7.8   7.81]&#10;&#10;Some plot are needed to confirm it:&#10;Meandering Shape, Deficit and turb." />
-    <option name="LAST_COMMIT_MESSAGE" value="Meandering fully implemented:&#10;The farm production is: 16008.80 kW, where each turbine is: [4963.7  1373.63 1431.71 1569.77 1691.21 1631.13 1669.02 1678.63]&#10;Vel_out: [11.    7.38  7.47  7.66  7.83  7.74  7.8   7.81]&#10;&#10;Some plot are needed to confirm it:&#10;Meandering Shape, Deficit and turb." />
+    <MESSAGE value="Several Changes because of misUnderstanding for GitHub&#10;&#10;This commit complete the full implementation of meandering with the unversionned program.&#10;&#10;+&#10;&#10;Some Calculations on eddy viscosity based on Madsen 2010&#10;Calibration of DWM for Aeroelastic.&#10;&#10;The following commit add 2 programs for wake added Turbulence (equivalent in Meandering part)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Several Changes because of misUnderstanding for GitHub&#10;&#10;This commit complete the full implementation of meandering with the unversionned program.&#10;&#10;+&#10;&#10;Some Calculations on eddy viscosity based on Madsen 2010&#10;Calibration of DWM for Aeroelastic.&#10;&#10;The following commit add 2 programs for wake added Turbulence (equivalent in Meandering part)" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
