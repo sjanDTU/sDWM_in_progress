@@ -734,15 +734,21 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
             km2 = 0.035
             Udef = 1 - DWM_WS_DATA
             # derive U by r:
-            dUdef_dr_r = [0] + [(Udef[i_r + 1] - Udef[i_r]) / (meta.vr_mixl[i_r + 1] - meta.vr_mixl[i_r]) for i_r
-                             in range(len(meta.vr_mixl) - 1)]
-            dU_dr_r = np.array(dUdef_dr_r)
-
+            dUdef_dr_r = [0] + [(Udef[i_r + 1] - Udef[i_r-1]) / (meta.vr_mixl[i_r + 1] - meta.vr_mixl[i_r-1]) for i_r
+                             in range(1,len(meta.vr_mixl) - 1)] + [0]
+            dUdef_dr_r = [0] + [(1.5*Udef[i_r + 1] - 2.*Udef[i_r]+0.5*Udef[i_r-1]) / (meta.vr_mixl[i_r + 1] - meta.vr_mixl[i_r - 1]) for
+                                i_r
+                                in range(1, len(meta.vr_mixl) - 1)] + [0]
+            #dU_dr_r = np.array(dUdef_dr_r)
+            deficit_depth = 1-Udef
+            derivative_deficit = dUdef_dr_r
             km_r = np.abs(1-Udef) * km1 + np.abs(dUdef_dr_r) * km2
         DWM_TI_DATA = mfor.TI_DWM[meta.vz[i_z], :]
         if meta.AINSLIE_Keck_details:
             plt.figure()
             plt.plot(km_r, meta.vr_mixl, label='km_r')
+            plt.plot(deficit_depth, meta.vr_mixl, label='Deficit Depth')
+            plt.plot(derivative_deficit, meta.vr_mixl, label='derivative_deficit')
             plt.plot(DWM_WS_DATA, meta.vr_mixl, label='WS profile')
             plt.legend()
             plt.show()
@@ -1108,7 +1114,7 @@ def meand_table_DWM_method(meta):
     return std_meand_x, std_meand_y
 
 
-def DWM_outputs(DWM,ffor,mfor,meta, aero,par, BEM):
+def DWM_outputs(DWM,ffor,mfor,meta, aero, par, BEM):
     """
     Function that store chosen flow field and turbine results
 
@@ -1333,7 +1339,7 @@ def DWM_main_field_model_partly_dynamic(ID_waked,deficits,inlets_ffor,inlets_ffo
 
         # NOT IMPLEMENTED
     elif not meta.steadyBEM_AINSLIE:
-        raise('Method not implemented')
+        raise Exception('Method not implemented')
         #aero, mfor, out, BEM = DWM_aero_steady(meta, ffor, aero, deficits, turb, inlets_ffor, inlets_ffor_deficits, out, ID_waked)
     print 'Computation Time for BEM is: ', time.time() - start_time
 
@@ -1342,6 +1348,7 @@ def DWM_main_field_model_partly_dynamic(ID_waked,deficits,inlets_ffor,inlets_ffo
     start_time = time.time()
     mfor                 = DWM_calc_mixL(meta,aero,mfor)
     print 'Computation Time for Ainslie is: ', time.time()-start_time
+    ############### Madsen Wake added Turbulence Treatment #########################################################
 
     # ############# Reconstruct global flow field by applying wake meandering #######################################
     mfor, ffor, meta, meand = DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor)

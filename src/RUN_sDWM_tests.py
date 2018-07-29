@@ -24,7 +24,8 @@ if __name__ == "__main__":
               'stab': 'N',
               'accum': 'linear',
               'optim': False,
-              'dynamic': False}
+              'dynamic': False,
+              'Meandering_turb_box_name': '1028'}
     ##########################################################################
 
     WT = wt.WindTurbine('Windturbine','../WT-data/'+inputs['WTG']+'/'+inputs['WTG']+'_PC.dat',inputs['HH'],inputs['R'])

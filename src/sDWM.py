@@ -40,6 +40,7 @@ def sDWM(derating,kwargs,xind):
     accum = kwargs.get('accum')
     optim = to_bool(kwargs.get('optim'))
     dynamic = to_bool(kwargs.get('dynamic'))
+    Meandering_turb_box_name=kwargs.get('Meandering_turb_box_name')
 
     # WT = wt.WindTurbine('Vestas v80 2MW offshore','V80_2MW_offshore.dat',70,40)
     # WF = wf.WindFarm('Horns Rev 1','HR_coordinates.dat',WT)
@@ -48,7 +49,7 @@ def sDWM(derating,kwargs,xind):
 
     #########################################################################################################
     if dynamic:
-        filename = '1028'  # must come from sDWM Input
+        filename = Meandering_turb_box_name  # must come from sDWM Input
         #R_wt = 46.5  # can come from sDWM
         #WTG = 'NY2'  # can come from sDWM
         #HH = 90.  # Hub height    # can come from sDWM

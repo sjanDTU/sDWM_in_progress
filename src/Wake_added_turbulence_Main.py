@@ -30,5 +30,5 @@ def pre_init_turb_WaT(filename):
     return MannBox
 
 # Test
-result = pre_init_turb_WaT('1028')
-print result.TI_u
+#result = pre_init_turb_WaT('1028')
+#print result.TI_u

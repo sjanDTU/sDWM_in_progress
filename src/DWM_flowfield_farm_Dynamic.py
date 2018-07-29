@@ -10,6 +10,8 @@ import matplotlib.pyplot as plt
 from math import pi, sqrt, isnan
 from scipy import io, interpolate
 from Meandering_Main import DWM_extract_meandering_from_TurbBox
+from cMann import MannBox
+from Wake_added_turbulence_Main import *
 
 
 
@@ -60,6 +62,26 @@ def get_Meandering_dynamic_V2(meta, meand, TurBox, WF):
         meand.WakesCentersLocations_in_time[i_z][:, 2] = meta.hub_y + meand.WakesCentersLocations_in_time[i_z][:, 2]
 
     return meta, meand
+
+def get_U_Wake_Turbulence_adding(meta):
+    """
+    Purpose: obtain the correct U_aw to add to wake
+    Scale MannBox
+    Distribution
+    :param meta:
+    :param mfor:
+    :return:
+    """
+    # Get TI_u
+    MannBox = pre_init_turb_WaT(meta.MannBox_name)
+
+    # Scale Turbulence on TI from the WindFarm
+    k_scaling = meta.mean_TI_DWM / MannBox.TI_u
+
+    MannBox.u_TurbBox = MannBox.u_TurbBox * k_scaling
+
+    # Distribution Part.
+
 
 
 def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor):

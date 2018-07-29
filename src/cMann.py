@@ -29,6 +29,8 @@ class MannBox:
 
         self.WakeExpansion = True
 
+        self.Keck_Transport_Velocity = False  # True to apply 0.8*U advection transport: Keck synthetic turbulence
+
 
         self.lx = 1.     # 32768m in total
         self.ly = 1.

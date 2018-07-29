@@ -501,7 +501,6 @@ def DWM_calc_mixL(meta,aero,mfor):
         print 'wake width data saved... '
 #    elapsed = time.time() - t
 #    print 'Velocity model computation time %i' % (int(elapsed))
-    #raw_input('entry (end of Ainslie Part)')
     if meta.BEM_AINSLIE_plot:
         plt.figure('Axial Velocity Output from mixL domain (MFOR)')
         plt.title('Axial Velocity Output from mixL domain (MFOR)')

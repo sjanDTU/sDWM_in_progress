@@ -27,7 +27,7 @@ class Meta:
         self.hub_x                 = self.lx/2. # position of the rotor center
         self.hub_y                 = self.ly/2.
         self.hub_z                 = np.asarray([]) # Turbine spacing [D]
-        self.dR                    = 20 # points per R in radial direction default 20
+        self.dR                    = 40 # points per R in radial direction default 20
         self.dx                    = 20 # points per R in lateral direction  default 20
         self.dy                    = 20 # points per R in longitudinal direction  default 20
         self.dz                    = 10 # points per D in axial direction default 10
@@ -137,8 +137,14 @@ class Meta:
         if not self.previous_sDWM:
             self.steadyBEM_AINSLIE = True  # if True, BEM_Ainslie use the average deficit
 
-            self.Keck = False
-            self.Madsen = True
+            self.Keck = True
+            self.Madsen = False
+
+            if self.Madsen:
+                # this model imply the use of a MannBox for the wake added Turbulence
+                # So you should specify the name of your MannBox
+                self.MannBox_name='1101'
+
             if self.steadyBEM_AINSLIE:
                 self.use_saved_data = True
                 # Could be used for fair comparison with previous sDWM
