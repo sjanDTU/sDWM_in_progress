@@ -111,8 +111,8 @@ class Meta:
         # Plot Setting Options
         self.BEM_plot = False
         self.AINSLIE_plot = False
-        self.AINSLIE_Keck_details = True
-        self.BEM_AINSLIE_plot = True
+        self.AINSLIE_Keck_details = False
+        self.BEM_AINSLIE_plot = False
 
         self.MEANDERING_plot = True
         self.MEANDERING_Total_plot = False

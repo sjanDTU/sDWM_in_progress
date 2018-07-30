@@ -11,6 +11,8 @@ import matplotlib.pyplot as plt
 from Polar_Interpolate_Data_Plan import cart2pol_for_mesh
 from ReadMannTurbulence import *
 
+from scipy.interpolate import griddata, RectBivariateSpline
+
 
 
 def pre_init_turb_WaT(filename):
@@ -26,7 +28,6 @@ def pre_init_turb_WaT(filename):
     MannBox.U_ref = get_averaged_U(filename)  # Specified U_mean for this Mannbox
 
     MannBox.u_TurbBox = get_turb_component_from_MannBox(filename, 'ufluct', False, MannBox, video=False)/MannBox.U_ref
-    MannBox.U_ref = get_averaged_U(filename)# Specified U_mean for this Mannbox
     MannBox.TI_u = np.sqrt(np.mean((MannBox.u_TurbBox) ** 2))
     print 'TI from MannBox WaT: ', MannBox.TI_u
 
@@ -56,7 +57,7 @@ def init_turb_WaT(MannBox, meta):
 
     return
 
-def obtain_wake_added_turbulence(MannBox, i_t, vr_mixl, kmt_r):
+def obtain_wake_added_turbulence(MannBox, i_t, meta):
     """
     Get the plan of wake added Turbulence
     Prepare it to be expressed in the meandering Frame
@@ -71,23 +72,26 @@ def obtain_wake_added_turbulence(MannBox, i_t, vr_mixl, kmt_r):
     """
 
     plan_of_interest = MannBox.u_TurbBox[:, :, i_t]
+    Ly = np.linspace(meta.x_vec[0], meta.x_vec[-1], MannBox.ny)
+    Lz = np.linspace(meta.y_vec[0], meta.y_vec[-1], MannBox.nz)
     # we consider this plan centered on the wake
+    #new_ly = np.linspace(meta.x_vec[0], meta.x_vec[-1], meta.nx)
+    #new_lz = np.linspace(meta.y_vec[0], meta.y_vec[-1], meta.ny)
+    new_ly = meta.x_vec
+    new_lz = meta.y_vec
 
-    """
-    plt.figure()
-    plt.contourf(plan_of_interest)
-    plt.colorbar()
-    plt.show()
-    #"""
+    #WaT = griddata((Ly,Lz),plan_of_interest,(new_ly, new_lz))
+    #WaT = RectBivariateSpline()
 
-    #yy, zz = np.meshgrid(np.linspace(-meta.vr_mixl, meta.vr_mixl, MannBox.ny),
-     #                    np.linspace(-meta.vr_mixl, meta.vr_mixl, MannBox.nz))
-    yy, zz = np.meshgrid(np.linspace(-vr_mixl[-1], vr_mixl[-1], MannBox.ny),
-                        np.linspace(-vr_mixl[-1], vr_mixl[-1], MannBox.nz))
-    rr = cart2pol_for_mesh((yy, zz))[0]
+    f_cart = RectBivariateSpline(x=Ly, y=Lz, z=np.transpose(plan_of_interest),
+                                                   # np.transpose for last version of scipy
+                                                   kx=1,  # number of splines: can't be superior to 5
+                                                   ky=1,
+                                                   s=0)  # positive smoothing factor
 
-    Distrib = np.interp(rr, vr_mixl, kmt_r)
-    WaT = Distrib * plan_of_interest
+    yy, zz = np.meshgrid(new_ly, new_lz)
+
+    WaT = f_cart(yy,zz)
 
     # reshape WaT to be compatible with FFoR
     """

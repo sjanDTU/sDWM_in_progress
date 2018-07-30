@@ -725,9 +725,6 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
         except:
             print 'Fatal error, possibly due to a too low turbulence intensity with respect to the demanded mean wind speed, try increase the input TI'
 
-        if not meta.Madsen:
-            km_r = 1
-
         if meta.Madsen or True:
             #print 'DWM_TI_DATA: ', DWM_TI_DATA
             # MADSEN Scaling for Turbulence:
@@ -742,7 +739,10 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
             meta.kmt_r = np.abs(1-Udef) * meta.km1 + np.abs(dUdef_dr_r) * meta.km2
             #np.save('kmt_r_for_iz'+str(i_z), meta.kmt_r)
             #np.save('vr_mixl',meta.vr_mixl)
+
         DWM_TI_DATA = mfor.TI_DWM[meta.vz[i_z], :]
+
+
         if meta.AINSLIE_Keck_details:
             plt.figure('Turbulence Intensity Correction')
             plt.plot( DWM_TI_DATA, meta.vr_mixl, label='DWM TI at WT'+str(meta.wtg_ind[i_z]))

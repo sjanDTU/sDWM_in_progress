@@ -210,14 +210,9 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor, MannBox):
             #tmp_field_WS_added[tmp_index] = obtain_wake_added_turbulence(MannBox, i_t, meta.vr_m, meta.kmt_r)[tmp_index]
             tmp_field_WS[tmp_index] = np.interp(r_dist[tmp_index], meta.vr_m, DWM_WS_DATA)
 
+            # Wake added Turbulence
             Kmt_r[tmp_index] =  np.interp(r_dist[tmp_index], meta.vr_m, meta.kmt_r)
-            plt.figure()
-            plt.contourf(Kmt_r)
-            plt.colorbar()
-            plt.show()
-
-            tmp_field_WS_added[tmp_index] = obtain_wake_added_turbulence(MannBox, i_t, meta.vr_m, meta.kmt_r)[tmp_index]
-
+            tmp_field_WS_added[tmp_index] = (obtain_wake_added_turbulence(MannBox, i_t, meta)*Kmt_r)[tmp_index]
 
             ffor.WS_axial_ffor[:, :, i_z, i_t] = (tmp_field_WS) + tmp_field_WS_added
             ffor.ffor_flow_field_ws_tmp2[:, :, i_z, i_t] = (tmp_field_WS ** 2)
@@ -253,7 +248,7 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor, MannBox):
                 print 'i_t = ', i_t
                 if meta.MEANDERING_WS_plot:
                     plt.subplot(121)
-                    CS1 = plt.contourf(X, Y, ffor.WS_axial_ffor[:, :, i_z, i_t], np.linspace(0.,1.,20))
+                    CS1 = plt.contourf(X, Y, ffor.WS_axial_ffor[:, :, i_z, i_t])#, np.linspace(0.,1.,20))
                     plt.xlabel('x'), plt.ylabel('y'), plt.title('Axial WS FFoR for Turbine ' + str(meta.wtg_ind[i_z])) #7-iz
                     plt.plot(ref_rotor_x_emitting, ref_rotor_y_emitting, 'r', label='WT emitting')
                     plt.plot(ref_rotor_x_concerned, ref_rotor_y_concerned, 'k', label='WT concerned')
