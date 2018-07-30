@@ -12,6 +12,7 @@ from Polar_Interpolate_Data_Plan import cart2pol_for_mesh
 from ReadMannTurbulence import *
 
 
+
 def pre_init_turb_WaT(filename):
     """
     Purpose:
@@ -101,10 +102,11 @@ def obtain_wake_added_turbulence(MannBox, i_t, vr_mixl, kmt_r):
 
 
 
+"""
 # Test
 #result = pre_init_turb_WaT('1028')
 #print result.TI_u
-#"""
+
 kmt_r = np.load('kmt_r_for_iz0.NPY')
 vr_mixl =  np.load('vr_mixl.NPY')
 plt.figure()

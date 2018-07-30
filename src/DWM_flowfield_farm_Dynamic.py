@@ -210,7 +210,7 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor, MannBox):
             #tmp_field_WS_added[tmp_index] = obtain_wake_added_turbulence(MannBox, i_t, meta.vr_m, meta.kmt_r)[tmp_index]
             tmp_field_WS[tmp_index] = np.interp(r_dist[tmp_index], meta.vr_m, DWM_WS_DATA)
 
-            Kmt_r[tmp_index] =  np.interp(r_dist[tmp_index], meta.vr_m, kmt_r)
+            Kmt_r[tmp_index] =  np.interp(r_dist[tmp_index], meta.vr_m, meta.kmt_r)
             plt.figure()
             plt.contourf(Kmt_r)
             plt.colorbar()
