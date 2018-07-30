@@ -131,16 +131,16 @@ class Meta:
         self.dA_DWM                = np.concatenate(([0], (pi*self.vr_m[1:]**2 - pi*self.vr_m[0:-1]**2)), axis=0)  # area vector for polar discretization
         self.lz_mixl               = np.asarray([]) # in R: 1R longer than global flow field due to backward diff scheme, turbine position dependent
 
-        if self.Keck:
-            ## Model inputs calibrated constant
-            self.Model                 = 'mixL' # Eddy viscosity model as per Keck et al. [2]
-            #self.fU                    = 1.10 # fU = 1.1 & fR = 0.98 yields the best fit to AL calibration data according to Keck et al. [5].
-            #self.fR                    = 0.98 #
-            self.fU                    = 1. #Madsen et al [2].
-            self.fR                    = 1.
-            self.atmo_stab             = 'N'
-            self.k1                    = 0.0919 # k1 = 0.0919 & k2 = 0.0178 yields the best fit to AL calibration data according to Keck et al. [5].
-            self.k2                    = 0.0178  # in Keck we can compare with k1 0.914 and k2 = 0.0216
+        #if self.Keck:
+        ## Model inputs calibrated constant
+        self.Model                 = 'mixL' # Eddy viscosity model as per Keck et al. [2]
+        #self.fU                    = 1.10 # fU = 1.1 & fR = 0.98 yields the best fit to AL calibration data according to Keck et al. [5].
+        #self.fR                    = 0.98 #
+        self.fU                    = 1. #Madsen et al [2].
+        self.fR                    = 1.
+        self.atmo_stab             = 'N'
+        self.k1                    = 0.0919 # k1 = 0.0919 & k2 = 0.0178 yields the best fit to AL calibration data according to Keck et al. [5].
+        self.k2                    = 0.0178  # in Keck we can compare with k1 0.914 and k2 = 0.0216
 
         ################################################################################################################
         # A METTRE DANS LE if plus bas
@@ -190,6 +190,10 @@ class Meta:
             self.k_amb_Larsen = 0.1
             self.k2_Madsen = 0.008  # seems to be the same as in 2010 (Calibrated Madsen Model)
             self.F_amb = 0.  # calculated in calc_mixl with 0.12/TI_amb
+
+            self.km1 = 0.6
+            self.km2 = 0.35
+            self.kmt_r = []
             #raise Exception('Method not Implemented, no Formula for Famb')
 
             # NEW F1 and Famb
@@ -236,18 +240,13 @@ class Meta:
         # Iterative Progress for the Main Loop
         self.iT = 0.
 
-
-
-
-
-
-
     def parse(self,**par):
         """Parsing data to class holding all meta data for sDWM core model."""
         for key, value in par.iteritems():
             if hasattr(self,key):
                 setattr(self, key, value)
             else:
+                print 'key: ', key
                 raise Exception('Key is not found, check spelling')
 
 
