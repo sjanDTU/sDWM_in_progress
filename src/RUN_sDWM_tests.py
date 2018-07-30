@@ -18,14 +18,14 @@ if __name__ == "__main__":
               'WS': 11.,
               'TI': 0.06,
               'WTcoord': '../data/Lill_rowB.dat',
-              'WTG': 'NY2',
+              'WTG': 'NREL5MW',
               'HH': 65.0,
               'R': 46.5,
               'stab': 'N',
               'accum': 'dominant',
               'optim': False,
-              'dynamic': True,
-              'Meandering_turb_box_name': '1028',
+              'dynamic': False,
+              'Meandering_turb_box_name': None,
               'WaT_turb_box_name': '1101'}
     ##########################################################################
 

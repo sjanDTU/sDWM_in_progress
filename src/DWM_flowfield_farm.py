@@ -725,7 +725,7 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
         except:
             print 'Fatal error, possibly due to a too low turbulence intensity with respect to the demanded mean wind speed, try increase the input TI'
 
-        if meta.Madsen or True:
+        if meta.Madsen or meta.Larsen:
             #print 'DWM_TI_DATA: ', DWM_TI_DATA
             # MADSEN Scaling for Turbulence:
             Udef = DWM_WS_DATA
@@ -751,7 +751,8 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
         DWM_TI_DATA[DWM_TI_DATA < np.nanmean(meta.mean_TI_DWM)] = np.nanmean(meta.mean_TI_DWM)
 
         if meta.AINSLIE_Keck_details:
-            plt.plot(meta.kmt_r/10, meta.vr_mixl, label='km_r/10')
+            if meta.Larsen or meta.Madsen:
+                plt.plot(meta.kmt_r/10, meta.vr_mixl, label='km_r/10')
             plt.plot(DWM_TI_DATA, meta.vr_mixl, label='Corrected for TI amb')
             plt.legend()
             plt.show()
@@ -908,7 +909,7 @@ def DWM_make_grid(meta):
     meta.vz_mixl = np.linspace(0,meta.lz_mixl-meta.dz_mixl,meta.lz_mixl/meta.dz_mixl) # coordinate streamwise in R vector mixL
     ### Plotting
     #print "dz_mixl="+str(meta.dz_mixl)
-    print "vz_mixl="+str(meta.vz_mixl)
+    #print "vz_mixl="+str(meta.vz_mixl)
     #print "len(vz_mixl)="+str(len(meta.vz_mixl))
 
     meta.nz = len(meta.vz)           # nb points in z (streamwise) direction ffor flow field

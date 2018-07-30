@@ -21,7 +21,7 @@ import matplotlib.pylab as plt
 import matplotlib._cntr as cntr
 import multiprocessing
 
-from ReadTurbulence import pre_init_turb
+from ReadTurbulence import pre_init_turb, ReadMannInput
 from Wake_added_turbulence_Main import pre_init_turb_WaT
 
 
@@ -51,25 +51,30 @@ def sDWM(derating,kwargs,xind):
 
     #########################################################################################################
     if dynamic:
-        filename = Meandering_turb_box_name  # must come from sDWM Input
-        #R_wt = 46.5  # can come from sDWM
-        #WTG = 'NY2'  # can come from sDWM
-        #HH = 90.  # Hub height    # can come from sDWM
+        if Meandering_turb_box_name!=None:
+            filename = Meandering_turb_box_name  # must come from sDWM Input
+            #R_wt = 46.5  # can come from sDWM
+            #WTG = 'NY2'  # can come from sDWM
+            #HH = 90.  # Hub height    # can come from sDWM
 
-        Rw = 1.  # try with no expansion
+            Rw = 1.  # try with no expansion
 
 
-        WF.U_mean = WS
-        WF.WT_R = WT.R
+            WF.U_mean = WS
+            WF.WT_R = WT.R
 
-        WF.WT_Rw = Rw
-        WF.TI = TI
-        # WindFarm.lenght = 4000.
+            WF.WT_Rw = Rw
+            WF.TI = TI
+            # WindFarm.lenght = 4000.
 
-        WT = wt.WindTurbine('Windturbine', '../WT-data/' + WTG + '/' + WTG + '_PC.dat', HH, WT.R)  # already present in sDWM
-        TurBox, WF = pre_init_turb(filename, WF, WT)
+            WT = wt.WindTurbine('Windturbine', '../WT-data/' + WTG + '/' + WTG + '_PC.dat', HH, WT.R)  # already present in sDWM
+            TurBox, WF = pre_init_turb(filename, WF, WT)
+        else:
+            TurBox = ReadMannInput('1028')
         MannBox = pre_init_turb_WaT(WaT_turb_box_name)
-        TI = TurBox.TI
+        print 'TI Input:', TI
+        #TI = TurBox.TI
+        print 'TI from TurbBox', TI
 
     ####################################################################################################################
     if optim is True:
@@ -108,12 +113,7 @@ def sDWM(derating,kwargs,xind):
 
     # Init dictionnaries
     deficits, turb, inlets_ffor, inlets_ffor_deficits,inlets_ffor_turb,out, DWM, ID_waked, ID_wake_adj, Farm_p_out, WT_p_out, Vel_out,WT_pitch_out,WT_RPM_out=init(WF)
-    print 'Dictionaries from Init WF:'
-    print 'deficits: ', deficits
-    print 'turb: ', turb
-    print 'inlets_ffor: ', inlets_ffor
-    print 'inlets_ffor_deficits: ', inlets_ffor_deficits
-    print 'inlets_ffor_turb: ', inlets_ffor_turb
+
     #raw_input('entry')
 
     # Extreme wake to define WT's in each wake, including partial wakes

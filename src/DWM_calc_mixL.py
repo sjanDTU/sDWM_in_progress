@@ -59,9 +59,36 @@ def DWM_init_calc_mixl(meta,aero,mfor):
         # mfor.U_init=f3(meta.vr_mixl)
         # mfor.U_init=smooth( mfor.U_init,window_len=5)
     # Generate the DWM filter functions for the eddy viscosity formulation
-    F1_vector  = np.hstack((np.linspace(meta.f1[0],1,meta.f1[1]*meta.dz/2),np.linspace(1,1,meta.lz_mixl*meta.dz/2)))
-    F2_z_vec   = np.arange(2+1./meta.dz,(len(F1_vector)+1)*(1./meta.dz),1./meta.dz)
-    F2_vector  = np.hstack((np.linspace(meta.f2[0],meta.f2[0],2*meta.dz), 1.-(1.-meta.f2[0])*np.exp(-meta.f2[1]*(F2_z_vec-2.))))
+    if not meta.without_filter_functions:
+        if meta.Keck:
+            F1_vector  = np.hstack((np.linspace(meta.f1[0],1,meta.f1[1]*meta.dz/2),np.linspace(1,1,meta.lz_mixl*meta.dz/2)))
+            F2_z_vec   = np.arange(2+1./meta.dz,(len(F1_vector)+1)*(1./meta.dz),1./meta.dz)
+            F2_vector  = np.hstack((np.linspace(meta.f2[0],meta.f2[0],2*meta.dz), 1.-(1.-meta.f2[0])*np.exp(-meta.f2[1]*(F2_z_vec-2.))))
+        if meta.Madsen:
+            # NOT CORRECTED
+            # Same F1 as Keck
+            # Not the same F2 as Keck... I don't find the formula so I interpolate the graph.
+            F1_vector = np.hstack((np.linspace(meta.f1[0], 1, meta.f1[1] * meta.dz / 2), np.linspace(1, 1, meta.lz_mixl * meta.dz / 2)))
+            F2_z_vec = np.arange(2 + 1. / meta.dz, (len(F1_vector) + 1) * (1. / meta.dz), 1. / meta.dz)
+            F2_vector = np.hstack((np.linspace(meta.f2[0], meta.f2[0], 2 * meta.dz), 1. - (1. - meta.f2[0]) * np.exp(-meta.f2[1] * (F2_z_vec - 2.))))
+
+            # F2 vector seems to be constituted by 4 functions
+            # [0D]0.07 -> 0.07 [2D],
+            # linear curve 0.07[2D] -> 0.3 [7D],
+            # exponential curve  0.3[7D] -> 1[10D]
+        if meta.Larsen:
+            # NOT CORRECTED FOR NOW IT S SAME as KECK
+            # We have to introduce the non linear function F_amb
+            # I don't found the formula for f_amb I don't find the formula so I interpolate the graph.
+            # it seems to be same F2 as Madsen
+            F1_vector = np.hstack((np.linspace(meta.f1[0], 1, meta.f1[1] * meta.dz / 2), np.linspace(1, 1, meta.lz_mixl * meta.dz / 2)))
+            F2_z_vec = np.arange(2 + 1. / meta.dz, (len(F1_vector) + 1) * (1. / meta.dz), 1. / meta.dz)
+            F2_vector = np.hstack((np.linspace(meta.f2[0], meta.f2[0], 2 * meta.dz), 1. - (1. - meta.f2[0]) * np.exp(-meta.f2[1] * (F2_z_vec - 2.))))
+
+            meta.F_amb = 0.12/meta.mean_TI_DWM
+
+            # F_amb curve in 1/TI_amb, analytical solution possible => 0.12/TI_amb
+            # F1 curve in arctan(x/D)
 
     if meta.AINSLIE_Keck_details:
         print "Initial lenghts of F1 and F2 don't correspond to vz_mixl"
@@ -74,7 +101,6 @@ def DWM_init_calc_mixl(meta,aero,mfor):
         plt.legend(), plt.show()
 
     # initiate the U, V, visc etc... matrices
-    print 'Initiate Ainslie matrices for Ainslie'
     mfor.V                 = np.zeros((len(meta.vz_mixl), len(meta.vr_mixl)),dtype=float)
     mfor.U                 = np.zeros((len(meta.vz_mixl), len(meta.vr_mixl)),dtype=float )
     mfor.visc              = np.zeros((len(meta.vz_mixl), len(meta.vr_mixl)),dtype=float )
@@ -296,13 +322,22 @@ def DWM_eddy_viscosity(mfor,meta,width,visc_wake,visc_wake1,visc_wake2,F1_vector
 
     if meta.Madsen:
         # Madsen visc presented November 2010 'Calibration and Validation of DWM for implementation in an aero code'
-        visc_wake[j - 1, :] = F2_vector[j-1]* meta.k2_Madsen *( meta.vr_mixl[width[j-1]-1]/meta.R_WTG )   * (1.0 - np.min(mfor.U[j-1,:]) )
-        mfor.visc[j-1,:] = F1_vector[j-1] * meta.k_amb_Madsen * meta.mean_TI_DWM + visc_wake[j - 1,:]
-        #mfor.visc[j - 1, :] = mfor.visc[j-1,:]
-        # Madsen visc presented November 2008 'Wale deficit and turbulence simulated with two models...'
-        #visc_wake[j - 1, :] = meta.k2_Madsen * (meta.vr_mixl[width[j - 1] - 1] / meta.R_WTG) * (1.0 - np.min(mfor.U[j - 1, :]))
-        #mfor.visc[j-1,:] = meta.k_amb_Madsen * meta.mean_TI_DWM + visc_wake[j - 1,:]
+        if not meta.without_filter_functions:
+            visc_wake[j - 1, :] = F2_vector[j-1]*meta.k2_Madsen * (meta.vr_mixl[width[j - 1] - 1] / meta.R_WTG) * (1.0 - np.min(mfor.U[j - 1, :]))
+            mfor.visc[j-1,:] = F1_vector[j-1] *meta.k_amb_Madsen * meta.mean_TI_DWM + visc_wake[j - 1,:]
+
+        # Madsen visc presented November 2008 'Wake deficit and turbulence simulated with two models...'
+        elif meta.without_filter_functions:
+            visc_wake[j - 1, :] = meta.k2_Madsen * (meta.vr_mixl[width[j - 1] - 1] / meta.R_WTG) * (
+            1.0 - np.min(mfor.U[j - 1, :]))
+            mfor.visc[j - 1, :] = meta.k_amb_Madsen * meta.mean_TI_DWM + visc_wake[j - 1, :]
         #raise Exception('Eddy Visc Not Implemented for now')
+
+    if meta.Larsen:
+        visc_wake[j - 1, :] = F2_vector[j - 1] * meta.k2_Madsen * (meta.vr_mixl[width[j - 1] - 1] / meta.R_WTG) * (1.0 - np.min(mfor.U[j - 1, :]))
+        mfor.visc[j - 1, :] = F1_vector[j - 1] * meta.F_amb * meta.k_amb_Larsen * meta.mean_TI_DWM + visc_wake[j - 1, :]
+
+
     if meta.Keck or meta.previous_sDWM:
         ## Include contribution from atmospheric boundary layer on DWM
         ##  turbulent stresses. This effect is taken into account by:

@@ -229,7 +229,7 @@ def get_turb_component_from_MannBox(filename,kind_of_fluct,plot_bool,MannBox, vi
 def pre_init_turb(filename, WindFarm, WT):
     """
     Purpose:
-    Get some essential informations before to run DWM_main_fiel
+    Get some essential informations before to run DWM_main_field
     TI, U etc...
 
     For a use of a TI input in sDWM we have to scale the turbulent component of the Mannbox.

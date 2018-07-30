@@ -37,8 +37,9 @@ def get_Meandering_dynamic(meta, meand):
 def get_Meandering_dynamic_V2(meta, meand, TurBox, WF):
     if meta.use_saved_data:
         # New Version for Multiple wake meandering
-        meand.WakesCentersLocations_in_time = np.load(
-              'C:/Users/augus/Documents/Stage/Codes/Mann_Turbulence/Result/Center_Position_in_time_Lillgrund/z_time_center_location.NPY')[meta.iT]
+        #meand.WakesCentersLocations_in_time = np.load(
+         #     'C:/Users/augus/Documents/Stage/Codes/Mann_Turbulence/Result/Center_Position_in_time_Lillgrund/z_time_center_location.NPY')[meta.iT]
+        meand.WakesCentersLocations_in_time = np.load('WAKES.NPY')[meta.iT]
         # /!\ a mieux placer dans le code /!\
         meand.time = meand.WakesCentersLocations_in_time[0][:, 0]#; print 'meand time : ', meand.time
         meand.nt = len(meand.time)#; print 'number of time points: ', meand.nt
@@ -210,9 +211,10 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor, MannBox):
             #tmp_field_WS_added[tmp_index] = obtain_wake_added_turbulence(MannBox, i_t, meta.vr_m, meta.kmt_r)[tmp_index]
             tmp_field_WS[tmp_index] = np.interp(r_dist[tmp_index], meta.vr_m, DWM_WS_DATA)
 
-            # Wake added Turbulence
-            Kmt_r[tmp_index] =  np.interp(r_dist[tmp_index], meta.vr_m, meta.kmt_r)
-            tmp_field_WS_added[tmp_index] = (obtain_wake_added_turbulence(MannBox, i_t, meta)*Kmt_r)[tmp_index]
+            if meta.Madsen and False:
+                # Wake added Turbulence
+                Kmt_r[tmp_index] =  np.interp(r_dist[tmp_index], meta.vr_m, meta.kmt_r)
+                tmp_field_WS_added[tmp_index] = (obtain_wake_added_turbulence(MannBox, i_t, meta)*Kmt_r)[tmp_index]
 
             ffor.WS_axial_ffor[:, :, i_z, i_t] = (tmp_field_WS) + tmp_field_WS_added
             ffor.ffor_flow_field_ws_tmp2[:, :, i_z, i_t] = (tmp_field_WS ** 2)
@@ -242,13 +244,13 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor, MannBox):
         #for i_z in np.arange(0, meta.nz):
             ref_rotor_x_concerned = (meta.hub_x[i_z] + np.cos(np.linspace(-pi, pi))) / 2.
             ref_rotor_y_concerned =(meta.hub_y + np.sin(np.linspace(-pi, pi))) / 2.
-            for i_t in np.arange(0, meand.nt, 2):
+            for i_t in np.arange(0, meand.nt, 4):
                 plt.cla()
                 plt.clf()
                 print 'i_t = ', i_t
                 if meta.MEANDERING_WS_plot:
                     plt.subplot(121)
-                    CS1 = plt.contourf(X, Y, ffor.WS_axial_ffor[:, :, i_z, i_t])#, np.linspace(0.,1.,20))
+                    CS1 = plt.contourf(X, Y, ffor.WS_axial_ffor[:, :, i_z, i_t], np.linspace(0.2,1.2,15))
                     plt.xlabel('x'), plt.ylabel('y'), plt.title('Axial WS FFoR for Turbine ' + str(meta.wtg_ind[i_z])) #7-iz
                     plt.plot(ref_rotor_x_emitting, ref_rotor_y_emitting, 'r', label='WT emitting')
                     plt.plot(ref_rotor_x_concerned, ref_rotor_y_concerned, 'k', label='WT concerned')
