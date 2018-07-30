@@ -62,6 +62,7 @@ def sDWM(derating,kwargs,xind):
         WF.U_mean = WS
         WF.WT_R = WT.R
         WF.WT_Rw = Rw
+        WF.TI = TI
         # WindFarm.lenght = 4000.
 
         WT = wt.WindTurbine('Windturbine', '../WT-data/' + WTG + '/' + WTG + '_PC.dat', HH, WT.R)  # already present in sDWM

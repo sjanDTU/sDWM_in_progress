@@ -6,7 +6,7 @@ date: 31/05/2018 at 15:01
 import numpy as np
 import matplotlib.pyplot as plt
 import math as m
-from cTurb import MannBox
+from cMann import MannBox
 
 from matplotlib import animation
 
@@ -101,8 +101,8 @@ def sizing_MannBox(MannBox , WindFarm):
     MannBox.T = MannBox.L / MannBox.U; print 'Mannbox T_total (no dimension): ', MannBox.T
     MannBox.dt = MannBox.T / MannBox.nx; print 'dt (no dimension): ', MannBox.dt
     MannBox.ti = [i*MannBox.dt for i in range(MannBox.nx)]
-    MannBox.ti = [t for t in MannBox.ti
-                  if t < MannBox.SimulationTime + MannBox.dt]  # we catch just one point after the simulation time
+    #MannBox.ti = [t for t in MannBox.ti
+     #             if t < MannBox.SimulationTime + MannBox.dt]  # we catch just one point after the simulation time
 
 
     MannBox.lx = MannBox.L
@@ -231,6 +231,12 @@ def pre_init_turb(filename, WindFarm, WT):
     Purpose:
     Get some essential informations before to run DWM_main_fiel
     TI, U etc...
+
+    For a use of a TI input in sDWM we have to scale the turbulent component of the Mannbox.
+    In the case of the use of a LES Box, we use the TI from the Box, so not as an independant input.
+
+    Notice: the meandering is treated for every  WT in the ambient conditions. so we must scale the MannBox
+    only at the beginning
     :return:
     """
     video = False
@@ -256,12 +262,21 @@ def pre_init_turb(filename, WindFarm, WT):
     MannBox.TI = np.sqrt((u ** 2 + v ** 2 + w ** 2) / 3) / WindFarm.U_mean
     print 'TI: ', MannBox.TI
 
+    if MannBox.Box_Kind == 'MannBox':
+        # We have to scale the turbulent Component
+
+        k_scale = WindFarm.TI / MannBox.TI
+
+        MannBox.v_TurbBox = k_scale * MannBox.v_TurbBox
+        MannBox.w_TurbBox = k_scale * MannBox.w_TurbBox
+
+        MannBox.TI = WindFarm.TI
+        print 'TI: ', MannBox.TI
     WindFarm.CT = WT.get_CT(WindFarm.U_mean)
-    print 'CT: ', WindFarm.CT   # Computes the thrust coefficient of the WindTurbine at the undisturbed wind speed
+    print 'CT: ', WindFarm.CT
     ##################################################################""
     ## END OF PRE INIT
     return MannBox, WindFarm
-
 
 
 

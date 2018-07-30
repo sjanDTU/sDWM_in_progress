@@ -17,18 +17,6 @@ class MannBox:
         self.ny = 1      # Point Discritization along y-axis
         self.nz = 1      # Point Discritization along z-axis
 
-        # Discretization to read
-        # Permit to compute the algo fastly with less points
-        # to read with all points, discr_reduc_factor = 1, and nx_r = nx = 16384 points  2^14
-        self.discr_reduc_factor = 1
-        self.nx_r = 16384  # Discretization along x-axis to read fastly!
-
-        self.SimulationTime = 30# (s)
-        self.CorrectionDelay = True  # We want to begin the simulation when the first plan go out of the WindFarm Box
-                                     # In this case at t=0, we have all the windfarm box affected by the turbulent box
-
-        self.WakeExpansion = True
-
 
         self.lx = 1.     # 32768m in total
         self.ly = 1.
@@ -44,6 +32,7 @@ class MannBox:
         self.ti = []
 
         self.TurbBox_of_interest = []
+        self.u_TurbBox = []  # For wake added Turbulence
         self.v_TurbBox = []
         self.w_TurbBox = []
         self.plan_of_interest = []
@@ -58,8 +47,32 @@ class MannBox:
         self.R_ref = 0.
         self.TI = 0.
 
+        self.TI_u = None
+
         # Plot option setting
-        self.RESULT_plot = False
+        self.RESULT_plot = True
+
+        # ------------------------------- # Method Settings # -------------------------------------------------------- #
+
+        # Discretization to read
+        # Permit to compute the algo fastly with less points
+        # to read with all points, discr_reduc_factor = 1, and nx_r = nx = 16384 points  2^14
+        self.discr_reduc_factor = 1
+        self.nx_r = 16384  # Discretization along x-axis to read fastly!
+
+        self.SimulationTime = 350  # (s)
+        self.CorrectionDelay = True  # We want to begin the simulation when the first plan go out of the WindFarm Box
+        # In this case at t=0, we have all the windfarm box affected by the turbulent box
+        self.delay = 0.
+
+        self.WakeExpansion = True  # Carry by a simple wake model proposed by Larsen 2009
+
+        self.Keck_Transport_Velocity = False  # True to apply 0.8*U advection transport: Keck synthetic turbulence
+
+        self.loop_debug = False
+        self.multiplewake_build_on_first_wake = False
+
+        self.Box_Kind = 'MannBox'  # LESBox or MannBox
 
 
 
@@ -97,6 +110,7 @@ class interpo_integrate():
         # Interpolated function to estimate wakecenter at a specific distance, written in term of time
         self.f_vc_t = 0.
         self.f_wc_t = 0.
+        self.F_tm_fvc_fwc = []
 
         #Plot Setting Options
         self.Plot = False
@@ -133,11 +147,13 @@ class windfarm():
         self.lenght = 0.
 
         self.TI = 0.
-        self.CT = 0.        #One value for all the wind Farm
+        self.CT = 0.   #One value for all the wind Farm
 
         self.stream_location_z = []
         self.nodim_lenght= 0.
         self.Rw_Max = 0.
+
+        self.constant_spacing = True
 
 
     def Set(self, **parRotor):

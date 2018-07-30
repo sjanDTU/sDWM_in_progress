@@ -6,7 +6,7 @@ date: 31/05/2018 at 15:01
 import numpy as np
 import matplotlib.pyplot as plt
 import math as m
-from cMann import MannBox
+from cTurb import MannBox
 
 from matplotlib import animation
 

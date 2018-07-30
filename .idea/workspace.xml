@@ -2,16 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b1e85f50-429b-433c-a650-5d1954bfe52d" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/WAKES.npy" afterPath="$PROJECT_DIR$/src/WAKES.npy" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/DWM_calc_mixL.py" afterPath="$PROJECT_DIR$/src/DWM_calc_mixL.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/DWM_flowfield_farm.py" afterPath="$PROJECT_DIR$/src/DWM_flowfield_farm.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/DWM_flowfield_farm_Dynamic.py" afterPath="$PROJECT_DIR$/src/DWM_flowfield_farm_Dynamic.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/RUN_sDWM_tests.py" afterPath="$PROJECT_DIR$/src/RUN_sDWM_tests.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Meandering_Main.py" afterPath="$PROJECT_DIR$/src/Meandering_Main.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ReadMannTurbulence.py" afterPath="$PROJECT_DIR$/src/ReadMannTurbulence.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Wake_added_turbulence_Main.py" afterPath="$PROJECT_DIR$/src/Wake_added_turbulence_Main.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cDWM.py" afterPath="$PROJECT_DIR$/src/cDWM.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cMann.py" afterPath="$PROJECT_DIR$/src/cMann.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ReadTurbulence.py" afterPath="$PROJECT_DIR$/src/ReadTurbulence.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cTurb.py" afterPath="$PROJECT_DIR$/src/cTurb.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sDWM.py" afterPath="$PROJECT_DIR$/src/sDWM.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -26,16 +22,9 @@
       <file leaf-file-name="sDWM.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/sDWM.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="271">
-              <caret line="17" column="33" lean-forward="true" selection-start-line="17" selection-start-column="33" selection-end-line="17" selection-end-column="33" />
-              <folding>
-                <marker date="1532935414532" expanded="true" signature="11707:11708" ph="..." />
-                <marker date="1532935414532" expanded="true" signature="11707:12503" ph="..." />
-                <marker date="1532935414532" expanded="true" signature="11707:13627" ph="..." />
-                <marker date="1532935414532" expanded="true" signature="11717:11881" ph="..." />
-                <marker date="1532935414532" expanded="true" signature="12508:12727" ph="..." />
-                <marker date="1532935414532" expanded="true" signature="12761:13396" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-              </folding>
+            <state relative-caret-position="169">
+              <caret line="62" column="22" lean-forward="true" selection-start-line="62" selection-start-column="22" selection-end-line="62" selection-end-column="22" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -102,46 +91,54 @@
               <folding>
                 <element signature="e#334#10876#0" expanded="false" />
                 <element signature="e#10934#13910#0" expanded="false" />
-                <marker date="1532935387387" expanded="false" signature="14047:17274" ph="..." />
-                <marker date="1532935387387" expanded="true" signature="30184:30185" ph="..." />
-                <marker date="1532935387387" expanded="false" signature="30184:32134" ph="..." />
                 <marker date="1532935387387" expanded="false" signature="30215:32117" ph="..." />
                 <marker date="1532935387387" expanded="false" signature="31036:32117" ph="..." />
-                <marker date="1532935387387" expanded="true" signature="31244:31795" ph="..." />
-                <marker date="1532935387387" expanded="true" signature="31446:31795" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ReadMannTurbulence.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/ReadMannTurbulence.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3264">
-              <caret line="217" column="42" lean-forward="false" selection-start-line="217" selection-start-column="42" selection-end-line="217" selection-end-column="42" />
-              <folding>
-                <marker date="1532935408022" expanded="false" signature="237:690" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="cMann.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cMann.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-638">
-              <caret line="6" column="3" lean-forward="true" selection-start-line="6" selection-start-column="3" selection-end-line="6" selection-end-column="3" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="cTurb.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="cTurb.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/cTurb.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="357">
-              <caret line="21" column="25" lean-forward="true" selection-start-line="21" selection-start-column="25" selection-end-line="21" selection-end-column="25" />
+              <caret line="21" column="20" lean-forward="true" selection-start-line="21" selection-start-column="20" selection-end-line="21" selection-end-column="20" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Meandering_Main.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/Meandering_Main.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="145">
+              <caret line="447" column="93" lean-forward="true" selection-start-line="447" selection-start-column="93" selection-end-line="447" selection-end-column="93" />
+              <folding>
+                <element signature="e#363#381#0" expanded="true" />
+                <element signature="e#26953#28087#1" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ReadTurbulence.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/ReadTurbulence.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="239">
+              <caret line="273" column="32" lean-forward="false" selection-start-line="273" selection-start-column="32" selection-end-line="273" selection-end-column="32" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Polar_Interpolate_Data_Plan.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Polar_Interpolate_Data_Plan.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="168">
+              <caret line="10" column="11" lean-forward="true" selection-start-line="10" selection-start-column="11" selection-end-line="10" selection-end-column="11" />
+              <folding>
+                <element signature="e#9#27#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -164,9 +161,20 @@
                 <element signature="e#32069#32380#1" expanded="false" />
                 <element signature="e#33204#36064#0" expanded="false" />
                 <element signature="e#35298#36031#0" expanded="false" />
-                <marker date="1532935393482" expanded="true" signature="36110:39334" ph="..." />
-                <marker date="1532935393482" expanded="true" signature="68908:70261" ph="..." />
-                <marker date="1532935393482" expanded="true" signature="69283:69684" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DWM_flowfield_farm_Dynamic.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/DWM_flowfield_farm_Dynamic.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="292">
+              <caret line="50" column="12" lean-forward="false" selection-start-line="50" selection-start-column="12" selection-end-line="50" selection-end-column="47" />
+              <folding>
+                <element signature="e#159#177#0" expanded="true" />
+                <element signature="e#2900#12392#0" expanded="false" />
+                <element signature="e#12496#18638#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -212,19 +220,19 @@
         <option value="$PROJECT_DIR$/src/DWM_main_BEM.py" />
         <option value="$PROJECT_DIR$/src/cBEM.py" />
         <option value="$PROJECT_DIR$/src/WindFarm.py" />
-        <option value="$PROJECT_DIR$/src/Meandering_Main.py" />
-        <option value="$PROJECT_DIR$/src/Polar_Interpolate_Data_Plan.py" />
         <option value="$PROJECT_DIR$/src/cTurb.py" />
         <option value="$PROJECT_DIR$/src/DWM_calc_mixL.py" />
-        <option value="$PROJECT_DIR$/src/ReadTurbulence.py" />
-        <option value="$PROJECT_DIR$/src/ReadMannTurbulence.py" />
         <option value="$PROJECT_DIR$/src/DWM_flowfield_farm.py" />
         <option value="$PROJECT_DIR$/src/cDWM.py" />
         <option value="$PROJECT_DIR$/src/RUN_sDWM_tests.py" />
         <option value="$PROJECT_DIR$/src/Wake_added_turbulence_Main.py" />
-        <option value="$PROJECT_DIR$/src/DWM_flowfield_farm_Dynamic.py" />
-        <option value="$PROJECT_DIR$/src/sDWM.py" />
         <option value="$PROJECT_DIR$/src/cMann.py" />
+        <option value="$PROJECT_DIR$/src/ReadMannTurbulence.py" />
+        <option value="$PROJECT_DIR$/src/Polar_Interpolate_Data_Plan.py" />
+        <option value="$PROJECT_DIR$/src/DWM_flowfield_farm_Dynamic.py" />
+        <option value="$PROJECT_DIR$/src/Meandering_Main.py" />
+        <option value="$PROJECT_DIR$/src/sDWM.py" />
+        <option value="$PROJECT_DIR$/src/ReadTurbulence.py" />
       </list>
     </option>
   </component>
@@ -513,7 +521,14 @@
       <option name="project" value="LOCAL" />
       <updated>1532448900545</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="Add of three programm for wake added Turbulence part.">
+      <created>1532935518028</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1532935518028</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -676,9 +691,6 @@
             <element signature="e#32069#32380#1" expanded="false" />
             <element signature="e#33204#36064#0" expanded="false" />
             <element signature="e#35298#36031#0" expanded="false" />
-            <marker date="1532935393482" expanded="true" signature="36110:39334" ph="..." />
-            <marker date="1532935393482" expanded="true" signature="68908:70261" ph="..." />
-            <marker date="1532935393482" expanded="true" signature="69283:69684" ph="..." />
           </folding>
         </state>
       </provider>
@@ -750,9 +762,6 @@
             <element signature="e#32069#32380#1" expanded="false" />
             <element signature="e#33204#36064#0" expanded="false" />
             <element signature="e#35298#36031#0" expanded="false" />
-            <marker date="1532935393482" expanded="true" signature="36110:39334" ph="..." />
-            <marker date="1532935393482" expanded="true" signature="68908:70261" ph="..." />
-            <marker date="1532935393482" expanded="true" signature="69283:69684" ph="..." />
           </folding>
         </state>
       </provider>
@@ -831,9 +840,6 @@
             <element signature="e#32069#32380#1" expanded="false" />
             <element signature="e#33204#36064#0" expanded="false" />
             <element signature="e#35298#36031#0" expanded="false" />
-            <marker date="1532935393482" expanded="true" signature="36110:39334" ph="..." />
-            <marker date="1532935393482" expanded="true" signature="68908:70261" ph="..." />
-            <marker date="1532935393482" expanded="true" signature="69283:69684" ph="..." />
           </folding>
         </state>
       </provider>
@@ -919,9 +925,6 @@
             <element signature="e#32069#32380#1" expanded="false" />
             <element signature="e#33204#36064#0" expanded="false" />
             <element signature="e#35298#36031#0" expanded="false" />
-            <marker date="1532935393482" expanded="true" signature="36110:39334" ph="..." />
-            <marker date="1532935393482" expanded="true" signature="68908:70261" ph="..." />
-            <marker date="1532935393482" expanded="true" signature="69283:69684" ph="..." />
           </folding>
         </state>
       </provider>
@@ -993,9 +996,6 @@
             <element signature="e#32069#32380#1" expanded="false" />
             <element signature="e#33204#36064#0" expanded="false" />
             <element signature="e#35298#36031#0" expanded="false" />
-            <marker date="1532935393482" expanded="true" signature="36110:39334" ph="..." />
-            <marker date="1532935393482" expanded="true" signature="68908:70261" ph="..." />
-            <marker date="1532935393482" expanded="true" signature="69283:69684" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1074,9 +1074,6 @@
             <element signature="e#32069#32380#1" expanded="false" />
             <element signature="e#33204#36064#0" expanded="false" />
             <element signature="e#35298#36031#0" expanded="false" />
-            <marker date="1532935393482" expanded="true" signature="36110:39334" ph="..." />
-            <marker date="1532935393482" expanded="true" signature="68908:70261" ph="..." />
-            <marker date="1532935393482" expanded="true" signature="69283:69684" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1119,9 +1116,6 @@
             <element signature="e#32069#32380#1" expanded="false" />
             <element signature="e#33204#36064#0" expanded="false" />
             <element signature="e#35298#36031#0" expanded="false" />
-            <marker date="1532935393482" expanded="true" signature="36110:39334" ph="..." />
-            <marker date="1532935393482" expanded="true" signature="68908:70261" ph="..." />
-            <marker date="1532935393482" expanded="true" signature="69283:69684" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1241,32 +1235,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/ReadTurbulence.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="341">
-          <caret line="228" column="0" lean-forward="false" selection-start-line="228" selection-start-column="0" selection-end-line="262" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/ReadMannTurbulence.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3264">
-          <caret line="217" column="42" lean-forward="false" selection-start-line="217" selection-start-column="42" selection-end-line="217" selection-end-column="42" />
-          <folding>
-            <marker date="1532935408022" expanded="false" signature="237:690" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Polar_Interpolate_Data_Plan.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1428">
-          <caret line="16" column="23" lean-forward="true" selection-start-line="16" selection-start-column="23" selection-end-line="16" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/cDWM.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-102">
@@ -1303,6 +1271,39 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/RUN_sDWM_tests.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="40" column="0" lean-forward="true" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
+          <folding>
+            <marker date="1532935400875" expanded="true" signature="218:2910" ph="..." />
+            <marker date="1532935400875" expanded="true" signature="332:480" ph="..." />
+            <marker date="1532935400875" expanded="true" signature="1088:1520" ph="..." />
+            <marker date="1532935400875" expanded="true" signature="1526:2047" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1532935400875" expanded="true" signature="2052:2910" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Wake_added_turbulence_Main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="520">
+          <caret line="83" column="4" lean-forward="false" selection-start-line="83" selection-start-column="4" selection-end-line="83" selection-end-column="4" />
+          <folding>
+            <element signature="e#2177#2275#1" expanded="false" />
+            <element signature="e#2762#2868#1" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cMann.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-383">
+          <caret line="6" column="3" lean-forward="true" selection-start-line="6" selection-start-column="3" selection-end-line="6" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/DWM_calc_mixL.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1397">
@@ -1310,23 +1311,26 @@
           <folding>
             <element signature="e#334#10876#0" expanded="false" />
             <element signature="e#10934#13910#0" expanded="false" />
-            <marker date="1532935387387" expanded="false" signature="14047:17274" ph="..." />
-            <marker date="1532935387387" expanded="true" signature="30184:30185" ph="..." />
-            <marker date="1532935387387" expanded="false" signature="30184:32134" ph="..." />
             <marker date="1532935387387" expanded="false" signature="30215:32117" ph="..." />
             <marker date="1532935387387" expanded="false" signature="31036:32117" ph="..." />
-            <marker date="1532935387387" expanded="true" signature="31244:31795" ph="..." />
-            <marker date="1532935387387" expanded="true" signature="31446:31795" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/DWM_flowfield_farm_Dynamic.py">
+    <entry file="file://$PROJECT_DIR$/src/cTurb.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="527">
-          <caret line="235" column="21" lean-forward="false" selection-start-line="235" selection-start-column="21" selection-end-line="235" selection-end-column="21" />
+        <state relative-caret-position="357">
+          <caret line="21" column="20" lean-forward="true" selection-start-line="21" selection-start-column="20" selection-end-line="21" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Polar_Interpolate_Data_Plan.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="168">
+          <caret line="10" column="11" lean-forward="true" selection-start-line="10" selection-start-column="11" selection-end-line="10" selection-end-column="11" />
           <folding>
-            <element signature="e#159#177#0" expanded="true" />
+            <element signature="e#9#27#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1348,73 +1352,57 @@
             <element signature="e#32069#32380#1" expanded="false" />
             <element signature="e#33204#36064#0" expanded="false" />
             <element signature="e#35298#36031#0" expanded="false" />
-            <marker date="1532935393482" expanded="true" signature="36110:39334" ph="..." />
-            <marker date="1532935393482" expanded="true" signature="68908:70261" ph="..." />
-            <marker date="1532935393482" expanded="true" signature="69283:69684" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DWM_flowfield_farm_Dynamic.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="292">
+          <caret line="50" column="12" lean-forward="false" selection-start-line="50" selection-start-column="12" selection-end-line="50" selection-end-column="47" />
+          <folding>
+            <element signature="e#159#177#0" expanded="true" />
+            <element signature="e#2900#12392#0" expanded="false" />
+            <element signature="e#12496#18638#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sDWM.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="271">
-          <caret line="17" column="33" lean-forward="true" selection-start-line="17" selection-start-column="33" selection-end-line="17" selection-end-column="33" />
+        <state relative-caret-position="169">
+          <caret line="62" column="22" lean-forward="true" selection-start-line="62" selection-start-column="22" selection-end-line="62" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/ReadMannTurbulence.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-3069">
+          <caret line="11" column="0" lean-forward="true" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
           <folding>
-            <marker date="1532935414532" expanded="true" signature="11707:11708" ph="..." />
-            <marker date="1532935414532" expanded="true" signature="11707:12503" ph="..." />
-            <marker date="1532935414532" expanded="true" signature="11707:13627" ph="..." />
-            <marker date="1532935414532" expanded="true" signature="11717:11881" ph="..." />
-            <marker date="1532935414532" expanded="true" signature="12508:12727" ph="..." />
-            <marker date="1532935414532" expanded="true" signature="12761:13396" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <element signature="e#78#96#0" expanded="true" />
+            <marker date="1532936189419" expanded="false" signature="237:690" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/RUN_sDWM_tests.py">
+    <entry file="file://$PROJECT_DIR$/src/ReadTurbulence.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="40" column="0" lean-forward="true" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
-          <folding>
-            <marker date="1532935400875" expanded="true" signature="218:2910" ph="..." />
-            <marker date="1532935400875" expanded="true" signature="332:480" ph="..." />
-            <marker date="1532935400875" expanded="true" signature="1088:1520" ph="..." />
-            <marker date="1532935400875" expanded="true" signature="1526:2047" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1532935400875" expanded="true" signature="2052:2910" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Wake_added_turbulence_Main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="95">
-          <caret line="83" column="4" lean-forward="false" selection-start-line="83" selection-start-column="4" selection-end-line="83" selection-end-column="4" />
-          <folding>
-            <element signature="e#118#136#0" expanded="false" />
-          </folding>
+        <state relative-caret-position="239">
+          <caret line="273" column="32" lean-forward="false" selection-start-line="273" selection-start-column="32" selection-end-line="273" selection-end-column="32" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Meandering_Main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="314">
-          <caret line="391" column="4" lean-forward="true" selection-start-line="391" selection-start-column="4" selection-end-line="391" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cMann.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-638">
-          <caret line="6" column="3" lean-forward="true" selection-start-line="6" selection-start-column="3" selection-end-line="6" selection-end-column="3" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cTurb.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="21" column="25" lean-forward="true" selection-start-line="21" selection-start-column="25" selection-end-line="21" selection-end-column="25" />
-          <folding />
+        <state relative-caret-position="145">
+          <caret line="447" column="93" lean-forward="true" selection-start-line="447" selection-start-column="93" selection-end-line="447" selection-end-column="93" />
+          <folding>
+            <element signature="e#363#381#0" expanded="true" />
+            <element signature="e#26953#28087#1" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>

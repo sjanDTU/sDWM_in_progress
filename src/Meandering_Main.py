@@ -16,6 +16,7 @@ from matplotlib import cm
 from mpl_toolkits.mplot3d import Axes3D
 import math as m
 from matplotlib import animation
+import copy
 
 from DWM_GClarsenPicks import get_Rw
 
@@ -57,234 +58,371 @@ def DWM_extract_meandering_from_TurbBox(MannBox, WindFarm):
     # -------------------------------- # INITIALIZATION # ------------------------------------ #
     MannBox, WindFarm = Init_Turb(MannBox, WindFarm)
 
-    # -------------------------- # PLOT CHECK PART # ---------------------------------- #
-    # With Simplification described in 'Pragmatic approach of wake meandering'
-    """
-    Ld = 100./WindFarm.WT_R
-    ti = 1 #s
-    yc_zc = Wake_Dynamic_at_Ld(Ld, ti, MannBox, Meand_Mann)
-    print yc_zc
-    yc_zc = []
-    for ti in MannBox.ti[:200]:
-        print 'ti: ', ti
-        yc_zc.append(Wake_Dynamic_at_Ld(Ld, ti, MannBox, Meand_Mann))
-    yc_zc = np.array(yc_zc)
-    print yc_zc
-    print np.shape(yc_zc)  # first axis: time, second axis: [vc, wc]
-    plt.figure()
-    plt.plot(yc_zc[:, 0],yc_zc[:, 1], label='Center location')
-    plt.show()
+
+    # What Can we do for a not constant spacing
+    # Not Implemented for now for the not crude approach
     #"""
-
-    # do a check of the 'Perfect Correlation' described in 'Pragmatic Approach
-
-    #### Plot yc or zc in time in WindFarm (3D) with circle of 2*Rw radius
-    """
-    Ld = np.linspace(0, WindFarm.lenght/WindFarm.WT_R, 200)
-    Wake = []
-    T = [ ti for ti in MannBox.ti[:] if ti<MannBox.SimulationTime]
-
-    for ld in Ld:
-        print 'Ld: ', ld
-        yc_zc = []
-        # as x_b = U*tho, tho = x_b/U (here x_b = ld)
-        tho = ld / MannBox.U    # time for the first wake release to reach the studied plan at ld
-
-        # Get Wake radius function of the transportation time (seems at this distance)
-        if MannBox.WakeExpansion:
-            # ----# Get the wake radius #----#
-            Rw = get_Rw(x=ld, R=1., TI=MannBox.TI, CT=WindFarm.CT)  # resulted Rw is no dimensionalized
-            MannBox.WakeRadius_for_this_Plan = Rw
-            MannBox.Af = m.pi * (2 * MannBox.WakeRadius_for_this_Plan) ** 2
-
-        for ti in T:
-            #print 'ti: ', ti
-            #print 'tho: ', tho
-
-            # a way to do well is to make difference between ti and tho
-            #ti = ti - tho
-            #print 'ti: ', ti
-            if ti-tho < 0:
-                yc_zc.append([np.nan, np.nan])
-            else :
-                yc_zc.append(Wake_Dynamic_at_Ld(ld, ti-tho, MannBox, Meand_Mann, WindFarm))
-            # a way to do well is to make difference between ti and tho
-            ti = ti - tho
-        Wake.append(yc_zc)
-    Wake = np.array(Wake)
-    print 'shape Wake', np.shape(Wake)
-
-    # Compute wake radius for each distances
-    L_Total = np.array([MannBox.dx*i for i in range(0, MannBox.nx, 64) if i*MannBox.dx < WindFarm.lenght/WindFarm.WT_R])
-    twoRw_to_plot = 2*get_Rw(L_Total, R=1., TI=MannBox.TI, CT=WindFarm.CT)
-    y_rw, z_rw = [], []
-    for index_ld in range(len([MannBox.dx*i for i in range(0, MannBox.nx, 64) if i*MannBox.dx < WindFarm.lenght/WindFarm.WT_R])):
-        y_rw.append(twoRw_to_plot[index_ld] * np.cos(np.linspace(-m.pi, m.pi,15)))
-        z_rw.append(twoRw_to_plot[index_ld] * np.sin(np.linspace(-m.pi, m.pi, 15)))
-    y_rw, z_rw = np.array(y_rw), np.array(z_rw)
-    print 'shape y_rw: ', np.shape(y_rw)
-
-    raw_input('Press any key to continue and plot solutions: ')
-    plt.ion()
-    fig = plt.figure()
-
-    for index_t in range(len(T)):
-        if video:
-            break
-        yc_zc = Wake[:, index_t, :]
-        print 'index_t', index_t
-        if index_t == 2 or index_t == 50 or index_t == 200 or index_t == 210:
-            plt.pause(10)
-
-        plt.pause(0.1)
-        plt.clf()
-        plt.cla()
-        ax = fig.add_subplot(111, projection='3d')
-        view = MannBox.ly/2
-        plt.ylim(-view, view)
-        plt.xlim(-view, view)
-
-        ax.scatter(yc_zc[:, 0], yc_zc[:, 1], Ld)
-        #ax.scatter for circle of 2 wake radius centered with the wake center
-        for i in range(np.shape(y_rw)[1]):
-            ax.scatter(y_rw[:, i] , z_rw[:, i], L_Total, color='r')
-        ax.view_init(azim=0, elev=-90)
-        #ax.set_zlim(0, WindFarm.lenght/WindFarm.WT_R/10)
-        ax.set_zlim(0, WindFarm.lenght/WindFarm.WT_R)
-        plt.draw()
-        #plt.pause(1)
+    RW = {}
+    LD = {}
+    for Wake_index in range(len(WindFarm.stream_location_z)):
+        ld_ref = WindFarm.stream_location_z[Wake_index]
+        tho_ref = ld_ref / MannBox.U
+        Ld = [abs(ld - ld_ref) for ld in WindFarm.stream_location_z[Wake_index:]]
+        RW[Wake_index] = get_Rw(x=Ld, R=1., TI=MannBox.TI, CT=WindFarm.CT)
+        LD[Wake_index] = Ld
+    print RW
+    print LD
+    #raw_input('....')
     #"""
-
-    #### Plot vc or wc in time at a specified distance (account wake expansion)
-    """
-    ld = 4   #(4R)
-    #ld = 100 / WindFarm.WT_R  # We are at a specified distance so we can get the wake radius at this distance
-                              # (doesn't change in time)
-                              # A simple stationary semi-analytical wake model Gunner C. Larsen (2009)
-
-    T = [ti for ti in MannBox.ti[:] if ti < MannBox.SimulationTime]
-
-    print 'Ld: ', ld
-    vc_wc = []
-    # as x_b = U*tho, tho = x_b/U (here x_b = ld)
-    tho = ld / MannBox.U  # time for the first wake release to reach the studied plan at ld
-
-    # Get Wake radius function of the transportation time (seems at this distance)
-    if MannBox.WakeExpansion:
-        # ----# Get the wake radius #----#
-        # resulted Rw is no dimensionalized
-        MannBox.WakeRadius_for_this_Plan = get_Rw(x=ld, R=1., TI=MannBox.TI, CT=WindFarm.CT)
-        MannBox.Af = m.pi * (2 * MannBox.WakeRadius_for_this_Plan) ** 2
-
-    for ti in T:
-        print 'ti: ', ti
-        if ti - tho < 0:
-            vc_wc.append([ti, np.nan, np.nan])
-        else:
-            vc_wc.append([ti]+(Wake_Dynamic_at_Ld(ld, ti - tho, MannBox, Meand_Mann, WindFarm)))
-
-    vc_wc = np.array(vc_wc)
-    yc_zc = vc_wc
-    yc_zc[:, 1:3] = ld/MannBox.U * yc_zc[:, 1:3]
-
-    print 'vc_wc shape: ', np.shape(vc_wc)
-
-    print 'yc_zc: '
-    print yc_zc
-
-    plt.figure()
-    plt.title('Characteristic Velocities in Time at a specified distance')
-    plt.plot(vc_wc[:, 0], vc_wc[:, 1], label='vc(t) at ld='+str(ld))
-    plt.plot(vc_wc[:, 0], vc_wc[:, 2], label='wc(t) at ld='+str(ld))
-    plt.legend()
-    plt.show()
-
-    plt.figure()
-    plt.title('center movements in time at a specified distance')
-    plt.plot(yc_zc[:, 0], yc_zc[:, 1], label='yc(t) at ld='+str(ld))
-    plt.plot(yc_zc[:, 0], yc_zc[:, 2], label='zc(t) at ld=' + str(ld))
-    plt.plot(yc_zc[:, 0], np.sqrt(yc_zc[:, 1]**2 + yc_zc[:, 2]**2), label='rc(t) at ld=' + str(ld))
-    plt.legend()
-    plt.show()
-    #"""
-
     # -------------- # Meandering Computation for each plan of interest # --------------------------- #
     # Ld is the list of the distance between generating plan and the plans of interest
     #Ld = WindFarm.stream_location_z  # We are at a specified distance so we can get the wake radius at this distance
                                      # (doesn't change in time)
                                      # A simple stationary semi-analytical wake model Gunner C. Larsen (2009)
+    ############ OLD LOOP for Debug only ###################
+    # This is a really crude approach of the algorithm to handle all the wake! So more computation time.
     Meand_Mann = meand_mann()
     if MannBox.CorrectionDelay:
         # We want to begin the simulation when the first plan go out of the WindFarm Box
-        delay = WindFarm.nodim_lenght / MannBox.U
+        MannBox.delay = WindFarm.nodim_lenght / MannBox.U
+        print 'delay is:', MannBox.delay
     # The data do not exceed the simulation time defined in class object (cMeand or cMann)
     T = [ti for ti in MannBox.ti[:] if ti < MannBox.SimulationTime]
 
+    if MannBox.loop_debug:
+        start_time = time.time()
+        WAKES = [] # list holding all wakes generated by each turbines
+        for WT_index in range(len(WindFarm.stream_location_z)):
+            # creates the list ld of interest
+            # all the distances are calculate for reference WT, we delete WT upstream to the WT ref
+            ld_ref = WindFarm.stream_location_z[WT_index]
+            Ld = [abs(ld-ld_ref) for ld in WindFarm.stream_location_z[WT_index:]]
 
-    WAKES = [] # list holding all wakes generated by each turbines
-    for WT_index in range(len(WindFarm.stream_location_z)):
-        # creates the list ld of interest
-        # all the distances are calculate for reference WT, we delete WT upstream to the WT ref
-        ld_ref = WindFarm.stream_location_z[WT_index]
-        Ld = [abs(ld-ld_ref) for ld in WindFarm.stream_location_z[WT_index:]]
+            # For each ld in Ld, we get a data matrix structured like this: column 1: time(s), column 2: yc, column 3: zc
+            # we store these matrixs in a list along Ld
 
-        # For each ld in Ld, we get a data matrix structured like this: column 1: time(s), column 2: yc, column 3: zc
-        # we store these matrixs in a list along Ld
+            Wake = []
 
-        Wake = []
+            tho_ref = ld_ref / MannBox.U
 
-        for ld in Ld:
-            print 'Ld: ', ld
+            for ld in Ld:
+                print 'Ld: ', ld
 
-            ts_vc_wc =[]
-            # as x_b = U*tho, tho = x_b/U (here x_b = ld)
-            tho = ld / MannBox.U  # time for the first wake release to reach the studied plan at ld
+                ts_vc_wc =[]
+                # as x_b = U*tho, tho = x_b/U (here x_b = ld)
+                tho_rel = ld / MannBox.U  # time for the first wake release to reach the studied plan at ld
 
-            # Get Wake radius function of the transportation time (seems at this distance)
-            if MannBox.WakeExpansion:
-                # ----# Get the wake radius #----#
-                Rw = get_Rw(x=ld, R=1., TI=MannBox.TI, CT=WindFarm.CT)  # resulted Rw is no dimensionalized
-                MannBox.WakeRadius_for_this_Plan = Rw
-                MannBox.Af = m.pi * (2 * MannBox.WakeRadius_for_this_Plan) ** 2
-            boolref = False
-            for ts in T:
-                if MannBox.CorrectionDelay:
-                    ts = ts + delay
-                    vc_wc = Wake_Dynamic_at_Ld(ld, ts - tho, MannBox, Meand_Mann)
-                    ts_vc_wc.append([ts-delay] + vc_wc)
-                else:
-                    if ts - tho < 0:
-                        ts_vc_wc.append([ts, np.nan, np.nan])
+                # Get Wake radius function of the transportation time (seems at this distance)
+                if MannBox.WakeExpansion:
+                    # ----# Get the wake radius #----#
+                    Rw = get_Rw(x=ld, R=1., TI=MannBox.TI, CT=WindFarm.CT)  # resulted Rw is no dimensionalized
+                    MannBox.WakeRadius_for_this_Plan = Rw
+                    MannBox.Af = m.pi * (2 * MannBox.WakeRadius_for_this_Plan) ** 2
+                boolref = False
+                for ts in T:
+                    if MannBox.CorrectionDelay:
+                        ts = ts + MannBox.delay
+                        if ld == 0.:
+                            vc_wc = [0., 0.]
+                        else:
+                            vc_wc = Wake_Dynamic_at_Ld(ld, ts - tho_ref-tho_rel, MannBox, Meand_Mann)
+                            #vc_wc = Wake_Dynamic_at_Ld(ld, ts, MannBox, Meand_Mann)
+                        ts_vc_wc.append([ts-MannBox.delay] + vc_wc)
                     else:
+                        if ts - tho < 0:
+                            ts_vc_wc.append([ts, np.nan, np.nan])
+                        else:
 
-                        vc_wc = Wake_Dynamic_at_Ld(ld, ts - tho, MannBox, Meand_Mann, WindFarm)
-                        if not boolref:
-                            boolref = True
-                            vc_wc_ref = vc_wc
-                        ts_vc_wc.append([ts]+vc_wc)
+                            vc_wc = Wake_Dynamic_at_Ld(ld, ts - tho, MannBox, Meand_Mann)
+                            if not boolref:
+                                boolref = True
+                                vc_wc_ref = vc_wc
+                            ts_vc_wc.append([ts]+vc_wc)
 
-            ts_vc_wc = np.array(ts_vc_wc)
-            ts_yc_zc = ts_vc_wc
-            if not MannBox.CorrectionDelay:
-                NaN_index = np.isnan(ts_yc_zc[:, 1])
-                ts_yc_zc[NaN_index, 1] = vc_wc_ref[0]
-                ts_yc_zc[NaN_index, 2] = vc_wc_ref[1]
+                ts_vc_wc = np.array(ts_vc_wc)
+                ts_yc_zc = ts_vc_wc
+                if not MannBox.CorrectionDelay:
+                    NaN_index = np.isnan(ts_yc_zc[:, 1])
+                    ts_yc_zc[NaN_index, 1] = vc_wc_ref[0]
+                    ts_yc_zc[NaN_index, 2] = vc_wc_ref[1]
 
-            ts_yc_zc[:, 1:3] = ld/MannBox.U * ts_yc_zc[:, 1:3]
-            Wake.append(ts_yc_zc)
-        WAKES.append(Wake)
+                ts_yc_zc[:, 1:3] = ld/MannBox.U * ts_yc_zc[:, 1:3]
+                Wake.append(ts_yc_zc)
+            WAKES.append(Wake)
+        print 'Computation time for crude approach: ', time.time() - start_time
 
-    # Index of the list WAKES correspond directly of the iteration in sDWM
+
+
+    ######NEW Loops
+    # 2 kinds of loop possible: One wake can be use for every wake in the WF (big assumption) (Mannbox considered for one WT)
+    # or multiple wake created as the first wake with wake expansion and constant WF CT (Mannbox considered for the entire WF)
+    if not MannBox.loop_debug:
+        ################################################################################################################
+
+        ################################################################################################################
+        if MannBox.multiplewake_build_on_first_wake:
+            T_Mannbox = [ti for ti in MannBox.ti[:] if ti < MannBox.SimulationTime+MannBox.delay]
+            Interpo_Integrate = interpo_integrate()
+            Interpo_Integrate.F_tm_fvc_fwc = []
+
+            # ------------------------ # INTERPOLATION LOOP # -------------------------------------------------------- #
+            tstart = time.time()
+            for t_M in T_Mannbox:
+                tm_vc_wc = []
+                for char in ['vfluct', 'wfluct']:
+                    Meand_Mann.wake_center_location = (0, 0)  # due to simplification
+                    MannBox.plan_of_interest = get_plan_of_interest(MannBox, ti=t_M, component_char=char)
+
+                    # ----# Interpolation Part (WakeCentered) #----#
+
+                    Interpo_Integrate = Interpolate_plan(MannBox, Interpo_Integrate, Meand_Mann)
+                    tm_vc_wc.append(Interpo_Integrate.f_cart)
+                Interpo_Integrate.F_tm_fvc_fwc.append(tm_vc_wc)
+            print 'computation time for interpo: ', time.time()- tstart
+
+            print np.shape(Interpo_Integrate.F_tm_fvc_fwc)
+
+            if not WindFarm.constant_spacing:
+                WAKES = []  # list holding all wakes generated by each turbines
+                for WT_index in range(len(WindFarm.stream_location_z)):
+                    # creates the list ld of interest
+                    # all the distances are calculate for reference WT, we delete WT upstream to the WT ref
+                    ld_ref = WindFarm.stream_location_z[WT_index]
+                    Ld = [abs(ld-ld_ref) for ld in WindFarm.stream_location_z[WT_index:]]
+
+                    # For each ld in Ld, we get a data matrix structured like this: column 1: time(s), column 2: yc, column 3: zc
+                    # we store these matrixs in a list along Ld
+
+                    Wake = []
+
+                    tho_ref = ld_ref / MannBox.U
+
+                    for ld in Ld:
+                        print 'Ld: ', ld
+
+                        ts_vc_wc =[]
+                        # as x_b = U*tho, tho = x_b/U (here x_b = ld)
+                        tho_rel = ld / MannBox.U  # time for the first wake release to reach the studied plan at ld
+
+                        # Get Wake radius function of the transportation time (seems at this distance)
+                        if MannBox.WakeExpansion:
+                            # ----# Get the wake radius #----#
+                            Rw = get_Rw(x=ld, R=1., TI=MannBox.TI, CT=WindFarm.CT)  # resulted Rw is no dimensionalized
+                            MannBox.WakeRadius_for_this_Plan = Rw
+                            MannBox.Af = m.pi * (2 * MannBox.WakeRadius_for_this_Plan) ** 2
+                        boolref = False
+                        for ts in T:
+                            if MannBox.CorrectionDelay:
+                                ts = ts + MannBox.delay
+                                if ld == 0.:# and ld_ref!=WindFarm.stream_location_z[-1]:
+                                    vc_wc = [0., 0.]
+                                else:
+                                    vc_wc = Wake_Dynamic_at_Ld_optim(ts - tho_ref-tho_rel, MannBox, Meand_Mann, Interpo_Integrate)
+                                    #vc_wc = Wake_Dynamic_at_Ld(ld, ts, MannBox, Meand_Mann)
+                                ts_vc_wc.append([ts-MannBox.delay] + vc_wc)
+                            else:
+                                if ts - tho < 0:
+                                    ts_vc_wc.append([ts, np.nan, np.nan])
+                                else:
+
+                                    vc_wc = Wake_Dynamic_at_Ld(ld, ts - tho, MannBox, Meand_Mann)
+                                    if not boolref:
+                                        boolref = True
+                                        vc_wc_ref = vc_wc
+                                    ts_vc_wc.append([ts]+vc_wc)
+
+                        ts_vc_wc = np.array(ts_vc_wc)
+                        ts_yc_zc = ts_vc_wc
+                        if not MannBox.CorrectionDelay:
+                            NaN_index = np.isnan(ts_yc_zc[:, 1])
+                            ts_yc_zc[NaN_index, 1] = vc_wc_ref[0]
+                            ts_yc_zc[NaN_index, 2] = vc_wc_ref[1]
+
+                        ts_yc_zc[:, 1:3] = ld/MannBox.U * ts_yc_zc[:, 1:3]
+                        Wake.append(ts_yc_zc)
+                    WAKES.append(Wake)
+
+            if WindFarm.constant_spacing:
+                # --------------------- # INTREGRATION PROCESS FOR FirST WAKE # ------------------------------------- #
+                start_time = time.time()
+                # same spacing & same wake expansion behaviour for each wake, so we can calcutate just one wake to build the other
+                WAKES = []  # list holding all wakes generated by each turbines
+
+                #Computation for the first wake only. tho ref =0
+                Wake = []
+                tho_ref = 0
+                for ld in WindFarm.stream_location_z:
+                    print 'Ld: ', ld
+
+                    ts_vc_wc = []
+                    # as x_b = U*tho, tho = x_b/U (here x_b = ld)
+                    tho_rel = ld / MannBox.U  # time for the first wake release to reach the studied plan at ld
+
+                    # Get Wake radius function of the transportation time (seems at this distance)
+                    if MannBox.WakeExpansion:
+                        # ----# Get the wake radius #----#
+                        Rw = get_Rw(x=ld, R=1., TI=MannBox.TI, CT=WindFarm.CT)  # resulted Rw is no dimensionalized
+                        MannBox.WakeRadius_for_this_Plan = Rw
+                        MannBox.Af = m.pi * (2 * MannBox.WakeRadius_for_this_Plan) ** 2
+                    boolref = False
+                    for ts in T:
+                        if MannBox.CorrectionDelay:
+                            ts = ts + MannBox.delay
+                            if ld == 0.:  # and ld_ref!=WindFarm.stream_location_z[-1]:
+                                vc_wc = [0., 0.]
+                            else:
+                                vc_wc = Wake_Dynamic_at_Ld_optim(ts - tho_ref - tho_rel, MannBox, Meand_Mann,
+                                                                 Interpo_Integrate)
+                                # vc_wc = Wake_Dynamic_at_Ld(ld, ts, MannBox, Meand_Mann)
+                            ts_vc_wc.append([ts - MannBox.delay] + vc_wc)
+                        else:
+                            if ts - tho_rel < 0:
+                                ts_vc_wc.append([ts, np.nan, np.nan])
+                            else:
+
+                                vc_wc = Wake_Dynamic_at_Ld(ld, ts - tho, MannBox, Meand_Mann)
+                                if not boolref:
+                                    boolref = True
+                                    vc_wc_ref = vc_wc
+                                ts_vc_wc.append([ts] + vc_wc)
+
+                    ts_vc_wc = np.array(list(ts_vc_wc))
+                    if not MannBox.CorrectionDelay:
+                        NaN_index = np.isnan(ts_yc_zc[:, 1])
+                        ts_yc_zc[NaN_index, 1] = vc_wc_ref[0]
+                        ts_yc_zc[NaN_index, 2] = vc_wc_ref[1]
+
+                    Wake.append(ts_vc_wc)
+                WAKES.append(list(Wake))
+                print 'Computation time for integrate: ', time.time() - start_time
+
+                # --------------------- # POST PROCESSING TO BUILD OTHER WAKEs # ------------------------------------- #
+                # Built other wake with first one
+                start_time = time.time()
+                for WT_index in range(1, len(WindFarm.stream_location_z)):
+                    # creates the list ld of interest
+                    # all the distances are calculate for reference WT, we delete WT upstream to the WT ref
+                    ld_ref = WindFarm.stream_location_z[WT_index]
+                    Ld = np.array([abs(ld - ld_ref) for ld in WindFarm.stream_location_z[WT_index:]])
+                    # For each ld in Ld, we get a data matrix structured like this: column 1: time(s), column 2: yc, column 3: zc
+                    # we store these matrixs in a list along Ld
+
+                    wake_to_add = copy.deepcopy(WAKES[0][WT_index:])
+
+                    # ------------ # POST PROCESSING TO apply OTHER WAKEs ld/U from simplification # ----------------- #
+                    for i_ld in range(len(Ld)):
+                        ld = float(Ld[i_ld])
+                        wake_to_add[i_ld][:][:, 1:3] = ld/MannBox.U * wake_to_add[i_ld][:][:, 1:3]
+                    WAKES.append(wake_to_add)
+
+                # --------------------- # Post Processing apply ld/U to first wake # --------------------------------- #
+                wake_to_change = copy.deepcopy(WAKES[0])
+                for i_ld in range(len(WindFarm.stream_location_z)):
+                    ld = float(WindFarm.stream_location_z[i_ld])
+                    wake_to_change[i_ld][:][:, 1:3] = ld/MannBox.U * wake_to_change[i_ld][:][:, 1:3]
+                WAKES[0] = wake_to_change
+
+                print 'Computation time for Post Process: ', time.time()-start_time
+
+
+
+        if not MannBox.multiplewake_build_on_first_wake:
+            T_Mannbox = [ti for ti in MannBox.ti[:] if ti < MannBox.SimulationTime + MannBox.delay]
+            Interpo_Integrate = interpo_integrate()
+            Interpo_Integrate.F_tm_fvc_fwc = []
+
+        # ---------------------------- # INTERPOLATION LOOP # -------------------------------------------------------- #
+            tstart = time.time()
+            for t_M in T_Mannbox:
+                tm_vc_wc = []
+                for char in ['vfluct', 'wfluct']:
+                    Meand_Mann.wake_center_location = (0, 0)  # due to simplification
+                    MannBox.plan_of_interest = get_plan_of_interest(MannBox, ti=t_M, component_char=char)
+
+                    # ----# Interpolation Part (WakeCentered) #----#
+
+                    Interpo_Integrate = Interpolate_plan(MannBox, Interpo_Integrate, Meand_Mann)
+                    tm_vc_wc.append(Interpo_Integrate.f_cart)
+                Interpo_Integrate.F_tm_fvc_fwc.append(tm_vc_wc)
+            print 'computation time for interpo: ', time.time() - tstart
+
+            print np.shape(Interpo_Integrate.F_tm_fvc_fwc)
+
+        # ---------------------------- # INTEGRATION LOOP # ---------------------------------------------------------- #
+            tstart = time.time()
+            WAKES = []
+            for WAKE_id in range(len(WindFarm.stream_location_z)):
+                Wake = []
+                for i_ld in range(len(LD[WAKE_id])):
+
+                    ld = LD[WAKE_id][i_ld]
+
+                    Rw = RW[WAKE_id][i_ld]
+                    MannBox.WakeRadius_for_this_Plan = Rw
+                    MannBox.Af = m.pi * (2 * MannBox.WakeRadius_for_this_Plan) ** 2
+
+
+                    tho_ref = LD[0][WAKE_id]/MannBox.U
+
+                    print 'Ld: ', ld
+
+                    ts_vc_wc = []
+                    # as x_b = U*tho, tho = x_b/U (here x_b = ld)
+                    tho_rel = ld / MannBox.U  # time for the first wake release to reach the studied plan at ld
+
+                    # Get Wake radius function of the transportation time (seems at this distance)
+                    boolref = False
+                    for ts in T:
+                        if MannBox.CorrectionDelay:
+                            ts = ts + MannBox.delay
+                            if ld == 0.:  # and ld_ref!=WindFarm.stream_location_z[-1]:
+                                vc_wc = [0., 0.]
+                            else:
+                                vc_wc = Wake_Dynamic_at_Ld_optim(ts - tho_ref - tho_rel, MannBox, Meand_Mann,
+                                                                 Interpo_Integrate)
+                                # vc_wc = Wake_Dynamic_at_Ld(ld, ts, MannBox, Meand_Mann)
+                            ts_vc_wc.append([ts - MannBox.delay] + vc_wc)
+                        else:
+                            if ts - tho_rel < 0:
+                                ts_vc_wc.append([ts, np.nan, np.nan])
+                            else:
+
+                                vc_wc = Wake_Dynamic_at_Ld(ld, ts - tho, MannBox, Meand_Mann)
+                                if not boolref:
+                                    boolref = True
+                                    vc_wc_ref = vc_wc
+                                ts_vc_wc.append([ts] + vc_wc)
+
+                    ts_vc_wc = np.array(ts_vc_wc)
+                    ts_yc_zc = ts_vc_wc
+                    if not MannBox.CorrectionDelay:
+                        NaN_index = np.isnan(ts_yc_zc[:, 1])
+                        ts_yc_zc[NaN_index, 1] = vc_wc_ref[0]
+                        ts_yc_zc[NaN_index, 2] = vc_wc_ref[1]
+
+                    ts_yc_zc[:, 1:3] = ld / MannBox.U * ts_yc_zc[:, 1:3]
+                    Wake.append(ts_vc_wc)
+                WAKES.append(Wake)
+            print np.shape(WAKES)
+            print 'Computation time to integrate: ', time.time() - tstart
+            #raw_input('....')
+
+
+            # Not Implemented
+    ####NEW LOOP FOR FAST RESULT BASED ON WAKE EXPANSION
+
+
 
     #Plot Part
     # Plot each Wake
     if MannBox.RESULT_plot:
         Plot_each_Wake(WAKES, WindFarm)
         Plot_Wakes_at_each_ld(WAKES, WindFarm)
+        #Plot_Wakes_at_each_ld_in_MannBox_referential(WAKES, WindFarm, MannBox)
     DATA = WAKES
     np.save('WAKES',DATA)
     print 'Wake Radius Data saved...'
-    return
+    return WAKES
 
 def Init_Turb(MannBox, WindFarm):
 
@@ -387,6 +525,81 @@ def Wake_Dynamic_at_Ld(ld, ti, MannBox, Meand_Mann):
         return yc_zc
     if bool_velocity:
         return vc_wc
+
+def Wake_Dynamic_at_Ld_optim(ti, MannBox, Meand_Mann, Interpo_Integrate):
+    """
+    Work with new loop. Computation time optimised. Because we don't add some useless interpolation due to the old loop
+    :param ld:
+    :param ti:
+    :param MannBox:
+    :param Meand_Mann:
+    :return:
+    """
+    # Caluculation to get Center position directly
+    # Calculation to get Characteristic Velocities (this way have to be used for the MEANDERING MAIN)
+    bool_velocity = True
+    # (Ld, y_g(Ld/U; t0+tho), z_g(Ld/U; t0+tho)
+    # (y_g, z_g) = Ld/U * [vc(U(T-ti), 0, 0), wc(U(T-ti),0,0)]
+
+    #ti = ts +delay - tho_ref - tho_rel
+    index_tm = int(ti/MannBox.dt)
+    #print index_tm
+
+
+    # Determine vc and wc at U(T-ti), 0, 0:
+    vc_wc = []
+    for char in ['vfluct', 'wfluct']:
+        if char == 'vfluct':
+            Interpo_Integrate.f_cart = Interpo_Integrate.F_tm_fvc_fwc[index_tm][0]
+        if char == 'wfluct':
+            Interpo_Integrate.f_cart = Interpo_Integrate.F_tm_fvc_fwc[index_tm][1]
+        Meand_Mann.wake_center_location = (0, 0)  # due to simplification
+
+
+        # ----# Integration Part #----#
+        Interpo_Integrate = polar_mesh_value(MannBox, Interpo_Integrate)
+        Final_Integral_Value = Trapz_for_Integrate_general_grid(Interpo_Integrate)
+
+        # ----# Calculate the characteristic velocity #----#
+        if bool_velocity:
+            vc_wc.append(Final_Integral_Value / MannBox.Af)
+    if bool_velocity:
+        return list(vc_wc)
+#----------------------# TEST #------------------------#
+
+
+"""
+filename = '1028'       # must come from sDWM Input
+R_wt = 46.5             # can come from sDWM
+U = 11.7                # can come from sDWM / or LES
+WTG = 'NY2'             # can come from sDWM
+HH = 90. #Hub height    # can come from sDWM
+
+Rw = 1.  # try with no expansion
+
+WindFarm = windfarm()
+WindFarm.U_mean = U
+WindFarm.WT_R = R_wt
+WindFarm.WT_Rw = Rw
+WindFarm.TI = 0.06
+#WindFarm.lenght = 4000.
+
+WT = wt.WindTurbine('Windturbine', '../WT-data/'+WTG+'/'+WTG+'_PC.dat',HH,R_wt) # already present in sDWM
+
 ########################################################################################################################
 
+start_time = time.time()
+TurBox, WindFarm = pre_init_turb(filename, WindFarm, WT)
+WindFarm.stream_location_z = [0,  4,  8, 12, 17, 21, 25, 30] # [D]
+WAKES = Mann_Main(TurBox, WindFarm)
+print time.time() - start_time
+
+print 'Result: ', WAKES
+print 'Shape: ', np.shape(WAKES)
+
+if False:
+    DATA = WAKES
+    print DATA
+    np.save('C:/Users/augus/Documents/Stage/Codes/Mann_Turbulence/Result/Center_Position_in_time_Lillgrund/z_time_center_location', DATA)
+    print 'Wake Radius Data saved...'
 #"""

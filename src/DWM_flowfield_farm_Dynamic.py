@@ -63,25 +63,6 @@ def get_Meandering_dynamic_V2(meta, meand, TurBox, WF):
 
     return meta, meand
 
-def get_U_Wake_Turbulence_adding(meta):
-    """
-    Purpose: obtain the correct U_aw to add to wake
-    Scale MannBox
-    Distribution
-    :param meta:
-    :param mfor:
-    :return:
-    """
-    # Get TI_u
-    MannBox = pre_init_turb_WaT(meta.MannBox_name)
-
-    # Scale Turbulence on TI from the WindFarm
-    k_scaling = meta.mean_TI_DWM / MannBox.TI_u
-
-    MannBox.u_TurbBox = MannBox.u_TurbBox * k_scaling
-
-    # Distribution Part.
-
 
 
 def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor, MannBox):
