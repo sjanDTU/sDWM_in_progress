@@ -18,14 +18,15 @@ if __name__ == "__main__":
               'WS': 11.,
               'TI': 0.06,
               'WTcoord': '../data/Lill_rowB.dat',
-              'WTG': 'NREL5MW',
+              'WTG': 'NY2',
               'HH': 65.0,
               'R': 46.5,
               'stab': 'N',
-              'accum': 'linear',
+              'accum': 'dominant',
               'optim': False,
-              'dynamic': False,
-              'Meandering_turb_box_name': '1028'}
+              'dynamic': True,
+              'Meandering_turb_box_name': '1028',
+              'WaT_turb_box_name': '1101'}
     ##########################################################################
 
     WT = wt.WindTurbine('Windturbine','../WT-data/'+inputs['WTG']+'/'+inputs['WTG']+'_PC.dat',inputs['HH'],inputs['R'])

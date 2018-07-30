@@ -32,6 +32,7 @@ def ReadMannInput(filename):
             loop_input = ''
     Input = new_Input
 
+    print 'MannBox read for Wake added Turubulence'
     print Input
 
     Mannbox.fieldDim = int(Input[0]); Mannbox.N_Comp = int(Input[1])
@@ -77,6 +78,7 @@ def get_averaged_U(filename):
         return 10.7
     return None
 
+############################ ADAPT IT for Wake added Turbulence
 def sizing_MannBox(MannBox , WindFarm):
     """
     Note: this sizing imply a choice of the reference wich is obvious if all turbines are same => there is ONE Radius
@@ -86,12 +88,6 @@ def sizing_MannBox(MannBox , WindFarm):
     :param windFarm_lenght:
     :return:
     """
-    if MannBox.WakeExpansion:
-        # To contain the wake ly must be superior to 4*Rw_max
-        k = 4 * WindFarm.Rw_Max / (MannBox.lz / WindFarm.WT_R)
-        print 'sized by k taking care the max wake radius with the wake expansion: ', k
-    else:
-        k = 1
 
     MannBox.U = MannBox.U / WindFarm.U_mean
     print 'U (no dimension): ', MannBox.U
@@ -115,8 +111,7 @@ def sizing_MannBox(MannBox , WindFarm):
     MannBox.U_ref = WindFarm.U_mean
     MannBox.R_ref = WindFarm.WT_R
 
-    MannBox.v_TurbBox = MannBox.v_TurbBox / MannBox.U_ref
-    MannBox.w_TurbBox = MannBox.w_TurbBox / MannBox.U_ref
+    MannBox.u_TurbBox = MannBox.u_TurbBox / MannBox.U_ref
     return MannBox
 
 def get_turb_component_from_MannBox(filename,kind_of_fluct,plot_bool,MannBox, video):
@@ -214,53 +209,44 @@ def get_turb_component_from_MannBox(filename,kind_of_fluct,plot_bool,MannBox, vi
         ani = animation.ArtistAnimation(fig, ims, interval=MannBox.dt*1000)
 
         ani.save('C:/Users/augus/Documents/Stage/Presentation/Video/Mannbox.html')
-
-        # Or
-
-        #writer = animation.writers['ffmpeg']
-        #writer = FFMpegWriter(fps=15, metadata=dict(artist='Me'), bitrate=1800)
-        #ani.save("movie.mp4", writer=writer)
         plt.show()
         print 'Video process ended'
 
     print 'shape(fluc_component_field): ', np.shape(Total_Vel)
     return Total_Vel
 
-def pre_init_turb(filename, WindFarm, WT):
+def sizing_MannBox_MFOR(MannBox , WindFarm):
     """
-    Purpose:
-    Get some essential informations before to run DWM_main_fiel
-    TI, U etc...
+    Note: this sizing imply a choice of the reference wich is obvious if all turbines are same => there is ONE Radius
+    :param MannBox:
+    :param R_WindTurbine:
+    :param U_mean_WindFarm:
+    :param windFarm_lenght:
     :return:
     """
-    video = False
-    # pre_init
-    # Meand_Mann.wake_center_location = (0, WT.H/WindFarm.R_wt) for after to be center to the ground
 
-    # ------------------ # GET TURBULENT BOX # -------------------------- #
-    MannBox = ReadMannInput(filename)
+    MannBox.U = MannBox.U / WindFarm.U_mean
+    print 'U (no dimension): ', MannBox.U
+    MannBox.L = MannBox.L / WindFarm.WT_R
+    print 'L (no dimension): ', MannBox.L
 
-    # determine u' mean to get turbulent intensity after.
-    # To reduce memory cost we have to get u' mean and delete the u_turbox
-    # Because this component it's not needed for the next
+    MannBox.T = MannBox.L / MannBox.U; print 'Mannbox T_total (no dimension): ', MannBox.T
+    MannBox.dt = MannBox.T / MannBox.nx; print 'dt (no dimension): ', MannBox.dt
+    MannBox.ti = [i*MannBox.dt for i in range(MannBox.nx)]
+    MannBox.ti = [t for t in MannBox.ti
+                  if t < MannBox.SimulationTime + MannBox.dt]  # we catch just one point after the simulation time
 
-    u_TurbBox = get_turb_component_from_MannBox(filename, 'ufluct', False, MannBox, video=False)
-    u = np.sqrt(np.mean(u_TurbBox ** 2))
-    u_TurbBox = []
 
-    MannBox.v_TurbBox = get_turb_component_from_MannBox(filename, 'vfluct', False, MannBox, video=video)
-    MannBox.w_TurbBox = get_turb_component_from_MannBox(filename, 'wfluct', False, MannBox, video=False)
-    v = np.sqrt(np.mean(MannBox.v_TurbBox ** 2))
-    w = np.sqrt(np.mean(MannBox.w_TurbBox ** 2))
+    # Should depends on the FFoR domain.
+    MannBox.lx = MannBox.L
+    MannBox.ly = MannBox.ly / WindFarm.WT_R * k
+    MannBox.lz = MannBox.lz / WindFarm.WT_R * k
 
-    MannBox.TI = np.sqrt((u ** 2 + v ** 2 + w ** 2) / 3) / WindFarm.U_mean
-    print 'TI: ', MannBox.TI
+    MannBox.dx = MannBox.lx / MannBox.nx
+    MannBox.dt = MannBox.dx / MannBox.U
 
-    WindFarm.CT = WT.get_CT(WindFarm.U_mean)
-    print 'CT: ', WindFarm.CT
-    ##################################################################""
-    ## END OF PRE INIT
-    return MannBox, WindFarm
+    MannBox.u_TurbBox = MannBox.u_TurbBox / MannBox.U_ref
+    return MannBox
 
 
 

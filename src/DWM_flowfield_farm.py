@@ -706,6 +706,7 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
     ffor.z_mat = meta.z_mat / meta.dz  # [D]
 
 
+
     if meta.MEANDERING_detail_plot:
         plt.ion()
         plt.figure()
@@ -730,28 +731,19 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
         if meta.Madsen or True:
             #print 'DWM_TI_DATA: ', DWM_TI_DATA
             # MADSEN Scaling for Turbulence:
-            km1 = 0.6
-            km2 = 0.035
-            Udef = 1 - DWM_WS_DATA
+            Udef = DWM_WS_DATA
             # derive U by r:
             dUdef_dr_r = [0] + [(Udef[i_r + 1] - Udef[i_r-1]) / (meta.vr_mixl[i_r + 1] - meta.vr_mixl[i_r-1]) for i_r
                              in range(1,len(meta.vr_mixl) - 1)] + [0]
-            dUdef_dr_r = [0] + [(1.5*Udef[i_r + 1] - 2.*Udef[i_r]+0.5*Udef[i_r-1]) / (meta.vr_mixl[i_r + 1] - meta.vr_mixl[i_r - 1]) for
-                                i_r
-                                in range(1, len(meta.vr_mixl) - 1)] + [0]
-            #dU_dr_r = np.array(dUdef_dr_r)
+
             deficit_depth = 1-Udef
             derivative_deficit = dUdef_dr_r
-            km_r = np.abs(1-Udef) * km1 + np.abs(dUdef_dr_r) * km2
+
+            meta.kmt_r = np.abs(1-Udef) * meta.km1 + np.abs(dUdef_dr_r) * meta.km2
+            #np.save('kmt_r_for_iz'+str(i_z), meta.kmt_r)
+            #np.save('vr_mixl',meta.vr_mixl)
         DWM_TI_DATA = mfor.TI_DWM[meta.vz[i_z], :]
         if meta.AINSLIE_Keck_details:
-            plt.figure()
-            plt.plot(km_r, meta.vr_mixl, label='km_r')
-            plt.plot(deficit_depth, meta.vr_mixl, label='Deficit Depth')
-            plt.plot(derivative_deficit, meta.vr_mixl, label='derivative_deficit')
-            plt.plot(DWM_WS_DATA, meta.vr_mixl, label='WS profile')
-            plt.legend()
-            plt.show()
             plt.figure('Turbulence Intensity Correction')
             plt.plot( DWM_TI_DATA, meta.vr_mixl, label='DWM TI at WT'+str(meta.wtg_ind[i_z]))
 
@@ -759,7 +751,7 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
         DWM_TI_DATA[DWM_TI_DATA < np.nanmean(meta.mean_TI_DWM)] = np.nanmean(meta.mean_TI_DWM)
 
         if meta.AINSLIE_Keck_details:
-            plt.plot(km_r/10, meta.vr_mixl, label='km_r')
+            plt.plot(meta.kmt_r/10, meta.vr_mixl, label='km_r/10')
             plt.plot(DWM_TI_DATA, meta.vr_mixl, label='Corrected for TI amb')
             plt.legend()
             plt.show()
@@ -774,21 +766,12 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
                 Ro_x                    = meand.meand_pos_x[i_z,i_t]
                 Ro_y                    = meand.meand_pos_y[i_z,i_t]
 
-            #print '(Ro_x,Ro_y): ', [Ro_x, Ro_y]
-            #print 'meta.x_mat: ', meta.x_mat
             r_dist                  = np.sqrt((meta.x_mat - Ro_x)**2 + (meta.y_mat - Ro_y)**2 )
-            #print 'r_dist: ', r_dist
-            #print 'r_dist: ', r_dist
 
             ###############################################################
-            #do we have to keep this for dynamic, or use GLarsen function?
-            #print 'mfor.wakeW[meta.vz[i_z]]: ', mfor.WakeW[meta.vz[i_z]]
             tmp_index               = r_dist < mfor.WakeW[meta.vz[i_z]]*1.5
             ################################################################
-            #print 'tmp_index: ', tmp_index
-            #raw_input('entry')
             tmp_field_WS            = np.ones((meta.nx,meta.ny))
-            #print 'tmp_index: ', tmp_index
 
             # it's here that we change the velocity to be in FFOR
             tmp_field_WS[tmp_index] = np.interp(r_dist[tmp_index], meta.vr_m, DWM_WS_DATA)
@@ -842,10 +825,6 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
         plt.show()
         plt.ioff()
 
-
-
-        #"""
-        #"""
     # Stores the mean field
     for i_z in np.arange(0,meta.nz,1):
         #### Here we average all time related data along the z-axis
@@ -929,7 +908,7 @@ def DWM_make_grid(meta):
     meta.vz_mixl = np.linspace(0,meta.lz_mixl-meta.dz_mixl,meta.lz_mixl/meta.dz_mixl) # coordinate streamwise in R vector mixL
     ### Plotting
     #print "dz_mixl="+str(meta.dz_mixl)
-    #print "vz_mixl="+str(meta.vz_mixl)
+    print "vz_mixl="+str(meta.vz_mixl)
     #print "len(vz_mixl)="+str(len(meta.vz_mixl))
 
     meta.nz = len(meta.vz)           # nb points in z (streamwise) direction ffor flow field
@@ -1272,7 +1251,7 @@ def DWM_outputs(DWM,ffor,mfor,meta, aero, par, BEM):
 # ***********************************************Dynamic sDWM**********************************************************
 # *******************************Working with Mann/LES box approach of meandering**************************************
 ########################################################################################################################
-def DWM_main_field_model_partly_dynamic(ID_waked,deficits,inlets_ffor,inlets_ffor_deficits,inlets_ffor_turb,turb,DWM,out, TurbBox, WF,**par):
+def DWM_main_field_model_partly_dynamic(ID_waked,deficits,inlets_ffor,inlets_ffor_deficits,inlets_ffor_turb,turb,DWM,out, TurbBox, WF, MannBox,**par):
     """Main flow field calculation function, handling all the calls to each sub functions. This function is called for
        each turbine in the wind farm from the most upstream to the most downstream one. The flow field calculations are
        carried out at the downstream distance of interest, i.e., where downstream rotors are partially or fully in the
@@ -1351,7 +1330,7 @@ def DWM_main_field_model_partly_dynamic(ID_waked,deficits,inlets_ffor,inlets_ffo
     ############### Madsen Wake added Turbulence Treatment #########################################################
 
     # ############# Reconstruct global flow field by applying wake meandering #######################################
-    mfor, ffor, meta, meand = DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor)
+    mfor, ffor, meta, meand = DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor, MannBox)
 
     # ############## Compute deficit at downstream rotor
     deficits, ID_waked, inlets_ffor, inlets_ffor_deficits  = DWM_get_deficit_FFOR_dynamic(ffor, meta, deficits, ID_waked, inlets_ffor, inlets_ffor_deficits)

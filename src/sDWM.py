@@ -22,6 +22,7 @@ import matplotlib._cntr as cntr
 import multiprocessing
 
 from ReadTurbulence import pre_init_turb
+from Wake_added_turbulence_Main import pre_init_turb_WaT
 
 
 ###########################################################################
@@ -41,6 +42,7 @@ def sDWM(derating,kwargs,xind):
     optim = to_bool(kwargs.get('optim'))
     dynamic = to_bool(kwargs.get('dynamic'))
     Meandering_turb_box_name=kwargs.get('Meandering_turb_box_name')
+    WaT_turb_box_name = kwargs.get('WaT_turb_box_name')
 
     # WT = wt.WindTurbine('Vestas v80 2MW offshore','V80_2MW_offshore.dat',70,40)
     # WF = wf.WindFarm('Horns Rev 1','HR_coordinates.dat',WT)
@@ -64,6 +66,7 @@ def sDWM(derating,kwargs,xind):
 
         WT = wt.WindTurbine('Windturbine', '../WT-data/' + WTG + '/' + WTG + '_PC.dat', HH, WT.R)  # already present in sDWM
         TurBox, WF = pre_init_turb(filename, WF, WT)
+        MannBox = pre_init_turb_WaT(WaT_turb_box_name)
         TI = TurBox.TI
 
     ####################################################################################################################
@@ -187,7 +190,7 @@ def sDWM(derating,kwargs,xind):
         ID_wake_adj[str(id0[iT])]=row
         #"""
         if dynamic:
-            aero, meta, mfor, ffor, DWM, deficits, inlets_ffor, inlets_ffor_deficits, inlets_ffor_turb, turb, out, ID_waked = DWM_main_field_model_partly_dynamic(ID_waked,deficits,inlets_ffor,inlets_ffor_deficits,inlets_ffor_turb,turb,DWM,out, TurBox, WF,**par)
+            aero, meta, mfor, ffor, DWM, deficits, inlets_ffor, inlets_ffor_deficits, inlets_ffor_turb, turb, out, ID_waked = DWM_main_field_model_partly_dynamic(ID_waked,deficits,inlets_ffor,inlets_ffor_deficits,inlets_ffor_turb,turb,DWM,out, TurBox, WF, MannBox,**par)
             if meta.iT == 0:
                 FFOR_result = ffor.WS_axial_ffor
             else:

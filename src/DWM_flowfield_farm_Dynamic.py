@@ -84,7 +84,7 @@ def get_U_Wake_Turbulence_adding(meta):
 
 
 
-def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor):
+def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor, MannBox):
     """
     Function that calculate the velocity in the fixed (global) frame of reference from the Mfor
 
@@ -154,6 +154,9 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor):
     ffor.z_mat = meta.z_mat / meta.dz
     ffor.time = meand.time
 
+    # Init for WaT
+    init_turb_WaT(MannBox, meta)
+
     for i_z in np.arange(0, meta.nz, 1):
         # print 'meta.vz[iz]: ', meta.vz[i_z]
         # EXTRACT TI_DWM AND WS_DWM IN MFoR
@@ -169,6 +172,20 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor):
 
         except:
             print 'Fatal error, possibly due to a too low turbulence intensity with respect to the demanded mean wind speed, try increase the input TI'
+
+        if meta.Madsen:
+            #print 'DWM_TI_DATA: ', DWM_TI_DATA
+            # MADSEN Scaling for Turbulence:
+            Udef = DWM_WS_DATA
+            # derive U by r:
+            dUdef_dr_r = [0] + [(Udef[i_r + 1] - Udef[i_r-1]) / (meta.vr_mixl[i_r + 1] - meta.vr_mixl[i_r-1]) for i_r
+                             in range(1,len(meta.vr_mixl) - 1)] + [0]
+
+            deficit_depth = 1-Udef
+            derivative_deficit = dUdef_dr_r
+
+            meta.kmt_r = np.abs(deficit_depth) * meta.km1 + np.abs(derivative_deficit) * meta.km2
+
         DWM_TI_DATA = mfor.TI_DWM[meta.vz[i_z], :]
 
         if meta.AINSLIE_Keck_details:
@@ -177,7 +194,7 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor):
 
         ### Correct DWM_TI_DATA so that no point to have lower TI than "TIamb"
         DWM_TI_DATA[DWM_TI_DATA < np.nanmean(meta.mean_TI_DWM)] = np.nanmean(meta.mean_TI_DWM)
-        print 'meta.mean_TI_DWM: ', meta.mean_TI_DWM
+        #print 'meta.mean_TI_DWM: ', meta.mean_TI_DWM
 
         if meta.AINSLIE_Keck_details:
             plt.plot(DWM_TI_DATA, meta.vr_mixl, label='Corrected for TI amb')
@@ -192,12 +209,9 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor):
                 Ro_x = DATA_from_Meandering_part[i_z][i_t, 1]
                 Ro_y = DATA_from_Meandering_part[i_z][i_t, 2]
 
-            #print '(Ro_x,Ro_y): ', [Ro_x, Ro_y]
-
-            #print 'meta.x_mat: ', meta.x_mat
             r_dist = np.sqrt((meta.x_mat - Ro_x) ** 2 + (meta.y_mat - Ro_y) ** 2) # Originally
-            #print 'r_dist: ', r_dist
-            # print 'r_dist: ', r_dist
+
+            # r_dist for wake added Turbulence
 
             ###############################################################
             # do we have to keep this for dynamic, or use GLarsen function?
@@ -207,25 +221,24 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor):
             #print 'tmp_index: ', tmp_index
 
             tmp_field_WS = np.ones((meta.nx, meta.ny))
+            tmp_field_WS_added = np.zeros((meta.nx, meta.ny))
+            Kmt_r = np.zeros((meta.nx, meta.ny))
             # print 'tmp_index: ', tmp_index
 
             # it's here that we change the velocity to be in FFOR
+            #tmp_field_WS_added[tmp_index] = obtain_wake_added_turbulence(MannBox, i_t, meta.vr_m, meta.kmt_r)[tmp_index]
             tmp_field_WS[tmp_index] = np.interp(r_dist[tmp_index], meta.vr_m, DWM_WS_DATA)
 
-            """
+            Kmt_r[tmp_index] =  np.interp(r_dist[tmp_index], meta.vr_m, kmt_r)
             plt.figure()
-            plt.subplot(121)
-            plt.title('DWM_WS_DATA')
-            plt.plot(DWM_WS_DATA, label='DWM_WS_DATA')
-            plt.legend()
-            plt.subplot(122)
-            plt.title('tmp_field_ws')
-            plt.plot(tmp_field_WS)
-            plt.legend()
+            plt.contourf(Kmt_r)
+            plt.colorbar()
             plt.show()
-            #"""
 
-            ffor.WS_axial_ffor[:, :, i_z, i_t] = (tmp_field_WS)
+            tmp_field_WS_added[tmp_index] = obtain_wake_added_turbulence(MannBox, i_t, meta.vr_m, meta.kmt_r)[tmp_index]
+
+
+            ffor.WS_axial_ffor[:, :, i_z, i_t] = (tmp_field_WS) + tmp_field_WS_added
             ffor.ffor_flow_field_ws_tmp2[:, :, i_z, i_t] = (tmp_field_WS ** 2)
 
             tmp_field_TI = meta.TI * np.ones((meta.nx, meta.ny))

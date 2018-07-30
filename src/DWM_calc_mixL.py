@@ -295,39 +295,44 @@ def DWM_eddy_viscosity(mfor,meta,width,visc_wake,visc_wake1,visc_wake2,F1_vector
         mfor.visc[j-1,:]           = F1_vector[j-1]*meta.k1*visc_norm_factor*u_star_DEF*l_star_DEF + visc_wake[j-1,:]
 
     if meta.Madsen:
-        visc_wake[j - 1, :] = F2_vector[j-1]* meta.k2_Madsen *( meta.vr_mixl[width[j-1]-1]/meta.R_WTG )   * (1.0 - np.min(mfor.U[j-1,:]) )
-        mfor.visc[j-1,:] = F1_vector[j-1] * meta.k_amb_Madsen * meta.mean_TI_DWM+ visc_wake[j - 1,:]
         # Madsen visc presented November 2010 'Calibration and Validation of DWM for implementation in an aero code'
+        visc_wake[j - 1, :] = F2_vector[j-1]* meta.k2_Madsen *( meta.vr_mixl[width[j-1]-1]/meta.R_WTG )   * (1.0 - np.min(mfor.U[j-1,:]) )
+        mfor.visc[j-1,:] = F1_vector[j-1] * meta.k_amb_Madsen * meta.mean_TI_DWM + visc_wake[j - 1,:]
+        #mfor.visc[j - 1, :] = mfor.visc[j-1,:]
+        # Madsen visc presented November 2008 'Wale deficit and turbulence simulated with two models...'
+        #visc_wake[j - 1, :] = meta.k2_Madsen * (meta.vr_mixl[width[j - 1] - 1] / meta.R_WTG) * (1.0 - np.min(mfor.U[j - 1, :]))
+        #mfor.visc[j-1,:] = meta.k_amb_Madsen * meta.mean_TI_DWM + visc_wake[j - 1,:]
         #raise Exception('Eddy Visc Not Implemented for now')
-    ## Include contribution from atmospheric boundary layer on DWM
-    ##  turbulent stresses. This effect is taken into account by:
-    # 1. Calculate the azimuthally averaged local gradient (du/dr tot) acting of the eddy viscosity as a combination of du/dr in the DWM model and du/dz from ABL
-    # 2. The du/dr contribution is constant in azimuthal direction. The du/dz part is assumed linear, which gives a sinus curve in a du/dr system
-    # 3. Instead of manipulating the velocity field, the eddy viscosity is increased by a "du/dr_total / du/dr_DWM"
-    #=> Visc*        =  Visc * du/dr_total / du/dr_DWM
-    #   => Turb_Stress  =  Visc* * du/dr_DWM = Visc * (du/dr_total / du/dr_DWM) * du/dr_DWM =  Visc * du/dr_total
-    # 4. "Wiener filter" is used to avoid problems when du/dr = 0, idea:  1/f(x) ~= f(x) / (f(x)^2 + k)
+    if meta.Keck or meta.previous_sDWM:
+        ## Include contribution from atmospheric boundary layer on DWM
+        ##  turbulent stresses. This effect is taken into account by:
+        # 1. Calculate the azimuthally averaged local gradient (du/dr tot) acting of the eddy viscosity as a combination of du/dr in the DWM model and du/dz from ABL
+        # 2. The du/dr contribution is constant in azimuthal direction. The du/dz part is assumed linear, which gives a sinus curve in a du/dr system
+        # 3. Instead of manipulating the velocity field, the eddy viscosity is increased by a "du/dr_total / du/dr_DWM"
+        #=> Visc*        =  Visc * du/dr_total / du/dr_DWM
+        #   => Turb_Stress  =  Visc* * du/dr_DWM = Visc * (du/dr_total / du/dr_DWM) * du/dr_DWM =  Visc * du/dr_total
+        # 4. "Wiener filter" is used to avoid problems when du/dr = 0, idea:  1/f(x) ~= f(x) / (f(x)^2 + k)
 
-    # Calculate total mean flow gradient - adds shear contribution via
-    # sinus function. This gets the stresses right, but sign is wrong in
-    #regions where du/dr_DWM - sign of du/dz_ABL is negative
-    # notations as per Keck et al. [3].
-    du_dr_DWM_du_dz=np.array(np.absolute(mfor.du_dr_DWM[j-1,:]) / mfor.Shear_add_du_dz ,dtype=complex)
-    alfa_1      = np.arcsin(du_dr_DWM_du_dz)
-    alfa_2      = pi - alfa_1
-    alfa_1=np.asarray([abs(x) for x in alfa_1])
-    alfa_2=np.asarray([abs(x) for x in alfa_2])
-    mfor.du_dr_tot[j-1,0: meta.nr_mixl] = ( np.absolute(mfor.du_dr_DWM[j-1,:]) *2.0*pi +\
-    ((np.absolute(mfor.du_dr_DWM[j-1,:]) < mfor.Shear_add_du_dz) * 2.0 * \
-    (mfor.Shear_add_du_dz*2.0*np.cos(alfa_1) - np.absolute(mfor.du_dr_DWM[j-1,:])*(alfa_2 - alfa_1) ) ) ) / (2.0*pi)
-    # du/dr_DWM block of area
-    # condition for added shear gradient (if du/dr_DWM >= du/dz_ABL there are no contribution)
-    # Area A1 + A2 in figure XXX
-    # Scaling from area to gradient
-    k_wiener                 = 2.0*mfor.Shear_add_du_dz * meta.dr**2
-    One_div_du_dr_DWM[j-1,:] = mfor.du_dr_DWM[j-1,:] / (mfor.du_dr_DWM[j-1,:]**2 + k_wiener)
-    visc_fac                 = np.maximum(1.0, (mfor.du_dr_tot[j-1,:] * np.fabs(One_div_du_dr_DWM[j-1,:])))
-    mfor.visc[j-1,:]              = mfor.visc[j-1,:] * visc_fac
+        # Calculate total mean flow gradient - adds shear contribution via
+        # sinus function. This gets the stresses right, but sign is wrong in
+        #regions where du/dr_DWM - sign of du/dz_ABL is negative
+        # notations as per Keck et al. [3].
+        du_dr_DWM_du_dz=np.array(np.absolute(mfor.du_dr_DWM[j-1,:]) / mfor.Shear_add_du_dz ,dtype=complex)
+        alfa_1      = np.arcsin(du_dr_DWM_du_dz)
+        alfa_2      = pi - alfa_1
+        alfa_1=np.asarray([abs(x) for x in alfa_1])
+        alfa_2=np.asarray([abs(x) for x in alfa_2])
+        mfor.du_dr_tot[j-1,0: meta.nr_mixl] = ( np.absolute(mfor.du_dr_DWM[j-1,:]) *2.0*pi +\
+        ((np.absolute(mfor.du_dr_DWM[j-1,:]) < mfor.Shear_add_du_dz) * 2.0 * \
+        (mfor.Shear_add_du_dz*2.0*np.cos(alfa_1) - np.absolute(mfor.du_dr_DWM[j-1,:])*(alfa_2 - alfa_1) ) ) ) / (2.0*pi)
+        # du/dr_DWM block of area
+        # condition for added shear gradient (if du/dr_DWM >= du/dz_ABL there are no contribution)
+        # Area A1 + A2 in figure XXX
+        # Scaling from area to gradient
+        k_wiener                 = 2.0*mfor.Shear_add_du_dz * meta.dr**2
+        One_div_du_dr_DWM[j-1,:] = mfor.du_dr_DWM[j-1,:] / (mfor.du_dr_DWM[j-1,:]**2 + k_wiener)
+        visc_fac                 = np.maximum(1.0, (mfor.du_dr_tot[j-1,:] * np.fabs(One_div_du_dr_DWM[j-1,:])))
+        mfor.visc[j-1,:]              = mfor.visc[j-1,:] * visc_fac
 
     return mfor
 
@@ -491,6 +496,31 @@ def DWM_calc_mixL(meta,aero,mfor):
         mfor.TI_DWM[j-1,:]  = np.sqrt( np.abs( (1.0 / (x_uw_wake * C_uw_wake)) * mfor.Turb_Stress_DWM[j-1,:]) )
         mfor.WakeW = meta.vr_mixl[width-1]
 
+        # Plot deficit and derivative for Madsen Approach
+        if meta.Madsen and meta.vz_mixl[j-1]< 3.3*2 < meta.vz_mixl[j]:
+
+            # MADSEN Scaling for Turbulence:
+            km1 = 0.6
+            km2 = 0.035
+            Udef = mfor.U[j-1,:]
+            # derive U by r:
+            dUdef_dr_r = [0] + [(Udef[i_r + 1] - Udef[i_r-1]) / (meta.vr_mixl[i_r + 1] - meta.vr_mixl[i_r-1]) for i_r
+                             in range(1,len(meta.vr_mixl) - 1)] + [0]
+            #dUdef_dr_r = [0] + [(1.5*Udef[i_r + 1] - 2.*Udef[i_r]+0.5*Udef[i_r-1]) / (meta.vr_mixl[i_r + 1] - meta.vr_mixl[i_r - 1]) for
+             #                   i_r
+              #                  in range(1, len(meta.vr_mixl) - 1)] + [0]
+            #dU_dr_r = np.array(dUdef_dr_r)
+            deficit_depth = 1-Udef
+            derivative_deficit = dUdef_dr_r
+            km_r = np.abs(1-Udef) * km1 + np.abs(dUdef_dr_r) * km2
+
+            plt.figure('derivative and deficit at 3.3D')
+            plt.title('at '+str(meta.vz_mixl[j-1])+ ' [R]')
+            plt.plot(deficit_depth, meta.vr_mixl, label='Deficit Depth')
+            plt.plot(derivative_deficit, meta.vr_mixl, label='dUdef')
+            plt.plot(Udef, meta.vr_mixl, label='Udef')
+            plt.legend()
+            plt.show()
     #print 'WakeWidth shape', wake_width.shape
         #mfor.width = width
     # print mfor.debugV[:,:]-mfor.V[22,:]

@@ -69,8 +69,17 @@ class Meta:
         self.atmo_stab             = 'N'
         self.k1                    = 0.0919 # k1 = 0.0919 & k2 = 0.0178 yields the best fit to AL calibration data according to Keck et al. [5].
         self.k2                    = 0.0178  # in Keck we can compare with k1 0.914 and k2 = 0.0216
-        self.k_amb_Madsen = 0.07          # Madsen eddy viscosity for F1
-        self.k2_Madsen = 0.008            # for F2
+
+        ###### Model presented by Madsen in 2008 and 2010 Calibration for aeroelastic computation
+        #self.k_amb_Madsen = 0.001          # Madsen eddy viscosity without F1  (2008)
+        #self.k2_Madsen = 0.002             # Without F2
+
+        self.k_amb_Madsen = 0.007          # Madsen eddy viscosity with F1
+        self.k2_Madsen = 0.008             # with F2
+        self.km1 = 0.6
+        self.km2 = 0.35
+        self.kmt_r = []
+
         ## Model flags
         self.Tbuildup_setting      = 1 # 1 = on # flag to control the buildup of turbulence along turbine rows, if disabled TI is equal to free stream TI
         self.wake_ind_setting      = 1 # 1 = on # flag to control the wake accumulation along turbine rows, if disabled U is equal to free stream velocity
@@ -103,17 +112,17 @@ class Meta:
         self.BEM_plot = False
         self.AINSLIE_plot = False
         self.AINSLIE_Keck_details = True
-        self.BEM_AINSLIE_plot = False
+        self.BEM_AINSLIE_plot = True
 
         self.MEANDERING_plot = True
-        self.MEANDERING_Total_plot = True
+        self.MEANDERING_Total_plot = False
         self.MEANDERING_detail_plot = False
-        self.MEANDERING_WS_plot = False
-        self.MEANDERING_TI_plot = True
+        self.MEANDERING_WS_plot = True
+        self.MEANDERING_TI_plot = False
 
         self.TI_Dynamic_for_Loads_plot = False  # According to Keck Atmospheric shear and wake ... 2013-2015
 
-        self.DEFICIT_plot = False
+        self.DEFICIT_plot = True
         self.DEFICIT_details = False # For Dynamic, it gives result in time
 
 
@@ -122,23 +131,23 @@ class Meta:
         # --------------------------------------------------------------------------
         # Model Specification Setting
         # Put only one True
-        self.previous_sDWM = True
+        self.previous_sDWM = False
 
         # Not implemented for the moment
-        self.previous_sDWM_working_with_a_MannBox = True # we not use the original Meand matrix but data
+        self.previous_sDWM_working_with_a_MannBox = False # we not use the original Meand matrix but data
         # from the meandering part for dynamic
         # Run the code as before, with a statistical approach of the meandering, no time consideration
         if self.previous_sDWM:
             self.steadyBEM_AINSLIE=False
             self.use_saved_data = False
-            self.working_with_meandering_statistical_data = False
-            self.Keck= True
-            self.Madsen = False
+            self.working_with_meandering_statistical_data = True
+            self.Keck= False
+            self.Madsen = True
         if not self.previous_sDWM:
             self.steadyBEM_AINSLIE = True  # if True, BEM_Ainslie use the average deficit
 
-            self.Keck = True
-            self.Madsen = False
+            self.Keck = False
+            self.Madsen = True
 
             if self.Madsen:
                 # this model imply the use of a MannBox for the wake added Turbulence
@@ -146,7 +155,7 @@ class Meta:
                 self.MannBox_name='1101'
 
             if self.steadyBEM_AINSLIE:
-                self.use_saved_data = True
+                self.use_saved_data = False
                 # Could be used for fair comparison with previous sDWM
                 self.working_with_meandering_statistical_data = False
         # In the dynamic approach, we can average the deficits (and turbulence) in time,

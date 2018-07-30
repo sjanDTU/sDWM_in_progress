@@ -24,10 +24,6 @@ class MannBox:
         self.nx_r = 16384  # Discretization along x-axis to read fastly!
 
         self.SimulationTime = 30# (s)
-        self.CorrectionDelay = True  # We want to begin the simulation when the first plan go out of the WindFarm Box
-                                     # In this case at t=0, we have all the windfarm box affected by the turbulent box
-
-        self.WakeExpansion = True
 
         self.Keck_Transport_Velocity = False  # True to apply 0.8*U advection transport: Keck synthetic turbulence
 
@@ -47,14 +43,6 @@ class MannBox:
 
         self.TurbBox_of_interest = []
         self.u_TurbBox = []  # For wake added Turbulence
-        self.v_TurbBox = []
-        self.w_TurbBox = []
-        self.plan_of_interest = []
-        self.radius_plan_of_interest = []
-        self.values_of_interest= []
-        #self.CenterLocation_on_Plan = 0., 0.
-        self.WakeRadius_for_this_Plan = 0.
-        self.Af = 0.
 
 
         self.U_ref = 0.
@@ -62,6 +50,7 @@ class MannBox:
         self.TI = 0.
 
         self.TI_u = None
+        self.k_scale = 1.
 
         # Plot option setting
         self.RESULT_plot = True
