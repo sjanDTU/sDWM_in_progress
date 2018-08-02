@@ -260,8 +260,24 @@ def pre_init_turb(filename, WindFarm, WT):
     w = np.sqrt(np.mean(MannBox.w_TurbBox ** 2))
 
     MannBox.TI = np.sqrt((u ** 2 + v ** 2 + w ** 2) / 3) / WindFarm.U_mean
-    print 'TI: ', MannBox.TI
+    print 'Meandering box, TI: ', MannBox.TI
 
+    # Scaling based on the 3D TI
+    #"""
+    if MannBox.Box_Kind == 'MannBox':
+        # We have to scale the turbulent Component
+
+        k_scale = WindFarm.TI / MannBox.TI
+
+        MannBox.v_TurbBox = k_scale * MannBox.v_TurbBox
+        MannBox.w_TurbBox = k_scale * MannBox.w_TurbBox
+
+        MannBox.TI = WindFarm.TI
+        print 'MannBox meandering TI scaled: ', MannBox.TI
+    #"""
+
+    # Scaling based on the axial TI needed?
+    """
     if MannBox.Box_Kind == 'MannBox':
         # We have to scale the turbulent Component
 
@@ -272,6 +288,7 @@ def pre_init_turb(filename, WindFarm, WT):
 
         MannBox.TI = WindFarm.TI
         print 'TI: ', MannBox.TI
+    #"""
     WindFarm.CT = WT.get_CT(WindFarm.U_mean)
     print 'CT: ', WindFarm.CT
     ##################################################################""

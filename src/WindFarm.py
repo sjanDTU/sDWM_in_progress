@@ -28,8 +28,7 @@ class WindFarm:
         self.WT = WT
 
         # Vector from iWT to jWT: self.vectWTtoWT[:,i,j]
-        self.vectWTtoWT=np.swapaxes([self.pos-np.repeat(np.atleast_2d \
-            (self.pos[:,i]).T,self.nWT,axis=1) for i in range(self.nWT)],0,1)
+        self.vectWTtoWT=np.swapaxes([self.pos-np.repeat(np.atleast_2d(self.pos[:,i]).T,self.nWT,axis=1) for i in range(self.nWT)],0,1)
 
         ############################################################################
         # Add for Turbulent analysis

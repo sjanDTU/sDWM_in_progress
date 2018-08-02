@@ -13,22 +13,21 @@ class Meta:
         # --------------------------------------------------------------------------
         # Model Specification Setting
         # Put only one True
-        self.previous_sDWM = True
+        self.previous_sDWM = False
 
-        # Not implemented for the moment
-        self.previous_sDWM_working_with_a_MannBox = False  # we not use the original Meand matrix but data
-        # from the meandering part for dynamic
-        # Run the code as before, with a statistical approach of the meandering, no time consideration
         if self.previous_sDWM:
             # Settings for Original sDWM
             self.steadyBEM_AINSLIE = False
 
             self.use_saved_data = False
             self.working_with_meandering_statistical_data = True
+            self.previous_sDWM_working_with_a_MannBox = False  # we not use the original Meand matrix but data
 
-            self.Keck = False
+            self.Keck = True
+
+            ###################
             self.Madsen = False
-            self.Larsen = True
+            self.Larsen = False
 
             self.without_filter_functions = False
         if not self.previous_sDWM:
@@ -37,9 +36,9 @@ class Meta:
             self.use_saved_data = True # Use WAKES pre-computed and stored in the root 'src'
             self.working_with_meandering_statistical_data = False
 
-            self.Larsen = False  # Do not change
             self.Keck = False
-            self.Madsen = True
+            self.Larsen = True
+            self.Madsen = False
 
             if self.Madsen:
                 #2010
@@ -69,17 +68,20 @@ class Meta:
         self.BEM_plot = False
         self.AINSLIE_plot = False
         self.AINSLIE_Keck_details = False
+        self.WaT_detail = False
         self.BEM_AINSLIE_plot = False
+        self.Deficit_Process_Detail = False
 
-        self.MEANDERING_plot = False
+        self.MEANDERING_plot = True
         self.MEANDERING_Total_plot = False
         self.MEANDERING_detail_plot = False
-        self.MEANDERING_WS_plot = False
+        self.MEANDERING_WS_plot = True
+        self.MEANDERING_WS_added_plot = True
         self.MEANDERING_TI_plot = False
 
         self.TI_Dynamic_for_Loads_plot = False  # According to Keck Atmospheric shear and wake ... 2013-2015
 
-        self.DEFICIT_plot = True
+        self.DEFICIT_plot = False
         self.DEFICIT_details = False # For Dynamic, it gives result in time
         # ------------------------------------------------------------------------------------------------------------ #
         ## Default Ambient conditions
@@ -175,8 +177,32 @@ class Meta:
             else:
                 ###### Model presented by Madsen in 2010 Calibration for aeroelastic computation
                 self.k_amb_Madsen = 0.07          # Madsen eddy viscosity with F1
+                #self.k_amb_Madsen = 0.  # Madsen eddy viscosity with F1
                 self.k2_Madsen = 0.008             # with F2
 
+                def F2(X):
+                    a1 = 0.046
+                    b1 = -0.022
+
+                    a2 = 0.821 / 25
+                    # a2 = 1.
+                    b2 = 0.0418 * 0.79
+                    c2 = 0.2 - np.exp(0) + 0.6 + .3 + 0.1 / 10 * 3 + 0.005
+                    Y = []
+                    for x in X:
+                        if x <= 2.:
+                            y = 0.07
+                        elif 2. < x < 7.:
+                            y = a1 * x + b1
+                        elif 7. <= x < 10.:
+                            y = a2 * np.exp(b2 * x ** 2.) + c2
+                            # y=0
+                        elif x > 10.:
+                            # y = 1.
+                            y = 1.
+                        Y.append(y)
+                    return np.array(Y)
+                self.F2 = F2
                 #Same F1 that F1 used in Keck model
                 #Not the same F2!
 
@@ -195,6 +221,31 @@ class Meta:
             self.km2 = 0.35
             self.kmt_r = []
             #raise Exception('Method not Implemented, no Formula for Famb')
+
+            def F2(X):
+                a1 = 0.046
+                b1 = -0.022
+
+                a2 = 0.821 / 25
+                # a2 = 1.
+                b2 = 0.0418 * 0.79
+                c2 = 0.2 - np.exp(0) + 0.6 + .3 + 0.1 / 10 * 3 + 0.005
+                Y = []
+                for x in X:
+                    if x <= 2.:
+                        y = 0.07
+                    elif 2. < x < 7.:
+                        y = a1 * x + b1
+                    elif 7. <= x < 10.:
+                        y = a2 * np.exp(b2 * x ** 2.) + c2
+                        # y=0
+                    elif x > 10.:
+                        # y = 1.
+                        y = 1.
+                    Y.append(y)
+                return np.array(Y)
+
+            self.F2 = F2
 
             # NEW F1 and Famb
             # I don't found the formula for f_amb

@@ -2,13 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b1e85f50-429b-433c-a650-5d1954bfe52d" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/WAKES.npy" afterPath="$PROJECT_DIR$/src/WAKES.npy" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/DWM_calc_mixL.py" afterPath="$PROJECT_DIR$/src/DWM_calc_mixL.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/DWM_flowfield_farm.py" afterPath="$PROJECT_DIR$/src/DWM_flowfield_farm.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/DWM_flowfield_farm_Dynamic.py" afterPath="$PROJECT_DIR$/src/DWM_flowfield_farm_Dynamic.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/RUN_sDWM_tests.py" afterPath="$PROJECT_DIR$/src/RUN_sDWM_tests.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ReadTurbulence.py" afterPath="$PROJECT_DIR$/src/ReadTurbulence.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Wake_added_turbulence_Main.py" afterPath="$PROJECT_DIR$/src/Wake_added_turbulence_Main.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/WindFarm.py" afterPath="$PROJECT_DIR$/src/WindFarm.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cDWM.py" afterPath="$PROJECT_DIR$/src/cDWM.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cTurb.py" afterPath="$PROJECT_DIR$/src/cTurb.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sDWM.py" afterPath="$PROJECT_DIR$/src/sDWM.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -20,141 +23,38 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="sDWM.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/sDWM.py">
+      <file leaf-file-name="WindFarm.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/WindFarm.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1275">
-              <caret line="75" column="9" lean-forward="false" selection-start-line="75" selection-start-column="9" selection-end-line="75" selection-end-column="9" />
+            <state relative-caret-position="193">
+              <caret line="30" column="69" lean-forward="false" selection-start-line="30" selection-start-column="69" selection-end-line="30" selection-end-column="69" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="test_WF.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test_WF.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="346">
+              <caret line="63" column="0" lean-forward="false" selection-start-line="63" selection-start-column="0" selection-end-line="63" selection-end-column="0" />
               <folding>
-                <element signature="e#7728#9353#0" expanded="false" />
-                <element signature="e#9654#11726#0" expanded="false" />
+                <element signature="e#0#18#0" expanded="true" />
+                <element signature="e#53#579#1" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="cDWM.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="cDWM.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/cDWM.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="143">
-              <caret line="250" column="0" lean-forward="false" selection-start-line="250" selection-start-column="0" selection-end-line="250" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="cMann.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cMann.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="76">
-              <caret line="6" column="3" lean-forward="false" selection-start-line="6" selection-start-column="3" selection-end-line="6" selection-end-column="3" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="cTurb.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cTurb.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="578">
-              <caret line="52" column="32" lean-forward="false" selection-start-line="52" selection-start-column="32" selection-end-line="52" selection-end-column="32" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RUN_sDWM_tests.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/RUN_sDWM_tests.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="314">
-              <caret line="26" column="30" lean-forward="false" selection-start-line="26" selection-start-column="30" selection-end-line="26" selection-end-column="30" />
+            <state relative-caret-position="244">
+              <caret line="26" column="0" lean-forward="true" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
               <folding>
-                <marker date="1532957810885" expanded="true" signature="332:479" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DWM_calc_mixL.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/DWM_calc_mixL.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="416">
-              <caret line="337" column="79" lean-forward="false" selection-start-line="337" selection-start-column="79" selection-end-line="337" selection-end-column="79" />
-              <folding>
-                <element signature="e#147#165#0" expanded="true" />
-                <element signature="e#5739#6227#0" expanded="false" />
-                <element signature="e#12594#15570#0" expanded="false" />
-                <element signature="e#22727#26927#0" expanded="false" />
-                <element signature="e#26969#34162#0" expanded="false" />
-                <element signature="e#30492#31699#0" expanded="false" />
-                <element signature="e#31779#32117#0" expanded="false" />
-                <element signature="e#32252#34145#0" expanded="false" />
-                <element signature="e#33077#34145#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DWM_flowfield_farm.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/DWM_flowfield_farm.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="279">
-              <caret line="72" column="15" lean-forward="true" selection-start-line="72" selection-start-column="15" selection-end-line="72" selection-end-column="15" />
-              <folding>
-                <element signature="e#136#154#0" expanded="true" />
-                <element signature="e#8862#20189#0" expanded="false" />
-                <element signature="e#13761#14180#0" expanded="false" />
-                <element signature="e#14585#15003#0" expanded="false" />
-                <element signature="e#20243#23995#0" expanded="false" />
-                <element signature="e#22608#23061#0" expanded="false" />
-                <element signature="e#23731#23974#0" expanded="false" />
-                <element signature="e#24064#28566#0" expanded="false" />
-                <element signature="e#28656#33145#0" expanded="false" />
-                <element signature="e#32069#32380#1" expanded="false" />
-                <element signature="e#33204#36064#0" expanded="false" />
-                <element signature="e#35298#36031#0" expanded="false" />
-                <element signature="e#40577#40716#0" expanded="false" />
-                <element signature="e#42929#44823#0" expanded="false" />
-                <element signature="e#45950#47828#0" expanded="false" />
-                <element signature="e#49458#52619#0" expanded="false" />
-                <element signature="e#52660#57598#0" expanded="false" />
-                <element signature="e#57658#63197#0" expanded="false" />
-                <element signature="e#63837#70269#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ReadTurbulence.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/ReadTurbulence.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="425">
-              <caret line="231" column="64" lean-forward="false" selection-start-line="231" selection-start-column="64" selection-end-line="231" selection-end-column="64" />
-              <folding>
-                <element signature="e#78#96#0" expanded="true" />
-                <element signature="e#242#1408#0" expanded="false" />
-                <element signature="e#1444#1959#0" expanded="false" />
-                <element signature="e#2005#3494#0" expanded="false" />
-                <element signature="e#3586#7409#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DWM_flowfield_farm_Dynamic.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/DWM_flowfield_farm_Dynamic.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2635">
-              <caret line="213" column="36" lean-forward="false" selection-start-line="213" selection-start-column="36" selection-end-line="213" selection-end-column="36" />
-              <folding>
-                <element signature="e#159#177#0" expanded="true" />
-                <element signature="e#456#1403#0" expanded="false" />
-                <element signature="e#1465#2906#0" expanded="false" />
-                <element signature="e#6921#7428#0" expanded="false" />
-                <element signature="e#7952#8042#0" expanded="false" />
-                <element signature="e#12549#18691#0" expanded="false" />
-                <element signature="e#18758#23527#0" expanded="false" />
-                <element signature="e#23631#34628#0" expanded="false" />
+                <element signature="e#2056#2182#0" expanded="false" />
+                <element signature="e#10566#11333#0" expanded="false" />
+                <element signature="e#12259#12950#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -199,19 +99,23 @@
         <option value="$PROJECT_DIR$/src/DWM_main_BEM_new_controller.py" />
         <option value="$PROJECT_DIR$/src/DWM_main_BEM.py" />
         <option value="$PROJECT_DIR$/src/cBEM.py" />
-        <option value="$PROJECT_DIR$/src/WindFarm.py" />
         <option value="$PROJECT_DIR$/src/cMann.py" />
         <option value="$PROJECT_DIR$/src/Polar_Interpolate_Data_Plan.py" />
         <option value="$PROJECT_DIR$/src/Meandering_Main.py" />
-        <option value="$PROJECT_DIR$/src/cTurb.py" />
         <option value="$PROJECT_DIR$/src/ReadMannTurbulence.py" />
-        <option value="$PROJECT_DIR$/src/Wake_added_turbulence_Main.py" />
-        <option value="$PROJECT_DIR$/src/ReadTurbulence.py" />
-        <option value="$PROJECT_DIR$/src/sDWM.py" />
-        <option value="$PROJECT_DIR$/src/DWM_flowfield_farm_Dynamic.py" />
-        <option value="$PROJECT_DIR$/src/RUN_sDWM_tests.py" />
+        <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch_4.py" />
+        <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch_5.py" />
+        <option value="$PROJECT_DIR$/src/cTurb.py" />
         <option value="$PROJECT_DIR$/src/DWM_flowfield_farm.py" />
+        <option value="$PROJECT_DIR$/src/ReadTurbulence.py" />
+        <option value="$PROJECT_DIR$/src/Wake_added_turbulence_Main.py" />
+        <option value="$PROJECT_DIR$/src/DWM_flowfield_farm_Dynamic.py" />
         <option value="$PROJECT_DIR$/src/DWM_calc_mixL.py" />
+        <option value="$PROJECT_DIR$/src/sDWM.py" />
+        <option value="$PROJECT_DIR$/src/WindFarm.py" />
+        <option value="$PROJECT_DIR$/src/test_WF.py" />
+        <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch_6.py" />
+        <option value="$PROJECT_DIR$/src/RUN_sDWM_tests.py" />
         <option value="$PROJECT_DIR$/src/cDWM.py" />
       </list>
     </option>
@@ -238,7 +142,22 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="ProjectPane" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="sDWM_in_progress" type="b2602c69:ProjectViewProjectNode" />
+              <item name="sDWM_in_progress" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="sDWM_in_progress" type="b2602c69:ProjectViewProjectNode" />
+              <item name="sDWM_in_progress" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
       <pane id="Scratches" />
       <pane id="Scope" />
     </panes>
@@ -246,6 +165,7 @@
   <component name="PropertiesComponent">
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../../BEM" />
+    <property name="com.intellij.ide.scratch.LRUPopupBuilder$2/Languages" value="Python" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -277,7 +197,58 @@
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
     </configuration>
-    <configuration name="Wake_added_turbulence_Main" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="scratch_4" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$APPLICATION_CONFIG_DIR$/scratches" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="sDWM_in_progress" />
+      <option name="SCRIPT_NAME" value="$APPLICATION_CONFIG_DIR$/scratches/scratch_4.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+    </configuration>
+    <configuration name="scratch_5" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$APPLICATION_CONFIG_DIR$/scratches" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="sDWM_in_progress" />
+      <option name="SCRIPT_NAME" value="$APPLICATION_CONFIG_DIR$/scratches/scratch_5.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+    </configuration>
+    <configuration name="scratch_6" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$APPLICATION_CONFIG_DIR$/scratches" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="sDWM_in_progress" />
+      <option name="SCRIPT_NAME" value="$APPLICATION_CONFIG_DIR$/scratches/scratch_6.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+    </configuration>
+    <configuration name="test_WF" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -289,19 +260,25 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="sDWM_in_progress" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/Wake_added_turbulence_Main.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/test_WF.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
     </configuration>
-    <list size="2">
+    <list size="5">
       <item index="0" class="java.lang.String" itemvalue="Python.RUN_sDWM_tests" />
-      <item index="1" class="java.lang.String" itemvalue="Python.Wake_added_turbulence_Main" />
+      <item index="1" class="java.lang.String" itemvalue="Python.scratch_4" />
+      <item index="2" class="java.lang.String" itemvalue="Python.scratch_5" />
+      <item index="3" class="java.lang.String" itemvalue="Python.scratch_6" />
+      <item index="4" class="java.lang.String" itemvalue="Python.test_WF" />
     </list>
     <recent_temporary>
-      <list size="2">
+      <list size="5">
         <item index="0" class="java.lang.String" itemvalue="Python.RUN_sDWM_tests" />
-        <item index="1" class="java.lang.String" itemvalue="Python.Wake_added_turbulence_Main" />
+        <item index="1" class="java.lang.String" itemvalue="Python.scratch_6" />
+        <item index="2" class="java.lang.String" itemvalue="Python.test_WF" />
+        <item index="3" class="java.lang.String" itemvalue="Python.scratch_5" />
+        <item index="4" class="java.lang.String" itemvalue="Python.scratch_4" />
       </list>
     </recent_temporary>
   </component>
@@ -533,7 +510,21 @@
       <option name="project" value="LOCAL" />
       <updated>1532942049462</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="Work on models management and implementation">
+      <created>1532971266958</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1532971266958</updated>
+    </task>
+    <task id="LOCAL-00033" summary="a Beginning of good aggreement between Larsen model 2012 and Keck 2015 for power production.&#10;&#10;It last to implement the correct F1 for Larsen.">
+      <created>1532971674028</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1532971674028</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -584,8 +575,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="- Versions Package Fixed!&#10;&#10;- Relevant results ( according to the saved_previous_sDWM) reobtained! It was a bug in the meandering part which is fixed now&#10;Example:&#10;result from save sDWM: [ 1386.1 509.59 440.3 491.3 500.98 520.96 522.58 529.82] kW&#10;result from in progress sDWM (in steady part, so with previous_sDWM function):&#10;[1386.1 504.35 435.01 490.39 503.6 517.41 etc...&#10;The difference is maybe because i don't use the same BEM controller." />
-    <MESSAGE value="No&#10;there is still a small difference." />
     <MESSAGE value="New Interpreter with updated package.&#10;This Interpreter is not directly compatible with the original sDWM (they used float as index, it's not possible for Numpy 1.14). &#10;This interpreter gives results very close to the original code (with the original interpreter). So we will continue now with this new interpreter. (I saved the old interpreter for the original code)." />
     <MESSAGE value="New Interpreter with updated package.&#10;This Interpreter is not directly compatible with the original sDWM (they used float as index, it's not possible for Numpy 1.14). &#10;This interpreter gives results very close to the original code (with the original interpreter). So we will continue now with this new interpreter. (I saved the old interpreter for the original code).&#10;&#10;- new bug fixed for the meandering plot" />
     <MESSAGE value="Some Graphic issues fixed" />
@@ -609,58 +598,26 @@
     <MESSAGE value="Add of three programm for wake added Turbulence part." />
     <MESSAGE value="Updated" />
     <MESSAGE value="Updated with wake added Turbulence" />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated with wake added Turbulence" />
+    <MESSAGE value="Work on models management and implementation" />
+    <MESSAGE value="a Beginning of good aggreement between Larsen model 2012 and Keck 2015 for power production.&#10;&#10;It last to implement the correct F1 for Larsen." />
+    <option name="LAST_COMMIT_MESSAGE" value="a Beginning of good aggreement between Larsen model 2012 and Keck 2015 for power production.&#10;&#10;It last to implement the correct F1 for Larsen." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="17" />
+      <option name="time" value="19" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/DWM_flowfield_farm.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="14" column="0" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
-          <folding>
-            <element signature="e#136#154#0" expanded="true" />
-            <element signature="e#8862#20189#0" expanded="false" />
-            <element signature="e#13761#14180#0" expanded="false" />
-            <element signature="e#14585#15003#0" expanded="false" />
-            <element signature="e#20243#23995#0" expanded="false" />
-            <element signature="e#22608#23061#0" expanded="false" />
-            <element signature="e#23731#23974#0" expanded="false" />
-            <element signature="e#24064#28566#0" expanded="false" />
-            <element signature="e#28656#33145#0" expanded="false" />
-            <element signature="e#32069#32380#1" expanded="false" />
-            <element signature="e#33204#36064#0" expanded="false" />
-            <element signature="e#35298#36031#0" expanded="false" />
-            <element signature="e#40577#40716#0" expanded="false" />
-            <element signature="e#42929#44823#0" expanded="false" />
-            <element signature="e#45950#47828#0" expanded="false" />
-            <element signature="e#49458#52619#0" expanded="false" />
-            <element signature="e#52660#57598#0" expanded="false" />
-            <element signature="e#57658#63197#0" expanded="false" />
-            <element signature="e#63837#70269#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/RUN_sDWM_tests.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <marker date="1532957810885" expanded="true" signature="332:479" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/cDWM.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="646">
           <caret line="39" column="9" lean-forward="false" selection-start-line="39" selection-start-column="9" selection-end-line="39" selection-end-column="9" />
-          <folding />
+          <folding>
+            <element signature="e#2056#2182#0" expanded="false" />
+            <element signature="e#10566#11333#0" expanded="false" />
+            <element signature="e#12259#12950#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -704,7 +661,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1532957810885" expanded="true" signature="332:479" ph="..." />
+            <marker date="1533204418998" expanded="true" signature="332:478" ph="..." />
           </folding>
         </state>
       </provider>
@@ -713,60 +670,11 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="646">
           <caret line="39" column="9" lean-forward="false" selection-start-line="39" selection-start-column="9" selection-end-line="39" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/DWM_flowfield_farm.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="16473">
-          <caret line="969" column="0" lean-forward="false" selection-start-line="969" selection-start-column="0" selection-end-line="969" selection-end-column="0" />
           <folding>
-            <element signature="e#136#154#0" expanded="true" />
-            <element signature="e#8862#20189#0" expanded="false" />
-            <element signature="e#13761#14180#0" expanded="false" />
-            <element signature="e#14585#15003#0" expanded="false" />
-            <element signature="e#20243#23995#0" expanded="false" />
-            <element signature="e#22608#23061#0" expanded="false" />
-            <element signature="e#23731#23974#0" expanded="false" />
-            <element signature="e#24064#28566#0" expanded="false" />
-            <element signature="e#28656#33145#0" expanded="false" />
-            <element signature="e#32069#32380#1" expanded="false" />
-            <element signature="e#33204#36064#0" expanded="false" />
-            <element signature="e#35298#36031#0" expanded="false" />
-            <element signature="e#40577#40716#0" expanded="false" />
-            <element signature="e#42929#44823#0" expanded="false" />
-            <element signature="e#45950#47828#0" expanded="false" />
-            <element signature="e#49458#52619#0" expanded="false" />
-            <element signature="e#52660#57598#0" expanded="false" />
-            <element signature="e#57658#63197#0" expanded="false" />
-            <element signature="e#63837#70269#0" expanded="false" />
+            <element signature="e#2056#2182#0" expanded="false" />
+            <element signature="e#10566#11333#0" expanded="false" />
+            <element signature="e#12259#12950#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sDWM.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3043">
-          <caret line="179" column="9" lean-forward="false" selection-start-line="179" selection-start-column="9" selection-end-line="179" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/RUN_sDWM_tests.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <marker date="1532957810885" expanded="true" signature="332:479" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cDWM.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="646">
-          <caret line="39" column="9" lean-forward="false" selection-start-line="39" selection-start-column="9" selection-end-line="39" selection-end-column="9" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -810,7 +718,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1532957810885" expanded="true" signature="332:479" ph="..." />
+            <marker date="1533204418998" expanded="true" signature="332:478" ph="..." />
           </folding>
         </state>
       </provider>
@@ -819,7 +727,11 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="646">
           <caret line="39" column="9" lean-forward="false" selection-start-line="39" selection-start-column="9" selection-end-line="39" selection-end-column="9" />
-          <folding />
+          <folding>
+            <element signature="e#2056#2182#0" expanded="false" />
+            <element signature="e#10566#11333#0" expanded="false" />
+            <element signature="e#12259#12950#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -863,7 +775,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1532957810885" expanded="true" signature="332:479" ph="..." />
+            <marker date="1533204418998" expanded="true" signature="332:478" ph="..." />
           </folding>
         </state>
       </provider>
@@ -872,7 +784,11 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="663">
           <caret line="39" column="9" lean-forward="false" selection-start-line="39" selection-start-column="9" selection-end-line="39" selection-end-column="9" />
-          <folding />
+          <folding>
+            <element signature="e#2056#2182#0" expanded="false" />
+            <element signature="e#10566#11333#0" expanded="false" />
+            <element signature="e#12259#12950#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -916,7 +832,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1532957810885" expanded="true" signature="332:479" ph="..." />
+            <marker date="1533204418998" expanded="true" signature="332:478" ph="..." />
           </folding>
         </state>
       </provider>
@@ -967,7 +883,11 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1564">
           <caret line="93" column="31" lean-forward="true" selection-start-line="93" selection-start-column="31" selection-end-line="93" selection-end-column="31" />
-          <folding />
+          <folding>
+            <element signature="e#2056#2182#0" expanded="false" />
+            <element signature="e#10566#11333#0" expanded="false" />
+            <element signature="e#12259#12950#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1000,13 +920,6 @@
       </provider>
     </entry>
     <entry file="file://C:/Program Files/RetroFlow Chart/RetroFlow.py" />
-    <entry file="file://$PROJECT_DIR$/src/WindFarm.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="327">
-          <caret line="48" column="24" lean-forward="false" selection-start-line="48" selection-start-column="24" selection-end-line="48" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Plot_Function.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1018,6 +931,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="109" column="18" lean-forward="false" selection-start-line="109" selection-start-column="18" selection-end-line="109" selection-end-column="18" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1035,13 +949,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Meandering_Main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-20">
-          <caret line="264" column="0" lean-forward="true" selection-start-line="264" selection-start-column="0" selection-end-line="264" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Read_NPY_WT.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1056,31 +963,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/ReadMannTurbulence.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-43">
-          <caret line="8" column="10" lean-forward="false" selection-start-line="8" selection-start-column="10" selection-end-line="8" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Wake_added_turbulence_Main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="331">
-          <caret line="29" column="118" lean-forward="false" selection-start-line="29" selection-start-column="118" selection-end-line="29" selection-end-column="118" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sDWM.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1275">
-          <caret line="75" column="9" lean-forward="false" selection-start-line="75" selection-start-column="9" selection-end-line="75" selection-end-column="9" />
-          <folding>
-            <element signature="e#7728#9353#0" expanded="false" />
-            <element signature="e#9654#11726#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/Anaconda2/envs/sDWM/Lib/site-packages/numpy/lib/function_base.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="152">
@@ -1088,51 +970,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/DWM_flowfield_farm_Dynamic.py">
+    <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_4.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2635">
-          <caret line="213" column="36" lean-forward="false" selection-start-line="213" selection-start-column="36" selection-end-line="213" selection-end-column="36" />
+        <state relative-caret-position="187">
+          <caret line="11" column="10" lean-forward="true" selection-start-line="11" selection-start-column="10" selection-end-line="11" selection-end-column="10" />
           <folding>
-            <element signature="e#159#177#0" expanded="true" />
-            <element signature="e#456#1403#0" expanded="false" />
-            <element signature="e#1465#2906#0" expanded="false" />
-            <element signature="e#6921#7428#0" expanded="false" />
-            <element signature="e#7952#8042#0" expanded="false" />
-            <element signature="e#12549#18691#0" expanded="false" />
-            <element signature="e#18758#23527#0" expanded="false" />
-            <element signature="e#23631#34628#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/ReadTurbulence.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="231" column="64" lean-forward="false" selection-start-line="231" selection-start-column="64" selection-end-line="231" selection-end-column="64" />
-          <folding>
-            <element signature="e#78#96#0" expanded="true" />
-            <element signature="e#242#1408#0" expanded="false" />
-            <element signature="e#1444#1959#0" expanded="false" />
-            <element signature="e#2005#3494#0" expanded="false" />
-            <element signature="e#3586#7409#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/DWM_calc_mixL.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="416">
-          <caret line="337" column="79" lean-forward="false" selection-start-line="337" selection-start-column="79" selection-end-line="337" selection-end-column="79" />
-          <folding>
-            <element signature="e#147#165#0" expanded="true" />
-            <element signature="e#5739#6227#0" expanded="false" />
-            <element signature="e#12594#15570#0" expanded="false" />
-            <element signature="e#22727#26927#0" expanded="false" />
-            <element signature="e#26969#34162#0" expanded="false" />
-            <element signature="e#30492#31699#0" expanded="false" />
-            <element signature="e#31779#32117#0" expanded="false" />
-            <element signature="e#32252#34145#0" expanded="false" />
-            <element signature="e#33077#34145#0" expanded="false" />
+            <element signature="e#0#16#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1145,39 +988,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/cTurb.py">
+    <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_5.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="578">
-          <caret line="52" column="32" lean-forward="false" selection-start-line="52" selection-start-column="32" selection-end-line="52" selection-end-column="32" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/RUN_sDWM_tests.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="314">
-          <caret line="26" column="30" lean-forward="false" selection-start-line="26" selection-start-column="30" selection-end-line="26" selection-end-column="30" />
+        <state relative-caret-position="136">
+          <caret line="23" column="0" lean-forward="false" selection-start-line="23" selection-start-column="0" selection-end-line="44" selection-end-column="22" />
           <folding>
-            <marker date="1532957810885" expanded="true" signature="332:479" ph="..." />
+            <element signature="e#0#18#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cDWM.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="143">
-          <caret line="250" column="0" lean-forward="false" selection-start-line="250" selection-start-column="0" selection-end-line="250" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/DWM_flowfield_farm.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="279">
-          <caret line="72" column="15" lean-forward="true" selection-start-line="72" selection-start-column="15" selection-end-line="72" selection-end-column="15" />
+        <state relative-caret-position="108">
+          <caret line="1093" column="35" lean-forward="true" selection-start-line="1093" selection-start-column="35" selection-end-line="1093" selection-end-column="35" />
           <folding>
             <element signature="e#136#154#0" expanded="true" />
-            <element signature="e#8862#20189#0" expanded="false" />
             <element signature="e#13761#14180#0" expanded="false" />
             <element signature="e#14585#15003#0" expanded="false" />
             <element signature="e#20243#23995#0" expanded="false" />
@@ -1188,6 +1014,7 @@
             <element signature="e#32069#32380#1" expanded="false" />
             <element signature="e#33204#36064#0" expanded="false" />
             <element signature="e#35298#36031#0" expanded="false" />
+            <element signature="e#36115#47862#0" expanded="false" />
             <element signature="e#40577#40716#0" expanded="false" />
             <element signature="e#42929#44823#0" expanded="false" />
             <element signature="e#45950#47828#0" expanded="false" />
@@ -1195,6 +1022,209 @@
             <element signature="e#52660#57598#0" expanded="false" />
             <element signature="e#57658#63197#0" expanded="false" />
             <element signature="e#63837#70269#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Wake_added_turbulence_Main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="63">
+          <caret line="95" column="0" lean-forward="false" selection-start-line="95" selection-start-column="0" selection-end-line="95" selection-end-column="0" />
+          <folding>
+            <element signature="e#888#1018#1" expanded="false" />
+            <element signature="e#1661#1814#0" expanded="false" />
+            <element signature="e#1979#2108#0" expanded="false" />
+            <element signature="e#3297#3403#1" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/ReadTurbulence.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="275" column="43" lean-forward="false" selection-start-line="275" selection-start-column="43" selection-end-line="275" selection-end-column="43" />
+          <folding>
+            <element signature="e#78#96#0" expanded="true" />
+            <element signature="e#242#1408#0" expanded="false" />
+            <element signature="e#1444#1959#0" expanded="false" />
+            <element signature="e#2005#3494#0" expanded="false" />
+            <element signature="e#3586#7409#0" expanded="false" />
+            <element signature="e#9377#9702#1" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DWM_calc_mixL.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="280">
+          <caret line="590" column="121" lean-forward="true" selection-start-line="590" selection-start-column="121" selection-end-line="590" selection-end-column="121" />
+          <folding>
+            <element signature="e#147#165#0" expanded="true" />
+            <element signature="e#3770#4111#0" expanded="false" />
+            <element signature="e#4149#4647#0" expanded="false" />
+            <element signature="e#4684#5194#0" expanded="false" />
+            <element signature="e#5238#5726#0" expanded="false" />
+            <element signature="e#12093#15069#0" expanded="false" />
+            <element signature="e#17782#18763#0" expanded="false" />
+            <element signature="e#18793#19649#0" expanded="false" />
+            <element signature="e#18960#19199#0" expanded="false" />
+            <element signature="e#19362#19649#0" expanded="false" />
+            <element signature="e#19679#19938#0" expanded="false" />
+            <element signature="e#19989#22252#0" expanded="false" />
+            <element signature="e#22314#26514#0" expanded="false" />
+            <element signature="e#29343#30096#0" expanded="false" />
+            <element signature="e#31576#31914#0" expanded="false" />
+            <element signature="e#33218#33609#0" expanded="false" />
+            <element signature="e#33661#34729#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/ReadMannTurbulence.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-746">
+          <caret line="8" column="10" lean-forward="false" selection-start-line="8" selection-start-column="10" selection-end-line="8" selection-end-column="10" />
+          <folding>
+            <element signature="e#242#1460#0" expanded="false" />
+            <element signature="e#1496#2011#0" expanded="false" />
+            <element signature="e#2121#3283#0" expanded="false" />
+            <element signature="e#5428#6011#0" expanded="false" />
+            <element signature="e#6070#6925#0" expanded="false" />
+            <element signature="e#7061#8189#0" expanded="false" />
+            <marker date="1532938504843" expanded="true" signature="237:690" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cTurb.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1054">
+          <caret line="62" column="31" lean-forward="false" selection-start-line="62" selection-start-column="31" selection-end-line="62" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sDWM_inputs.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DWM_flowfield_farm_Dynamic.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="160" column="38" lean-forward="false" selection-start-line="160" selection-start-column="38" selection-end-line="160" selection-end-column="38" />
+          <folding>
+            <element signature="e#159#177#0" expanded="true" />
+            <element signature="e#456#1403#0" expanded="false" />
+            <element signature="e#1465#2906#0" expanded="false" />
+            <element signature="e#4340#4453#0" expanded="false" />
+            <element signature="e#4472#4608#0" expanded="false" />
+            <element signature="e#7729#7921#0" expanded="false" />
+            <element signature="e#7957#8597#0" expanded="false" />
+            <element signature="e#8059#8202#0" expanded="false" />
+            <element signature="e#8503#8597#0" expanded="false" />
+            <element signature="e#8731#8816#0" expanded="false" />
+            <element signature="e#8851#8958#0" expanded="false" />
+            <element signature="e#9798#10225#0" expanded="false" />
+            <element signature="e#10447#10755#0" expanded="false" />
+            <element signature="e#12027#12988#0" expanded="false" />
+            <element signature="e#13020#13946#0" expanded="false" />
+            <element signature="e#13987#18278#0" expanded="false" />
+            <element signature="e#18418#24560#0" expanded="false" />
+            <element signature="e#24627#29430#0" expanded="false" />
+            <element signature="e#27634#29397#0" expanded="false" />
+            <element signature="e#29534#40531#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DWM_init_dict.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-612">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/WindFarm.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="193">
+          <caret line="30" column="69" lean-forward="false" selection-start-line="30" selection-start-column="69" selection-end-line="30" selection-end-column="69" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sDWM.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="110" column="4" lean-forward="false" selection-start-line="110" selection-start-column="4" selection-end-line="112" selection-end-column="20" />
+          <folding>
+            <element signature="e#1888#2442#0" expanded="false" />
+            <element signature="e#2797#3369#0" expanded="false" />
+            <element signature="e#3403#3519#0" expanded="false" />
+            <element signature="e#9791#11863#0" expanded="false" />
+            <marker date="1533197742345" expanded="false" signature="7830:9473" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test_WF.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="346">
+          <caret line="63" column="0" lean-forward="false" selection-start-line="63" selection-start-column="0" selection-end-line="63" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+            <element signature="e#53#579#1" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Meandering_Main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1332">
+          <caret line="380" column="0" lean-forward="false" selection-start-line="380" selection-start-column="0" selection-end-line="380" selection-end-column="0" />
+          <folding>
+            <element signature="e#3658#6550#0" expanded="false" />
+            <element signature="e#7166#12734#0" expanded="false" />
+            <element signature="e#12807#16689#0" expanded="false" />
+            <element signature="e#23407#24541#1" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_6.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="8" column="91" lean-forward="true" selection-start-line="8" selection-start-column="91" selection-end-line="8" selection-end-column="91" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/RUN_sDWM_tests.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="24" column="34" lean-forward="true" selection-start-line="24" selection-start-column="34" selection-end-line="24" selection-end-column="34" />
+          <folding>
+            <marker date="1533204418998" expanded="true" signature="332:478" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cDWM.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="244">
+          <caret line="26" column="0" lean-forward="true" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
+          <folding>
+            <element signature="e#2056#2182#0" expanded="false" />
+            <element signature="e#10566#11333#0" expanded="false" />
+            <element signature="e#12259#12950#0" expanded="false" />
           </folding>
         </state>
       </provider>

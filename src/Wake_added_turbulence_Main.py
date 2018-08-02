@@ -31,6 +31,13 @@ def pre_init_turb_WaT(filename):
     MannBox.TI_u = np.sqrt(np.mean((MannBox.u_TurbBox) ** 2))
     print 'TI from MannBox WaT: ', MannBox.TI_u
 
+    """
+    #Variance
+    Var = np.mean((MannBox.u_TurbBox-np.mean(MannBox.u_TurbBox))**2)
+    print Var
+    raw_input('...')
+    #"""
+
     # Size the MannBox according to MFOR / FFoR / mixl domain settings
 
     return MannBox
@@ -43,17 +50,27 @@ def init_turb_WaT(MannBox, meta):
     :param MannBox:
     :return:
     """
-
+    debug = False
     # is it possible to not create a second mannbox to save memory cost
     # ---------------------------- # Scale Turbulence Intensity # -------------------- #
     # We take of the last scaling due to the last iteration
     MannBox.u_TurbBox = MannBox.u_TurbBox / MannBox.k_scale
 
     # we update/calculate the new scaling for the next iteration
+    if debug:
+        print 'First scaling: '
+
+        print 'k_scale', MannBox.k_scale
+        print 'MannBox_Tiu', MannBox.TI_u
+        print 'mean DWM Ti', meta.mean_TI_DWM
     MannBox.k_scale = meta.mean_TI_DWM / MannBox.TI_u
 
     # We apply the scaling
     MannBox.u_TurbBox = MannBox.k_scale * MannBox.u_TurbBox
+    if debug:
+        print 'kscale: ', MannBox.k_scale
+        print 'Mannbox Ti', np.sqrt(np.mean((MannBox.u_TurbBox) ** 2))
+        raw_input('...')
 
     return
 
@@ -72,16 +89,15 @@ def obtain_wake_added_turbulence(MannBox, i_t, meta):
     """
 
     plan_of_interest = MannBox.u_TurbBox[:, :, i_t]
-    Ly = np.linspace(meta.x_vec[0], meta.x_vec[-1], MannBox.ny)
-    Lz = np.linspace(meta.y_vec[0], meta.y_vec[-1], MannBox.nz)
-    # we consider this plan centered on the wake
-    #new_ly = np.linspace(meta.x_vec[0], meta.x_vec[-1], meta.nx)
-    #new_lz = np.linspace(meta.y_vec[0], meta.y_vec[-1], meta.ny)
-    new_ly = meta.x_vec
+
+    # Box containing plan of (2R, 2R)
+    Ly = np.linspace(0., 4., MannBox.ny)
+    Lz = np.linspace(0, 4., MannBox.nz)
+
+
+    new_ly = meta.x_vec     #more than 2
     new_lz = meta.y_vec
 
-    #WaT = griddata((Ly,Lz),plan_of_interest,(new_ly, new_lz))
-    #WaT = RectBivariateSpline()
 
     f_cart = RectBivariateSpline(x=Ly, y=Lz, z=np.transpose(plan_of_interest),
                                                    # np.transpose for last version of scipy

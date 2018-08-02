@@ -31,7 +31,7 @@ def DWM_init_calc_mixl(meta,aero,mfor):
         width (np.array int): wake width vector index
     """
 
-
+    F1_vector, F2_vector = None , None
      # Sets the input vector
     # bin_filter = np.array([aero.r_w.max(0) > meta.vr_mixl]).astype(int).flatten()
     # xq=meta.vr_mixl[:sum(bin_filter)]*bin_filter[:sum(bin_filter)]
@@ -64,27 +64,23 @@ def DWM_init_calc_mixl(meta,aero,mfor):
             F1_vector  = np.hstack((np.linspace(meta.f1[0],1,meta.f1[1]*meta.dz/2),np.linspace(1,1,meta.lz_mixl*meta.dz/2)))
             F2_z_vec   = np.arange(2+1./meta.dz,(len(F1_vector)+1)*(1./meta.dz),1./meta.dz)
             F2_vector  = np.hstack((np.linspace(meta.f2[0],meta.f2[0],2*meta.dz), 1.-(1.-meta.f2[0])*np.exp(-meta.f2[1]*(F2_z_vec-2.))))
+
         if meta.Madsen:
-            # NOT CORRECTED
             # Same F1 as Keck
             # Not the same F2 as Keck... I don't find the formula so I interpolate the graph.
             F1_vector = np.hstack((np.linspace(meta.f1[0], 1, meta.f1[1] * meta.dz / 2), np.linspace(1, 1, meta.lz_mixl * meta.dz / 2)))
-            F2_z_vec = np.arange(2 + 1. / meta.dz, (len(F1_vector) + 1) * (1. / meta.dz), 1. / meta.dz)
-            F2_vector = np.hstack((np.linspace(meta.f2[0], meta.f2[0], 2 * meta.dz), 1. - (1. - meta.f2[0]) * np.exp(-meta.f2[1] * (F2_z_vec - 2.))))
-
+            F2_vector = meta.F2(meta.vz_mixl / 2)
             # F2 vector seems to be constituted by 4 functions
             # [0D]0.07 -> 0.07 [2D],
             # linear curve 0.07[2D] -> 0.3 [7D],
             # exponential curve  0.3[7D] -> 1[10D]
         if meta.Larsen:
-            # NOT CORRECTED FOR NOW IT S SAME as KECK
             # We have to introduce the non linear function F_amb
             # I don't found the formula for f_amb I don't find the formula so I interpolate the graph.
             # it seems to be same F2 as Madsen
-            F1_vector = np.hstack((np.linspace(meta.f1[0], 1, meta.f1[1] * meta.dz / 2), np.linspace(1, 1, meta.lz_mixl * meta.dz / 2)))
-            F2_z_vec = np.arange(2 + 1. / meta.dz, (len(F1_vector) + 1) * (1. / meta.dz), 1. / meta.dz)
-            F2_vector = np.hstack((np.linspace(meta.f2[0], meta.f2[0], 2 * meta.dz), 1. - (1. - meta.f2[0]) * np.exp(-meta.f2[1] * (F2_z_vec - 2.))))
-
+            k = 2.5
+            F1_vector = (np.arctan(k * (meta.vz_mixl - 5)) / pi + 0.5)
+            F2_vector = meta.F2(meta.vz_mixl/2)
             meta.F_amb = 0.12/meta.mean_TI_DWM
 
             # F_amb curve in 1/TI_amb, analytical solution possible => 0.12/TI_amb
@@ -305,18 +301,20 @@ def DWM_eddy_viscosity(mfor,meta,width,visc_wake,visc_wake1,visc_wake2,F1_vector
     mfor.du_dr_DWM[j-1,1: meta.nr_mixl-2]  = (mfor.U[j-1,2:(meta.nr_mixl-2)+1] - mfor.U[j-1,0:(meta.nr_mixl-2)-1])/(2*meta.dr)
     mfor.du_dr_DWM[j-1,meta.nr_mixl-1]      = (mfor.U[j-1, meta.nr_mixl-1] - mfor.U[j-1, meta.nr_mixl-2])/meta.dr
 
-    # Blend of mixL and Ainslie eddy visc
-    # Keck Visc
-    visc_wake1[j-1,:]     = F2_vector[j-1]* meta.k2 *( meta.vr_mixl[width[j-1]-1]/meta.R_WTG )**2 * np.abs(mfor.du_dr_DWM[j-1,:])
-    # Ainslie Visc
-    visc_wake2[j-1,:]     = F2_vector[j-1]* meta.k2 *( meta.vr_mixl[width[j-1]-1]/meta.R_WTG )   * (1.0 - np.min(mfor.U[j-1,:]) )
-    # Take the max of two
-    visc_wake[j-1,:]      = np.maximum(visc_wake1[j-1,:],visc_wake2[j-1,:])
-    #max operator is included in the eddy viscosity formulation to avoid underestimating the
-    #turbulent stresses at locations where the velocity gradient of the deficit du_dr approaches zero
-    # Atmospheric eddy visc as u*l*, yields total eddy viscosity
-
     if meta.Keck or meta.previous_sDWM:
+        # Blend of mixL and Ainslie eddy visc
+        # Keck Visc
+        visc_wake1[j - 1, :] = F2_vector[j - 1] * meta.k2 * (meta.vr_mixl[width[j - 1] - 1] / meta.R_WTG) ** 2 * np.abs(
+            mfor.du_dr_DWM[j - 1, :])
+        # Ainslie Visc
+        visc_wake2[j - 1, :] = F2_vector[j - 1] * meta.k2 * (meta.vr_mixl[width[j - 1] - 1] / meta.R_WTG) * (
+        1.0 - np.min(mfor.U[j - 1, :]))
+        # Take the max of two
+        visc_wake[j - 1, :] = np.maximum(visc_wake1[j - 1, :], visc_wake2[j - 1, :])
+        # max operator is included in the eddy viscosity formulation to avoid underestimating the
+        # turbulent stresses at locations where the velocity gradient of the deficit du_dr approaches zero
+        # Atmospheric eddy visc as u*l*, yields total eddy viscosity
+
         visc_norm_factor      = 6.3918 # Applied to use Keck et al. [3] calibration
         mfor.visc[j-1,:]           = F1_vector[j-1]*meta.k1*visc_norm_factor*u_star_DEF*l_star_DEF + visc_wake[j-1,:]
 
@@ -492,6 +490,7 @@ def DWM_calc_mixL(meta,aero,mfor):
     """
     print 'Performing DWM_calc_mixL (Ainslie Computation)'
     save_wakewidth_data = False
+    i_p = 0
     if save_wakewidth_data:
         print "Saving wake width data"
         wake_width = []
@@ -521,18 +520,23 @@ def DWM_calc_mixL(meta,aero,mfor):
             mfor.V[j,i+1] = (meta.vr_mixl[i] / meta.vr_mixl[i+1]) * mfor.V[j,i] - (meta.dr/(2*meta.dz_mixl))*( (mfor.U[j,i+1] - mfor.U[j-1,i+1]) + \
             (meta.vr_mixl[i] / meta.vr_mixl[i+1])*((mfor.U[j,i] - mfor.U[j-1,i])) )
 
-        # print mfor.V.shape
-        # POST PROCESSING SIGNAL: Turbulent stress
-        mfor.Turb_Stress_DWM[j-1,:]           = mfor.visc[j-1,:]  * mfor.du_dr_DWM[j-1,:]
+        if meta.Keck:
+            #--------------------------------------------------------------------------------------------------------------#
+            # CHECK THIS PART FOR MADSEN, LARSEN
+            # POST PROCESSING SIGNAL: Turbulent stress
+            mfor.Turb_Stress_DWM[j-1,:]           = mfor.visc[j-1,:]  * mfor.du_dr_DWM[j-1,:]
 
-        # POST PROCESSING SIGNAL: TI_DWM formulated based on the relation derived between u'v' and u'u' (see Keck et al. [3])
-        x_uw_wake      = 1.0
-        C_uw_wake      = (0.7550 - meta.mean_TI_DWM*1.75) / 2 # Article states: "C_uw_wake = 0.3", but this seems to give better results (=> 0.3 for TI=8.6%)
-        mfor.TI_DWM[j-1,:]  = np.sqrt( np.abs( (1.0 / (x_uw_wake * C_uw_wake)) * mfor.Turb_Stress_DWM[j-1,:]) )
+
+            # POST PROCESSING SIGNAL: TI_DWM formulated based on the relation derived between u'v' and u'u' (see Keck et al. [3])
+            x_uw_wake      = 1.0
+            C_uw_wake      = (0.7550 - meta.mean_TI_DWM*1.75) / 2 # Article states: "C_uw_wake = 0.3", but this seems to give better results (=> 0.3 for TI=8.6%)
+            mfor.TI_DWM[j-1,:]  = np.sqrt( np.abs( (1.0 / (x_uw_wake * C_uw_wake)) * mfor.Turb_Stress_DWM[j-1,:]) )
+
+
         mfor.WakeW = meta.vr_mixl[width-1]
 
         # Plot deficit and derivative for Madsen Approach
-        if meta.Madsen and meta.vz_mixl[j-1]< 3.3*2 < meta.vz_mixl[j]:
+        if meta.WaT_detail and meta.vz_mixl[j-1]< 3.3*2 < meta.vz_mixl[j]:
 
             # MADSEN Scaling for Turbulence:
             km1 = 0.6
@@ -566,7 +570,7 @@ def DWM_calc_mixL(meta,aero,mfor):
         print 'wake width data saved... '
 #    elapsed = time.time() - t
 #    print 'Velocity model computation time %i' % (int(elapsed))
-    if meta.BEM_AINSLIE_plot:
+    if meta.Deficit_Process_Detail:
         plt.figure('Axial Velocity Output from mixL domain (MFOR)')
         plt.title('Axial Velocity Output from mixL domain (MFOR)')
         #plt.xlim(1.,0.)
@@ -576,14 +580,32 @@ def DWM_calc_mixL(meta,aero,mfor):
 
         plt.legend(), plt.show()
 
-        plt.figure('Axial TI Output from mixL domain (MFOR)')
-        plt.title('Axial TI Output from mixL domain (MFOR)')
-        plt.ylabel('vr (polar discretization)[R]')
-        plt.xlabel('TI')
-        for i_z in np.arange(0, meta.nz, 1):
-            plt.plot(mfor.TI_DWM[meta.vz[i_z], :], meta.vr_mixl, label='at Turbine '+ str(7-i_z))
+        plt.figure(2)
+        L_observer = [ 16,32,48,64] # in R, strictly ascending location
+        for j in np.arange(1, len(meta.vz_mixl), 1):
+            if meta.vz_mixl[j - 1] < L_observer[i_p] < meta.vz_mixl[j]:
+                i_p = i_p + 1
+                Udef = mfor.U[j-1,:]
 
-        plt.legend(), plt.show()
+                #plt.plot(Udef, meta.vr_mixl, label = str(meta.vz_mixl[j-1])[:3]+'-'+str(meta.vz_mixl[j])[:3]+' [R]')
+                plt.plot(meta.vr_mixl, Udef,label=str(meta.vz_mixl[j - 1])[:3] + '-' + str(meta.vz_mixl[j])[:3] + ' [R]')
+                if i_p == len(L_observer):
+                    break
+        #plt.xlabel('[U0]'), plt.ylabel('[R]')
+        plt.ylabel('[U0]'), plt.xlabel('[R]')
+        plt.legend()
+        plt.show()
+
+
+        if meta.Keck:
+            plt.figure('Axial TI Output from mixL domain (MFOR)')
+            plt.title('Axial TI Output from mixL domain (MFOR)')
+            plt.ylabel('vr (polar discretization)[R]')
+            plt.xlabel('TI')
+            for i_z in np.arange(0, meta.nz, 1):
+                plt.plot(mfor.TI_DWM[meta.vz[i_z], :], meta.vr_mixl, label='at Turbine '+ str(7-i_z))
+
+            plt.legend(), plt.show()
 
         if meta.AINSLIE_Keck_details:
             print 'Plot: We restrict the x abscisse to 2.5'

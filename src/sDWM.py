@@ -58,14 +58,10 @@ def sDWM(derating,kwargs,xind):
             #HH = 90.  # Hub height    # can come from sDWM
 
             Rw = 1.  # try with no expansion
-
-
             WF.U_mean = WS
             WF.WT_R = WT.R
-
             WF.WT_Rw = Rw
             WF.TI = TI
-            # WindFarm.lenght = 4000.
 
             WT = wt.WindTurbine('Windturbine', '../WT-data/' + WTG + '/' + WTG + '_PC.dat', HH, WT.R)  # already present in sDWM
             TurBox, WF = pre_init_turb(filename, WF, WT)
@@ -105,11 +101,17 @@ def sDWM(derating,kwargs,xind):
     if 'Lill' in WTcoord:
         WF.vectWTtoWT=WF.vectWTtoWT*(WT.R/46.5) # 46.5 is the Lillgrund nominal radius of SWT turbine
         #print WT.R/46.5: 1.0
-        #print 'WF.vectWTtoWT: ', WF.vectWTtoWT
+        print 'WF.vectWTtoWT: ', WF.vectWTtoWT
+        raw_input('...')
 
 
     # Compute distance WT to WT in mean flow coordinate system
     distFlowCoord, nDownstream, id0= WF.turbineDistance(WD)
+
+    print 'distflowcoord', distFlowCoord
+    print 'ndownstream', nDownstream
+    print 'id0', id0
+    raw_input('...')
 
     # Init dictionnaries
     deficits, turb, inlets_ffor, inlets_ffor_deficits,inlets_ffor_turb,out, DWM, ID_waked, ID_wake_adj, Farm_p_out, WT_p_out, Vel_out,WT_pitch_out,WT_RPM_out=init(WF)
@@ -193,6 +195,7 @@ def sDWM(derating,kwargs,xind):
         #"""
         if dynamic:
             aero, meta, mfor, ffor, DWM, deficits, inlets_ffor, inlets_ffor_deficits, inlets_ffor_turb, turb, out, ID_waked = DWM_main_field_model_partly_dynamic(ID_waked,deficits,inlets_ffor,inlets_ffor_deficits,inlets_ffor_turb,turb,DWM,out, TurBox, WF, MannBox,**par)
+            """
             if meta.iT == 0:
                 FFOR_result = ffor.WS_axial_ffor
             else:
@@ -228,6 +231,7 @@ def sDWM(derating,kwargs,xind):
                             plt.colorbar(CS1)
                             plt.draw()
                             plt.pause(0.0001)
+            #"""
         else:
             aero, meta, mfor, ffor, DWM, deficits,inlets_ffor,inlets_ffor_deficits, inlets_ffor_turb,turb, out,ID_waked = DWM_main_field_model(ID_waked,deficits,inlets_ffor,inlets_ffor_deficits,inlets_ffor_turb,turb,DWM,out,**par)
             if meta.steadyBEM_AINSLIE:
