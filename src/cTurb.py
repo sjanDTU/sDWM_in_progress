@@ -13,9 +13,9 @@ class MannBox:
         self.fieldDim = 0.
         self.N_Comp = 0.
 
-        self.nx = 1      # Point Discritization along x-axis
-        self.ny = 1      # Point Discritization along y-axis
-        self.nz = 1      # Point Discritization along z-axis
+        self.nx = 1      # Point Discretization along x-axis
+        self.ny = 1      # Point Discretization along y-axis
+        self.nz = 1      # Point Discretization along z-axis
 
 
         self.lx = 1.     # 32768m in total
@@ -60,7 +60,7 @@ class MannBox:
         self.discr_reduc_factor = 1
         self.nx_r = 16384  # Discretization along x-axis to read fastly!
 
-        self.SimulationTime = 30  # (s)
+        self.SimulationTime = 60  # (s)
         self.CorrectionDelay = True  # We want to begin the simulation when the first plan go out of the WindFarm Box
         # In this case at t=0, we have all the windfarm box affected by the turbulent box
         self.delay = 0.

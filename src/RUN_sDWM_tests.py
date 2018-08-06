@@ -14,19 +14,22 @@ from sDWM import sDWM
 if __name__ == "__main__":
     inputs = dict()
     ##########################################################################
-    inputs = {'WD': 220,#270-70, #222
-              'WS': 8.,
-              'TI': 0.01,
-              'WTcoord': '../data/Lill_rowB.dat',
-              'WTG': 'NREL5MW',
-              'HH': 65.0,
-              'R': 46.5,
+    inputs = {'WD': 0.,# ref is 270 in general (222 for lillgrund Row)  # Ref LES 180?or 0?
+              'WS': 9.,
+              'TI': 0.06,
+              #'WTcoord': '../data/Lill_rowB.dat',
+              #'WTcoord': '../data/TEST_S372m_nWT4_D0.dat',
+              #'WTcoord': '../data/LES_WF_layout.dat',
+              'WTcoord': '../data/LES_WF_layout_3reduced.dat',
+              'WTG': 'NY2',
+              'HH': 80.0,
+              'R': 40.,
               'stab': 'N',
               'accum': 'dominant',
               'optim': False,
-              'dynamic': True,
-              'Meandering_turb_box_name': None,
-              'WaT_turb_box_name': '1101'}
+              'dynamic': True,                   # Imply bemsteady... TRUE
+              'Meandering_turb_box_name': None,  # Imply used_saved data TRUE (not automatical for the moment)
+              'WaT_turb_box_name': '1028'}
     ##########################################################################
 
     WT = wt.WindTurbine('Windturbine','../WT-data/'+inputs['WTG']+'/'+inputs['WTG']+'_PC.dat',inputs['HH'],inputs['R'])

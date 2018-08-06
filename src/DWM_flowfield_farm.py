@@ -77,34 +77,20 @@ def DWM_main_field_model(ID_waked,deficits,inlets_ffor,inlets_ffor_deficits,inle
     aero = Aero(meta.WTG)
     t = time.time()
 
-
     # ##### Set up MFoR and FFoR streamwise domain properties   #####################################################
     meta                 = DWM_make_grid(meta)
 
     # ##### Load wake meandering properties from meta model: f(stab,hub height,z,TI) ################################
-    if meta.previous_sDWM:
+    if meta.Meandering:
         if meta.previous_sDWM_working_with_a_MannBox:
             meta, meand = get_Meandering_dynamic(meta, meand)
         else:
             meand                = DWM_meta_meand(meand,meta)
-    else:
-        if meta.working_with_meandering_statistical_data: # For fair comparison with previous sDWM
-            meand = DWM_meta_meand(meand, meta)
-        else:
-            meta, meand = get_Meandering_dynamic(meta, meand)
 
 
     # ##  Run BEM model and create velocity deficit calculations inputs #############################################
     start_time = time.time()
-    if meta.previous_sDWM:
-        aero,mfor,out,BEM    = DWM_aero(meta,ffor,aero,deficits,turb,inlets_ffor,inlets_ffor_deficits,out,ID_waked)
-    else:
-        if meta.steadyBEM_AINSLIE:
-            aero, mfor, out, BEM = DWM_aero(meta, ffor, aero, deficits, turb, inlets_ffor,inlets_ffor_deficits,out,ID_waked)
-
-        # NOT IMPLEMENTED
-        elif not meta.steadyBEM_AINSLIE:
-            aero, mfor, out, BEM = DWM_aero_steady(meta, ffor, aero, deficits, turb, inlets_ffor, inlets_ffor_deficits, out, ID_waked)
+    aero,mfor,out,BEM    = DWM_aero(meta,ffor,aero,deficits,turb,inlets_ffor,inlets_ffor_deficits,out,ID_waked)
     print 'Computation Time for BEM is: ', time.time() - start_time
 
 
@@ -115,18 +101,12 @@ def DWM_main_field_model(ID_waked,deficits,inlets_ffor,inlets_ffor_deficits,inle
     print 'Computation Time for Ainslie is: ', time.time()-start_time
 
     # ############# Reconstruct global flow field by applying wake meandering #######################################
-    if meta.previous_sDWM:
-        mfor,ffor,meta,meand = DWM_MFOR_to_FFOR(mfor,meta,meand,ffor)
-    else:
-        mfor, ffor, meta, meand = DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor)
+    mfor,ffor,meta,meand = DWM_MFOR_to_FFOR(mfor,meta,meand,ffor)
 
 
 
     # ############## Compute deficit at downstream rotor
-    if meta.previous_sDWM:
-        deficits, ID_waked,inlets_ffor,inlets_ffor_deficits   = DWM_get_deficit(ffor,meta,deficits,ID_waked,inlets_ffor,inlets_ffor_deficits)
-    else:
-        deficits, ID_waked, inlets_ffor, inlets_ffor_deficits  = DWM_get_deficit_FFOR_dynamic(ffor, meta, deficits, ID_waked, inlets_ffor, inlets_ffor_deficits)
+    deficits, ID_waked,inlets_ffor,inlets_ffor_deficits   = DWM_get_deficit(ffor,meta,deficits,ID_waked,inlets_ffor,inlets_ffor_deficits)
 
     # print deficits
     # print inlets_ffor
@@ -135,10 +115,7 @@ def DWM_main_field_model(ID_waked,deficits,inlets_ffor,inlets_ffor_deficits,inle
 
     # ############## Compute turbulence level at downstream rotor
 
-    if meta.previous_sDWM:
-        turb, inlets_ffor_turb                 = DWM_get_turb(ffor,meta,turb,inlets_ffor_turb)
-    else:
-        turb, inlets_ffor_turb = DWM_get_turb_dynamic(ffor, meta, turb, inlets_ffor_turb)
+    turb, inlets_ffor_turb                 = DWM_get_turb(ffor,meta,turb,inlets_ffor_turb)
 
     # ############# Compute new axisymmetric flow for next turbine ##################################################
     #ffor,inlets = DWM_make_inflow_to_mixl(meta,ffor,inlets)
@@ -225,10 +202,10 @@ def DWM_aero(meta,ffor,aero,deficits,turb,inlets_ffor,inlets_ffor_deficits,out,I
     a_domain     = np.interp(meta.vr_m,np.hstack(([aero.r_w, aero.r_w[-1]+0.01, aero.r_w[-1]+0.02])), np.hstack((( 1.0 - aero.U_w), [0., 0.])))
                                                 # Increase of r_w size with 2 more points
     print 'New disrcretisation for Ainslie vr_m'
-    if meta.BEM_plot:
+    if meta.BC_detail_plot:
         print 'Aero CT: ', aero.CT
         plt.figure('Comparison between a_domain (Ainslie) and a (BEM)')
-        plt.title('Comparison between a_domain (Ainslie, when no pressure expansion) and a (BEM at rotor plane)')
+        plt.title('Comparison between a_domain (BC for Ainslie) and a (BEM at rotor plane)')
         plt.plot(a_domain, meta.vr_mixl, label='a_domain')
         plt.plot(BEM.a, aero.r_t, label='a (BEM)')
         plt.xlabel('Induction Factor'), plt.ylabel('radius discretization Ainslie [0., 4.], [R]'), plt.legend()
@@ -244,7 +221,7 @@ def DWM_aero(meta,ffor,aero,deficits,turb,inlets_ffor,inlets_ffor_deficits,out,I
         f3=interpolate.InterpolatedUnivariateSpline(radial,vel,  k=1)
         mfor.U_init=f3(meta.vr_mixl)
         mfor.U_init=smooth( mfor.U_init,window_len=5)
-        if meta.BEM_AINSLIE_plot:
+        if meta.BC_detail_plot:
             print 'mfor.U_init 0. -> 1. BEM, 1. -> 4. linear expansion of velocity'
             plt.figure('mfor.U_init')
             plt.title('U initialization for Ainslie (WT in Freestream)')
@@ -301,7 +278,7 @@ def DWM_aero(meta,ffor,aero,deficits,turb,inlets_ffor,inlets_ffor_deficits,out,I
         ffor.WS_axial_sym      = np.ones((len(np.arange(0,meta.dR+1.,1))))
         ffor.WS_axial_sym[0]=np.nanmean(U_init[r_dist_2 < (1.05*np.amin(r_dist_2))])
         #print 'meta.dR: ', meta.dR
-        for i_r_pos in np.arange(1,meta.dR+1,1):
+        for i_r_pos in np.arange(1,meta.dR+1,1):  # ORIGINALLY 1 to meta.dR +1
             #print 'i_r_pos: ', i_r_pos
             a=r_dist_2 > ((i_r_pos+1-1.5)*(1.0/meta.dR))# rotor neg boundaries
             bb=r_dist_2 < ((i_r_pos+1-0.5)*(1.0/meta.dR)) #rotor pos boundaries
@@ -323,7 +300,7 @@ def DWM_aero(meta,ffor,aero,deficits,turb,inlets_ffor,inlets_ffor_deficits,out,I
         mfor.U_init[mfor.U_init < 0.0]=0.0 # prevent from negative velocities on linear summation
         mfor.U_init=smooth( mfor.U_init,window_len=5)
 
-    if meta.BEM_AINSLIE_plot:
+    if meta.BC_detail_plot:
         print 'U_init shape: ', np.shape(mfor.U_init)
         plt.figure('U_init, the Input for Ainslie Coming from BEM')
         plt.title('U_init, the Input for Ainslie Coming from BEM')
@@ -409,7 +386,6 @@ def DWM_rotor_aero(meta,aero,ID_waked, *args):
         aero.ia = meta.WTG_spec.get_a(aero.CT)
         aero.a=  aero.ia*np.ones(len(aero.r_t))
     # print 'BEM predicts %4.2f kW at %4.2f m/s' %(BEM.Power/1000.,meta.mean_WS_DWM)
-
     if meta.BEM_plot:
         plt.figure('BEM')
         plt.title('Local axial velocity in the wake from Momemtum theory')
@@ -432,12 +408,6 @@ def DWM_rotor_aero(meta,aero,ID_waked, *args):
     aero.r_w = np.dot(aero.r_t, aero.f_w)   # New radial discretization for ainslie after the near wake expansion
     # Boundary conditions for U_w #(U_BC(r_BC) in Keck Validation of sDWM # Eq (6)
     aero.U_w     = 1.0-(aero.a * (1.0 + meta.fU))
-    if meta.BEM_plot:
-        plt.figure('BEM')
-        plt.title('Local axial velocity in the wake from Momemtum theory')
-        plt.plot(aero.U_w, aero.r_w, label='U_w')
-        plt.xlabel('U [U0]'), plt.ylabel('r [R]')#, plt.xlim(1.,0.)
-        plt.legend(), plt.show()
     return aero, BEM
 
 # Not needed???
@@ -705,6 +675,8 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
     ffor.y_mat = meta.y_mat / 2.  # [R] -> [D]
     ffor.z_mat = meta.z_mat / meta.dz  # [D]
 
+    #raw_input(ffor.x_vec)
+
 
 
     if meta.MEANDERING_detail_plot:
@@ -743,16 +715,16 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
         DWM_TI_DATA = mfor.TI_DWM[meta.vz[i_z], :]
 
 
-        if meta.AINSLIE_Keck_details:
+        if meta.Deficit_Process_Detail:
             plt.figure('Turbulence Intensity Correction')
             plt.plot( DWM_TI_DATA, meta.vr_mixl, label='DWM TI at WT'+str(meta.wtg_ind[i_z]))
 
         ### Correct DWM_TI_DATA so that no point to have lower TI than "TIamb DWM"
         DWM_TI_DATA[DWM_TI_DATA < np.nanmean(meta.mean_TI_DWM)] = np.nanmean(meta.mean_TI_DWM)
 
-        if meta.AINSLIE_Keck_details:
+        if meta.Deficit_Process_Detail:
             if meta.Larsen or meta.Madsen:
-                plt.plot(meta.kmt_r/10, meta.vr_mixl, label='km_r/10')
+                plt.plot(meta.kmt_r, meta.vr_mixl, label='km_r/10')
             plt.plot(DWM_TI_DATA, meta.vr_mixl, label='Corrected for TI amb')
             plt.legend()
             plt.show()
@@ -760,12 +732,16 @@ def DWM_MFOR_to_FFOR(mfor,meta,meand,ffor):
 
         #for i_t in np.arange(0, 2, 1):
         for i_t in np.arange(0,len(meand.time),1):
-            if meta.previous_sDWM_working_with_a_MannBox:
-                Ro_x = DATA_from_Meandering_part[i_z][i_t, 1]
-                Ro_y = DATA_from_Meandering_part[i_z][i_t, 2]
+            if meta.Meandering:
+                if meta.previous_sDWM_working_with_a_MannBox:
+                    Ro_x = DATA_from_Meandering_part[i_z][i_t, 1]
+                    Ro_y = DATA_from_Meandering_part[i_z][i_t, 2]
+                else:
+                    Ro_x                    = meand.meand_pos_x[i_z,i_t]
+                    Ro_y                    = meand.meand_pos_y[i_z,i_t]
             else:
-                Ro_x                    = meand.meand_pos_x[i_z,i_t]
-                Ro_y                    = meand.meand_pos_y[i_z,i_t]
+                Ro_x, Ro_y = (meta.hub_x[0], meta.hub_y)
+
 
             r_dist                  = np.sqrt((meta.x_mat - Ro_x)**2 + (meta.y_mat - Ro_y)**2 )
 
@@ -900,6 +876,7 @@ def DWM_make_grid(meta):
     """
 
     meta.vz=meta.hub_z[0:]*meta.dz
+    #print 'meta.dz:', meta.dz
     #print 'meta.vz in makegrid(float): ', meta.vz
     meta.vz = np.rint(meta.vz).astype(dtype=int)
     #print 'meta.vz rounded: ', meta.vz
@@ -972,7 +949,7 @@ def DWM_meta_meand(meand,meta):
     for i_z in np.arange(0, meta.nz, 1):
         meand.meand_pos_x[i_z, :] = (meta.hub_x[0] + (meand.std_meand_x[i_z] * seed_x)).ravel()
         meand.meand_pos_y[i_z, :] = (meta.hub_y + (meand.std_meand_y[i_z] * seed_y)).ravel()
-    if meta.MEANDERING_plot:
+    if meta.MEANDERING_detail_plot:
         for i_z in np.arange(meta.nz-1, -1, -1):
             plt.figure('Wake Center position (statistical approach) for WT '+str(7-i_z))
             plt.title('Wake Center position (statistical approach) for WT '+str(7-i_z))
@@ -1082,7 +1059,7 @@ def meand_table_DWM_method(meta):
     #print 'Std_meand_y: ', std_meand_y
     #print 'Std_meand_x: ', std_meand_x
 
-    if meta.MEANDERING_plot:
+    if meta.MEANDERING_detail_plot:
         plt.figure('Standard deviation (statistical approach)')
         plt.title('Standard deviation (statistical approach) for each WindTurbines')
         plt.plot(range(meta.nz-1, -1, -1), std_meand_x, 'o', label= 'Std x')
@@ -1299,18 +1276,19 @@ def DWM_main_field_model_partly_dynamic(ID_waked,deficits,inlets_ffor,inlets_ffo
     """
     # Create instances of class
     meta=Meta()
+    meta.previous_sDWM = False
     meta.parse(**par)
     meand=Meand()
     ffor =  FFoR()
     aero = Aero(meta.WTG)
     t = time.time()
 
-
     # ##### Set up MFoR and FFoR streamwise domain properties   #####################################################
     meta                 = DWM_make_grid(meta)
 
     # ##### Load/Compute wake meandering properties from meta model################################
-    meta, meand = get_Meandering_dynamic_V2(meta, meand,TurbBox, WF)
+    if meta.Meandering:
+        meta, meand = get_Meandering_dynamic_V2(meta, meand,TurbBox, WF)
 
     # ##  Run BEM model and create velocity deficit calculations inputs #############################################
     start_time = time.time()

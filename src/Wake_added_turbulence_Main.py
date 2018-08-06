@@ -27,10 +27,10 @@ def pre_init_turb_WaT(filename):
 
     MannBox.U_ref = get_averaged_U(filename)  # Specified U_mean for this Mannbox
 
-    MannBox.u_TurbBox = get_turb_component_from_MannBox(filename, 'ufluct', False, MannBox, video=False)/MannBox.U_ref
-    MannBox.TI_u = np.sqrt(np.mean((MannBox.u_TurbBox) ** 2))
+    MannBox.u_TurbBox = get_turb_component_from_MannBox(filename, 'ufluct', False, MannBox, video=False)#/MannBox.U_ref
+    MannBox.TI_u = np.sqrt(np.mean((MannBox.u_TurbBox) ** 2)) /MannBox.U_ref #RMS
     print 'TI from MannBox WaT: ', MannBox.TI_u
-
+    print 'RMS TI, at a location: ', np.mean(np.sqrt(np.mean((MannBox.u_TurbBox) ** 2, axis = 2)) )/MannBox.U_ref #Have to be similar to MannBOx Ti_u to be Homogeneous
     """
     #Variance
     Var = np.mean((MannBox.u_TurbBox-np.mean(MannBox.u_TurbBox))**2)
@@ -107,7 +107,12 @@ def obtain_wake_added_turbulence(MannBox, i_t, meta):
 
     yy, zz = np.meshgrid(new_ly, new_lz)
 
-    WaT = f_cart(yy,zz)
+    WaT = f_cart(yy,zz)/MannBox.U_ref
+
+    #plt.figure()
+    #plt.contourf(WaT)
+    #plt.colorbar()
+    #plt.show()
 
     # reshape WaT to be compatible with FFoR
     """
@@ -124,8 +129,10 @@ def obtain_wake_added_turbulence(MannBox, i_t, meta):
 
 """
 # Test
-#result = pre_init_turb_WaT('1028')
-#print result.TI_u
+result = pre_init_turb_WaT('1101')
+print result.TI_u
+raw_input('...')
+
 
 kmt_r = np.load('kmt_r_for_iz0.NPY')
 vr_mixl =  np.load('vr_mixl.NPY')

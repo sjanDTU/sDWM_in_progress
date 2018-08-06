@@ -10,79 +10,31 @@ class Meta:
     """
     def __init__(self):
         """ Initializing the data / Set default value ."""
-        # --------------------------------------------------------------------------
-        # Model Specification Setting
-        # Put only one True
-        self.previous_sDWM = False
-
-        if self.previous_sDWM:
-            # Settings for Original sDWM
-            self.steadyBEM_AINSLIE = False
-
-            self.use_saved_data = False
-            self.working_with_meandering_statistical_data = True
-            self.previous_sDWM_working_with_a_MannBox = False  # we not use the original Meand matrix but data
-
-            self.Keck = True
-
-            ###################
-            self.Madsen = False
-            self.Larsen = False
-
-            self.without_filter_functions = False
-        if not self.previous_sDWM:
-            self.steadyBEM_AINSLIE = True  # if True, BEM_Ainslie use the average deficit
-
-            self.use_saved_data = True # Use WAKES pre-computed and stored in the root 'src'
-            self.working_with_meandering_statistical_data = False
-
-            self.Keck = False
-            self.Larsen = True
-            self.Madsen = False
-
-            if self.Madsen:
-                #2010
-                self.Larsen = False
-                self.Keck = False
-                # this model imply the use of a MannBox for the wake added Turbulence
-                # So you should specify the name of your MannBox
-                self.MannBox_name = '1101'
-                self.without_filter_functions = False  #put True for 2008 Model
-            if self.Larsen:
-                # 2012
-                self.Keck = False
-                self.Madsen = False
-
-                self.without_filter_functions = False # Do not change
-            if self.Keck:
-                self.Madsen = False
-                self.Larsen = False
-
-                self.without_filter_functions = False # Do not change
-        # In the dynamic approach, we can average the deficits (and turbulence) in time,
-        # and use this mean for the BEM-Ainslie Computation.
-        # That's a drastic reduction of computation time.
-        # However we can ask if it is really relevant for a dynamic simulation
-        # -------------------------------------------------------------------------
-        # Plot Setting Options
+        self.previous_sDWM = True
+        # ---------------------------- # PLOT SETTINGS OPTIONS # ----------------------------------------------------- #
+        # Deficit Process
         self.BEM_plot = False
-        self.AINSLIE_plot = False
-        self.AINSLIE_Keck_details = False
-        self.WaT_detail = False
-        self.BEM_AINSLIE_plot = False
+        self.BC_detail_plot = False
         self.Deficit_Process_Detail = False
+        self.AINSLIE_EV_details = False
 
-        self.MEANDERING_plot = True
-        self.MEANDERING_Total_plot = False
+        # Meandering Process (more settings in cTurb)
+        self.MEANDERING_plot = False
         self.MEANDERING_detail_plot = False
         self.MEANDERING_WS_plot = True
         self.MEANDERING_WS_added_plot = True
         self.MEANDERING_TI_plot = False
 
+        # Wake Added Turbulence Process
+        self.WaT_detail = False
+
+        # Build-up process and result in term of global deficit and Turbulence
         self.TI_Dynamic_for_Loads_plot = False  # According to Keck Atmospheric shear and wake ... 2013-2015
 
-        self.DEFICIT_plot = False
+        self.DEFICIT_plot = True
         self.DEFICIT_details = False # For Dynamic, it gives result in time
+
+
         # ------------------------------------------------------------------------------------------------------------ #
         ## Default Ambient conditions
         self.WS                    = 8.0 # wind speed m/s
@@ -145,23 +97,121 @@ class Meta:
         self.k2                    = 0.0178  # in Keck we can compare with k1 0.914 and k2 = 0.0216
 
         ################################################################################################################
-        # A METTRE DANS LE if plus bas
+
+
+        ## Model flags
+        self.Tbuildup_setting      = 1 # 1 = on # flag to control the buildup of turbulence along turbine rows, if disabled TI is equal to free stream TI
+        self.wake_ind_setting      = 1 # 1 = on # flag to control the wake accumulation along turbine rows, if disabled U is equal to free stream velocity
+        self.accu                  = 'dominant' # accumulation model
+        self.accu_inlet            = True # accumulation of inlet velocity field. If enabled, the inflow flow field to each turbine is computed as the aggregated upstream flow field. If disabled, the model behaves like the HAWC2-DWM model [2] and [4]
+        self.full_output           = False # control the amount of outputs scalar. If true, the velocity flow field is returned
+
+        ## Misc variables
+        self.mek_elec_power        = 0.95 # mek power to electric power
+        self.rho                   = 1.25 # air at +10C
+        self.wtg_ind               = np.asarray([]) # turbine index in main loop
+        self.WTG_spec              = [] # class holding the turbine spec
+
+
+        ## WF Control BEM
+        self.derating              = 1.
+        self.optim                 = False
+
+
+        ## DWM Filter functions
+        #if self.Keck:
+        # Based on calibration data according to Keck et al. [5]. # F1 same as Madsen 2010
+        self.f1                    =[0., 4.,] # F1 function = 1 after 4R
+        self.f2                    =[0.035, 0.35] # F2 function starts at 0.035 for first 4R, then follows F2 = 1-0.965*e(-0.45*(2X-4)) (X in [R])
+        """
         if self.Madsen:
-            ## Model inputs calibrated constant
-            self.Model = 'mixL'  # Eddy viscosity model as per Keck et al. [2]
-            # self.fU                    = 1.10 # fU = 1.1 & fR = 0.98 yields the best fit to AL calibration data according to Keck et al. [5].
-            # self.fR                    = 0.98 #
-            self.fU = 1.  # Madsen et al [2].
-            self.fR = 1.
-            self.atmo_stab = 'N'
-            self.k1 = 0.0919  # k1 = 0.0919 & k2 = 0.0178 yields the best fit to AL calibration data according to Keck et al. [5].
-            self.k2 = 0.0178  # in Keck we can compare with k1 0.914 and k2 = 0.0216
+            # Based on calibration data according to Keck et al. [5]. # F1 same as Madsen 2010
+            self.f1 = [0., 4., ]  # F1 function = 1 after 4R
 
-            # Some calibration result to know
-            # k1 = 0.587 and k2 = 0.0178 fu =1.10 and fr=0.98 # Keck PhD thesis
-            # k1 = 0.0914 and k2 = 0.216                      # Keck 2012 Implementation of a mixl
+            # NOT the same F2!!!
+            self.f2 = [0.035, 0.35]  # F2 function starts at 0.035 for first 4R, then follows F2 = 1-0.965*e(-0.45*(2X-4)) (X in [R])
+        if self.Larsen:
+            # Based on calibration data according to Keck et al. [5]. # F1 same as Madsen 2010
+            self.f1 = [0., 4., ]  # F1 function = 1 after 4R
 
-        #################################################################################################################
+            # NOT the same F2!!!
+            self.f2 = [0.035, 0.35]  # F2 function starts at 0.035 for first 4R, then follows F2 = 1-0.965*e(-0.45*(2X-4)) (X in [R])
+        #"""
+
+        # Iterative Progress for the Main Loop
+        self.iT = 0.
+
+    def parse(self,**par):
+        """Parsing data to class holding all meta data for sDWM core model."""
+        for key, value in par.iteritems():
+            if hasattr(self,key):
+                setattr(self, key, value)
+            else:
+                print 'key: ', key
+                raise Exception('Key is not found, check spelling')
+
+        # --------------------------------------------------------------------------
+        # ---------------------------------- # Model Specification Setting # ----------------------------------------- #
+
+        if self.previous_sDWM:
+            # Settings for Original sDWM
+            self.steadyBEM_AINSLIE = False
+            self.Meandering = True
+
+            self.use_saved_data = False
+            self.working_with_meandering_statistical_data = True
+            self.previous_sDWM_working_with_a_MannBox = False  # we not use the original Meand matrix but data
+
+            self.Keck = True
+
+            ###################
+            self.Madsen = False
+            self.Larsen = False
+
+            self.without_filter_functions = False
+        if not self.previous_sDWM:
+            self.steadyBEM_AINSLIE = True  # if True, BEM_Ainslie use the average deficit, False is not Implemented for now.
+
+            # ----------- # Meandering # -------------------#
+            self.Meandering = True
+            # DO AN OPTION to DISABLE MEANDERING
+            self.use_saved_data = True  # Use WAKES pre-computed and stored in the root 'src'
+            self.working_with_meandering_statistical_data = False
+
+            # ----------- # Wake Added Turbulence Settings # ----------- #
+            self.WaT = False  # Traditional model of WaT based on  an isotropic Mannbox
+            # In case of Keck model the WaT is managed in the deficit process, so it's not dynamic WaT
+
+
+            # ------------- # Eddy Viscosity Model # ------------------ #
+            self.EV_model = 'Keck'
+            # Keck : F1,F2 Improved WaT, Turbulent formulation, ABL etc..
+            # Larsen: F1, F2, Famb, Ainslie
+            # Madsen: F1, F2, Anslie or without F1, F2
+            if self.EV_model == 'Keck':
+                self.Keck = True
+                self.Larsen = False
+                self.Madsen = False
+
+                self.without_filter_functions = False
+            if self.EV_model == 'Larsen':
+                self.Keck = False
+                self.Larsen = True
+                self.Madsen = False
+
+                self.without_filter_functions = False
+            if self.EV_model == 'Madsen':
+                self.Keck = False  # F1,F2 Improved WaT, Turbulent formulation, ABL etc...
+                self.Larsen = False  # F1, F2, Famb, Ainslie
+                self.Madsen = True  # F1, F2, Anslie or without F1, F2
+
+                self.without_filter_functions = False  # put True for 2008 Model
+                # In the dynamic approach, we can average the deficits (and turbulence) in time,
+                # and use this mean for the BEM-Ainslie Computation.
+                # That's a drastic reduction of computation time.
+                # However we can ask if it is really relevant for a dynamic simulation with a dynamic Input for Ainslie/BEM?
+
+
         ###### Model presented by Madsen in 2008 and 2010 Calibration for aeroelastic computation
         if self.Madsen:
             if self.without_filter_functions:
@@ -169,16 +219,16 @@ class Meta:
                 ###### Model presented by Madsen in 2008 Wake deficit and Turbulence simulated with two models
                 # This model can be used to check kmt_r trend
                 # That's a ref for the Wake added turbulence used in 2010 Madsen coalibrated model
-                self.k_amb_Madsen = 0.001          # Madsen eddy viscosity without F1  (2008)
-                self.k2_Madsen = 0.002             # Without F2
+                self.k_amb_Madsen = 0.001  # Madsen eddy viscosity without F1  (2008)
+                self.k2_Madsen = 0.002  # Without F2
                 self.km1 = 0.6
                 self.km2 = 0.25
                 self.kmt_r = []
             else:
                 ###### Model presented by Madsen in 2010 Calibration for aeroelastic computation
-                self.k_amb_Madsen = 0.07          # Madsen eddy viscosity with F1
-                #self.k_amb_Madsen = 0.  # Madsen eddy viscosity with F1
-                self.k2_Madsen = 0.008             # with F2
+                self.k_amb_Madsen = 0.07  # Madsen eddy viscosity with F1
+                # self.k_amb_Madsen = 0.  # Madsen eddy viscosity with F1
+                self.k2_Madsen = 0.008  # with F2
 
                 def F2(X):
                     a1 = 0.046
@@ -202,15 +252,18 @@ class Meta:
                             y = 1.
                         Y.append(y)
                     return np.array(Y)
+
                 self.F2 = F2
-                #Same F1 that F1 used in Keck model
-                #Not the same F2!
+                # Same F1 that F1 used in Keck model
+                # Not the same F2!
 
                 self.km1 = 0.6
                 self.km2 = 0.35
                 self.kmt_r = []
+
+        ###### Model presented by Larsen in 2012 Full scale validation of the DWM for loads and power production
         if self.Larsen:
-            ###### Model presented by Larsen in 2012 Full scale validation of the DWM for loads and power production
+
             # Famb, F1 introduced/modified from 2010 to give better correlation with for more turbulence intensities cases
             # to model correctly the recovery
             self.k_amb_Larsen = 0.1
@@ -220,7 +273,8 @@ class Meta:
             self.km1 = 0.6
             self.km2 = 0.35
             self.kmt_r = []
-            #raise Exception('Method not Implemented, no Formula for Famb')
+
+            # raise Exception('Method not Implemented, no Formula for Famb')
 
             def F2(X):
                 a1 = 0.046
@@ -250,56 +304,6 @@ class Meta:
             # NEW F1 and Famb
             # I don't found the formula for f_amb
 
-        ## Model flags
-        self.Tbuildup_setting      = 1 # 1 = on # flag to control the buildup of turbulence along turbine rows, if disabled TI is equal to free stream TI
-        self.wake_ind_setting      = 1 # 1 = on # flag to control the wake accumulation along turbine rows, if disabled U is equal to free stream velocity
-        self.accu                  = 'dominant' # accumulation model
-        self.accu_inlet            = True # accumulation of inlet velocity field. If enabled, the inflow flow field to each turbine is computed as the aggregated upstream flow field. If disabled, the model behaves like the HAWC2-DWM model [2] and [4]
-        self.full_output           = False # control the amount of outputs scalar. If true, the velocity flow field is returned
-
-        ## Misc variables
-        self.mek_elec_power        = 0.95 # mek power to electric power
-        self.rho                   = 1.25 # air at +10C
-        self.wtg_ind               = np.asarray([]) # turbine index in main loop
-        self.WTG_spec              = [] # class holding the turbine spec
-
-
-        ## WF Control BEM
-        self.derating              = 1.
-        self.optim                 = False
-
-
-        ## DWM Filter functions
-        if self.Keck:
-            # Based on calibration data according to Keck et al. [5]. # F1 same as Madsen 2010
-            self.f1                    =[0., 4.,] # F1 function = 1 after 4R
-            self.f2                    =[0.035, 0.35] # F2 function starts at 0.035 for first 4R, then follows F2 = 1-0.965*e(-0.45*(2X-4)) (X in [R])
-        if self.Madsen:
-            # Based on calibration data according to Keck et al. [5]. # F1 same as Madsen 2010
-            self.f1 = [0., 4., ]  # F1 function = 1 after 4R
-
-            # NOT the same F2!!!
-            self.f2 = [0.035, 0.35]  # F2 function starts at 0.035 for first 4R, then follows F2 = 1-0.965*e(-0.45*(2X-4)) (X in [R])
-        if self.Larsen:
-            # Based on calibration data according to Keck et al. [5]. # F1 same as Madsen 2010
-            self.f1 = [0., 4., ]  # F1 function = 1 after 4R
-
-            # NOT the same F2!!!
-            self.f2 = [0.035, 0.35]  # F2 function starts at 0.035 for first 4R, then follows F2 = 1-0.965*e(-0.45*(2X-4)) (X in [R])
-
-
-        # Iterative Progress for the Main Loop
-        self.iT = 0.
-
-    def parse(self,**par):
-        """Parsing data to class holding all meta data for sDWM core model."""
-        for key, value in par.iteritems():
-            if hasattr(self,key):
-                setattr(self, key, value)
-            else:
-                print 'key: ', key
-                raise Exception('Key is not found, check spelling')
-
 
         # here we update the attributes that are affected by the new variable parsing
         self.mean_WS=[]
@@ -320,8 +324,13 @@ class Meta:
         #print self.nx
         #print self.ny
         #print self.nz
+        #raw_input(self.dx)
         self.x_vec                 = np.arange(1,self.nx+1,1)*(1.0/self.dx) # grid coordinates in lat. direction [R]
         self.y_vec                 = np.arange(1,self.ny+1,1)*(1.0/self.dy) # grid coordinates in long. direction [R]
+        # Corrected to reach a real (1D*1D) domain in  case of perfectly aligned row
+        #self.x_vec = np.linspace(0., self.lx,self.nx)# grid coordinates in lat. direction [R]
+        #self.y_vec = np.linspace(0., self.ly, self.ny)  # grid coordinates in long. direction [R]
+        #raw_input(self.x_vec)
         self.z_vec                 = np.asarray([]) # grid coordinates in streamwise. direction [D]
         self.z_vec_old             = np.asarray([]) # grid coordinates in streamwise. direction [D] at previous turbine
         self.x_mat                 = np.tile(self.x_vec.reshape(len(self.x_vec),1),self.ny)  # matrix grid holding x coordinates
@@ -355,12 +364,9 @@ class Meand:
         self.meand_pos_y           = np.asarray([]) # wake position vector long
         self.rea                   = np.asarray([]) # fixed realization for debugging and unitest only
 
-        #Dynamic
-        self.Dynamic = True
-        self.LoadData = True
         self.WakesCentersLocations_in_time = []
 
-        self.nt = 0
+        self.nt = len(self.time)
 
      def parse(self,**par):
         """Parsing data ."""

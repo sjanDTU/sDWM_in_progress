@@ -101,17 +101,18 @@ def sDWM(derating,kwargs,xind):
     if 'Lill' in WTcoord:
         WF.vectWTtoWT=WF.vectWTtoWT*(WT.R/46.5) # 46.5 is the Lillgrund nominal radius of SWT turbine
         #print WT.R/46.5: 1.0
-        print 'WF.vectWTtoWT: ', WF.vectWTtoWT
-        raw_input('...')
+        #print 'WF.vectWTtoWT: ', WF.vectWTtoWT
+        #raw_input('...')
 
 
     # Compute distance WT to WT in mean flow coordinate system
     distFlowCoord, nDownstream, id0= WF.turbineDistance(WD)
-
+    """
     print 'distflowcoord', distFlowCoord
     print 'ndownstream', nDownstream
     print 'id0', id0
     raw_input('...')
+    #"""
 
     # Init dictionnaries
     deficits, turb, inlets_ffor, inlets_ffor_deficits,inlets_ffor_turb,out, DWM, ID_waked, ID_wake_adj, Farm_p_out, WT_p_out, Vel_out,WT_pitch_out,WT_RPM_out=init(WF)
@@ -133,7 +134,8 @@ def sDWM(derating,kwargs,xind):
     print 'ID_wake {id: id with a wake}: '
     print ID_wake
     print ID_wake[1]
-    #raw_input(';;;')
+    print distFlowCoord
+
     # Power output list
     Farm_p_out=0.
     WT_p_out=np.zeros((WF.nWT))
@@ -142,34 +144,27 @@ def sDWM(derating,kwargs,xind):
     Vel_out=np.zeros((WF.nWT))
 
     # COMPUTING TO PLOT
+    """
     POWER_TURBINE = []
     VEL_plot=[]
     RPM_plot=[]
     PITCH_plot=[]
+    #"""
     ## Main DWM loop over turbines
     FFOR_result = []
     for iT in range(WF.nWT):
         # Define flow case geometry
         cWT = id0[iT]
+
         #Radial coordinates in cWT for wake affected WT's
         x=distFlowCoord[0,cWT,ID_wake[cWT]]
-        print 'x: ', x
         C2C   = distFlowCoord[1,cWT,ID_wake[cWT]]
-        #######PLOTTING######
-        #if iT==0:
-        #    print x
-        #    print C2C
-        #print x
-        #print C2C
 
         index_orig=np.argsort(x)
         x=np.sort(x)
         row= ID_wake[id0[iT]][index_orig]
         C2C=C2C[index_orig]
 
-        print 'row', row
-        print C2C
-        #raw_input('...')
         # Wrapping the DWM core model with I/O
         par={
          'WS':WS,
@@ -192,6 +187,7 @@ def sDWM(derating,kwargs,xind):
          'iT': iT
         }
         ID_wake_adj[str(id0[iT])]=row
+        print row
         #"""
         if dynamic:
             aero, meta, mfor, ffor, DWM, deficits, inlets_ffor, inlets_ffor_deficits, inlets_ffor_turb, turb, out, ID_waked = DWM_main_field_model_partly_dynamic(ID_waked,deficits,inlets_ffor,inlets_ffor_deficits,inlets_ffor_turb,turb,DWM,out, TurBox, WF, MannBox,**par)
@@ -280,13 +276,16 @@ def sDWM(derating,kwargs,xind):
         # Power by each turbine
         WT_p_out[iT]=out[str(meta.wtg_ind[0])][0]
         # Pitch and RPM
+        """
         WT_pitch_out[iT,0]=aero.PITCH
         WT_pitch_out[iT,1]=aero.PITCH_opt
         WT_RPM_out[iT,0]=aero.RPM
         WT_RPM_out[iT,1]=aero.RPM_opt
+        #"""
         Vel_out[iT]=out[str(meta.wtg_ind[0])][1]
 
         #PLOTTING
+        """
         POWER_TURBINE=POWER_TURBINE+[out[str(meta.wtg_ind[0])][0]]
         VEL_plot=VEL_plot+[meta.mean_WS_DWM]
         RPM_plot=RPM_plot+[WT_RPM_out[iT,0]]

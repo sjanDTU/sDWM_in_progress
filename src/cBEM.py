@@ -160,7 +160,7 @@ class InitAlgo:
     """ This class holds BEM algorithm flags and parameters
     """
     def __init__(self):
-        self.nbIt = 200  # maximum number of iterations in BEM
+        self.nbIt = 200  # maximum number of iterations in BEM  # 200 originally
         self.aTol = 10 ** -6 # tolerance for axial induction factor convergence
         self.relaxation = 0.5  # relaxation factor in axial induction factor
         self.CTcorrection = 'GlauertCT'  #  type of CT correction more model implementated in the future like 'spera'
