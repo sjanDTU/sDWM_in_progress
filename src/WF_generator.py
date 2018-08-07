@@ -161,17 +161,18 @@ def extract_coord_from_ROT_file(rot_file_name):
 
 
 # To generate a WindFarm according to a ROT file
-"""
+#"""
 ROT_name = 'v8z12_ABL_16wt_TURB3new_19.ROT'
 
 XYZ_coord = extract_coord_from_ROT_file(ROT_name)
 plot_WF(XYZ_coord)
 
-R = 46.5 # KNOW THE R HERE
+R = 40. # KNOW THE R HERE
 
 XZ_coord = XYZ_coord[:,(0,2)] * R
 XZ_coord[:, 0] = 0.
 np.savetxt('../data/LES_WF_layout.dat',XZ_coord)
+print 'Coord Saved with name LES_WF_layout'
 # X Lateral position
 # Y Height Position
 # Z Downstream Position

@@ -17,6 +17,8 @@ class MannBox:
         self.ny = 1      # Point Discritization along y-axis
         self.nz = 1      # Point Discritization along z-axis
 
+        self.NT_READ = 1024
+
         # Discretization to read
         # Permit to compute the algo fastly with less points
         # to read with all points, discr_reduc_factor = 1, and nx_r = nx = 16384 points  2^14
@@ -51,6 +53,14 @@ class MannBox:
 
         self.TI_u = None
         self.k_scale = 1.
+
+        self.based_on_MannBoxsize = True
+        self.One_rotordiameter_size = False
+
+        if not self.based_on_MannBoxsize:
+            self.One_rotordiameter_size = True
+            self.R_MB = 1.
+
 
         # Plot option setting
         self.RESULT_plot = True

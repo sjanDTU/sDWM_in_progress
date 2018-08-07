@@ -227,6 +227,7 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor, MannBox):
                 plt.show()
 
         for i_t in np.arange(0, len(meand.time), 1):
+            i_z_detail = 3
             if meta.Meandering:
                 if meta.working_with_meandering_statistical_data:
                     Ro_x = meand.meand_pos_x[i_z, i_t]
@@ -238,13 +239,34 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor, MannBox):
                 Ro_x, Ro_y = (meta.hub_x[0], meta.hub_y)
 
             r_dist = np.sqrt((meta.x_mat - Ro_x) ** 2 + (meta.y_mat - Ro_y) ** 2) # Originally
+            #print r_dist
+            #print meta.x_mat - Ro_x
+            MannBox.R_MB = (MannBox.ly/2.) / MannBox.R_ref
+            R_Mannbox = MannBox.R_MB # recommended in Madsen, 2010, Calibration
+            tmp_index_Mann_added_x = (np.abs(meta.x_mat - Ro_x) < R_Mannbox)
+            tmp_index_Mann_added_y = (np.abs(meta.y_mat - Ro_y) < R_Mannbox)
+            tmp_index_Mann_added = tmp_index_Mann_added_x*tmp_index_Mann_added_y
 
+            if i_z == i_z_detail:
+                plt.figure()
+                plt.subplot(131)
+                plt.pcolor(tmp_index_Mann_added_x)
+                plt.title('tmp_index_mann_x')
+                plt.subplot(132)
+                plt.pcolor(tmp_index_Mann_added_y)
+                plt.title('tmp_index_mann_y')
+                plt.subplot(133)
+
+                plt.pcolor(tmp_index_Mann_added)
+                plt.title('tmp_index_mann')
+                plt.show()
             # r_dist for wake added Turbulence
 
             ###############################################################
             # do we have to keep this for dynamic, or use GLarsen function?
             #print 'mfor.wakeW[meta.vz[i_z]]: ', mfor.WakeW[meta.vz[i_z]]
             tmp_index = r_dist < mfor.WakeW[meta.vz[i_z]] * 1.5
+
             ################################################################
             tmp_field_WS = np.ones((meta.nx, meta.ny))
             tmp_field_WS[tmp_index] = np.interp(r_dist[tmp_index], meta.vr_m, DWM_WS_DATA)
@@ -252,13 +274,22 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor, MannBox):
             # ---------------- # Wake added Turubulence Process # ---------------------------------------------------- #
             #
             if meta.WaT:
+                #print 'R_mann', R_Mannbox
+                tmp_index_added = r_dist < R_Mannbox#mfor.WakeW[meta.vz[i_z]]
                 if meta.Madsen or meta.Larsen:
+                    tmp_turb = np.zeros((meta.nx, meta.ny))
                     tmp_field_WS_added = np.zeros((meta.nx, meta.ny))
                     Kmt_r = np.zeros((meta.nx, meta.ny))
                     # Wake added Turbulence
-                    Kmt_r[tmp_index] =  np.interp(r_dist[tmp_index], meta.vr_mixl[:-2], meta.kmt_r[:-2])
+                    Kmt_r[tmp_index_added] =  np.interp(r_dist[tmp_index_added], meta.vr_mixl[:-2], meta.kmt_r[:-2])
 
-                    tmp_field_WS_added[tmp_index] = (obtain_wake_added_turbulence(MannBox, i_t, meta)*Kmt_r)[tmp_index]
+
+
+                    tmp_turb[tmp_index_Mann_added] = obtain_wake_added_turbulence(MannBox, i_t, meta)(meta.x_mat-Ro_x,meta.y_mat-Ro_y)[tmp_index_Mann_added]
+
+
+
+                    tmp_field_WS_added[tmp_index_added] = (tmp_turb*Kmt_r)[tmp_index_added]
                     ffor.WS_axial_added_ffor[:, :, i_z, i_t] = tmp_field_WS_added
                 if meta.Keck:
                     tmp_field_WS_added = np.zeros((meta.nx, meta.ny))
@@ -269,11 +300,30 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor, MannBox):
                     tmp_field_WS_added[tmp_index] = (obtain_wake_added_turbulence(MannBox, i_t, meta)* Kmt_r)[tmp_index]
                     ffor.WS_axial_added_ffor[:, :, i_z, i_t] = tmp_field_WS_added
 
-                    """
+                    #""""
+                if i_z == i_z_detail:
                     plt.figure()
+                    plt.subplot(221)
+                    plt.title('Kmt_r')
+                    plt.pcolor(meta.x_mat-Ro_x, meta.y_mat-Ro_y,Kmt_r)
+                    plt.colorbar()
+
+                    plt.subplot(222)
+                    plt.title('Mannbox Turb')
+                    plt.pcolor( tmp_turb)
+                    plt.colorbar()
+
+                    plt.subplot(223)
+                    plt.title('boolean Index')
+                    plt.pcolor(tmp_index_added)
+
+                    plt.subplot(224)
+                    plt.title('added wake Turbulence')
                     plt.pcolor(tmp_field_WS_added)
                     plt.colorbar()
+
                     plt.show()
+
                     #"""
 
             ffor.WS_axial_deficit_ffor[:, :, i_z, i_t] = tmp_field_WS
@@ -342,8 +392,8 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor, MannBox):
         X, Y = ffor.x_mat, ffor.y_mat
         ref_rotor_x_emitting = (meta.hub_x[0] + np.cos(np.linspace(-pi, pi))) / 2.
         ref_rotor_y_emitting =(meta.hub_y + np.sin(np.linspace(-pi, pi))) / 2.
-        for i_z in np.arange(0, 3):
-        #for i_z in np.arange(0, meta.nz):
+        #for i_z in np.arange(0, 3):
+        for i_z in np.arange(0, meta.nz):
             ref_rotor_x_concerned = (meta.hub_x[i_z] + np.cos(np.linspace(-pi, pi))) / 2.
             ref_rotor_y_concerned =(meta.hub_y + np.sin(np.linspace(-pi, pi))) / 2.
 

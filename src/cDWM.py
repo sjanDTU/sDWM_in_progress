@@ -179,12 +179,12 @@ class Meta:
             self.working_with_meandering_statistical_data = False
 
             # ----------- # Wake Added Turbulence Settings # ----------- #
-            self.WaT = False  # Traditional model of WaT based on  an isotropic Mannbox
+            self.WaT = True  # Traditional model of WaT based on  an isotropic Mannbox
             # In case of Keck model the WaT is managed in the deficit process, so it's not dynamic WaT
 
 
             # ------------- # Eddy Viscosity Model # ------------------ #
-            self.EV_model = 'Keck'
+            self.EV_model = 'Larsen'
             # Keck : F1,F2 Improved WaT, Turbulent formulation, ABL etc..
             # Larsen: F1, F2, Famb, Ainslie
             # Madsen: F1, F2, Anslie or without F1, F2

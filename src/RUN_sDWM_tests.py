@@ -21,6 +21,7 @@ if __name__ == "__main__":
               #'WTcoord': '../data/TEST_S372m_nWT4_D0.dat',
               #'WTcoord': '../data/LES_WF_layout.dat',
               'WTcoord': '../data/LES_WF_layout_3reduced.dat',
+              #'WTcoord': '../data/LES_WF_layout_3reduced_modified.dat',
               'WTG': 'NY2',
               'HH': 80.0,
               'R': 40.,
@@ -29,7 +30,7 @@ if __name__ == "__main__":
               'optim': False,
               'dynamic': True,                   # Imply bemsteady... TRUE
               'Meandering_turb_box_name': None,  # Imply used_saved data TRUE (not automatical for the moment)
-              'WaT_turb_box_name': '1028'}
+              'WaT_turb_box_name': 'iso'}
     ##########################################################################
 
     WT = wt.WindTurbine('Windturbine','../WT-data/'+inputs['WTG']+'/'+inputs['WTG']+'_PC.dat',inputs['HH'],inputs['R'])

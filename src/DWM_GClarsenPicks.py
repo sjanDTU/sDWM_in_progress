@@ -97,6 +97,7 @@ def get_Rw(x,R,TI,CT,pars=[0.435449861,0.797853685,-0.124807893,0.136821858,15.6
     #print Rw
     return Rw
 
+
 def get_R96(R,CT,TI,pars=[0.435449861,0.797853685,-0.124807893,0.136821858,15.6298,1.0]):
     """Computes the wake radius at 9.6D downstream location of a turbine
 
@@ -157,3 +158,6 @@ def Ua_shear(r,te,zc,uH,alpha):
     """
 
     return uH * ((zc + r * np.sin(te)) / zc)**alpha
+
+
+print get_Rw(7600/2,TI=0.06,CT=0.8,R=40.)/40.

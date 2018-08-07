@@ -67,7 +67,9 @@ def sDWM(derating,kwargs,xind):
             TurBox, WF = pre_init_turb(filename, WF, WT)
         else:
             TurBox = ReadMannInput('1028')
-        MannBox = pre_init_turb_WaT(WaT_turb_box_name)
+        if WaT_turb_box_name!= None:
+            MannBox = pre_init_turb_WaT(WaT_turb_box_name)
+            MannBox.R_ref = R
         print 'TI Input:', TI
         #TI = TurBox.TI
         print 'TI from TurbBox', TI

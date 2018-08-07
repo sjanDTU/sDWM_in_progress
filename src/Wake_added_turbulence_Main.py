@@ -31,6 +31,7 @@ def pre_init_turb_WaT(filename):
     MannBox.TI_u = np.sqrt(np.mean((MannBox.u_TurbBox) ** 2)) /MannBox.U_ref #RMS
     print 'TI from MannBox WaT: ', MannBox.TI_u
     print 'RMS TI, at a location: ', np.mean(np.sqrt(np.mean((MannBox.u_TurbBox) ** 2, axis = 2)) )/MannBox.U_ref #Have to be similar to MannBOx Ti_u to be Homogeneous
+    print 'MannBoxsize: ('+str(MannBox.ly)+', '+str(MannBox.lz)+')'
     """
     #Variance
     Var = np.mean((MannBox.u_TurbBox-np.mean(MannBox.u_TurbBox))**2)
@@ -90,38 +91,24 @@ def obtain_wake_added_turbulence(MannBox, i_t, meta):
 
     plan_of_interest = MannBox.u_TurbBox[:, :, i_t]
 
-    # Box containing plan of (2R, 2R)
-    Ly = np.linspace(0., 4., MannBox.ny)
-    Lz = np.linspace(0, 4., MannBox.nz)
+    # Box containing cross section covering one rotor diameter (according to Madsen, 2010, calibration ...)
+    if MannBox.One_rotordiameter_size:
+        Ly = np.linspace(-MannBox.R_MB, MannBox.R_MB, MannBox.ny)
+        Lz = np.linspace(-MannBox.R_MB, MannBox.R_MB, MannBox.nz)
+    elif MannBox.based_on_MannBoxsize:
+        Ly = np.linspace(-MannBox.ly/2, MannBox.ly/2, MannBox.ny)
+        Lz = np.linspace(-MannBox.lz / 2, MannBox.lz / 2, MannBox.ny)
+        Ly = Ly /MannBox.R_ref
+        Lz = Lz/MannBox.R_ref
 
-
-    new_ly = meta.x_vec     #more than 2
-    new_lz = meta.y_vec
-
-
-    f_cart = RectBivariateSpline(x=Ly, y=Lz, z=np.transpose(plan_of_interest),
+    f_cart = RectBivariateSpline(x=Ly, y=Lz, z=np.transpose(plan_of_interest/MannBox.U_ref),
                                                    # np.transpose for last version of scipy
                                                    kx=1,  # number of splines: can't be superior to 5
                                                    ky=1,
                                                    s=0)  # positive smoothing factor
 
-    yy, zz = np.meshgrid(new_ly, new_lz)
+    return f_cart
 
-    WaT = f_cart(yy,zz)/MannBox.U_ref
-
-    #plt.figure()
-    #plt.contourf(WaT)
-    #plt.colorbar()
-    #plt.show()
-
-    # reshape WaT to be compatible with FFoR
-    """
-    plt.figure()
-    plt.contourf(Distrib*plan_of_interest)
-    plt.colorbar()
-    plt.show()
-    #"""
-    return WaT
 
 
 

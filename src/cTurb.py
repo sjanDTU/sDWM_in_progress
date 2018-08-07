@@ -67,10 +67,10 @@ class MannBox:
 
         self.WakeExpansion = True  # Carry by a simple wake model proposed by Larsen 2009
 
-        self.Keck_Transport_Velocity = False  # True to apply 0.8*U advection transport: Keck synthetic turbulence
+        #self.Keck_Transport_Velocity = False  # True to apply 0.8*U advection transport: Keck synthetic turbulence
 
         self.loop_debug = False
-        self.multiplewake_build_on_first_wake = False
+        self.multiplewake_build_on_first_wake = True
 
         self.Box_Kind = 'MannBox'  # LESBox or MannBox
 
