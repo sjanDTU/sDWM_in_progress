@@ -490,7 +490,8 @@ def DWM_calc_mixL(meta,aero,mfor):
         mfor (instance of class): Updated instance of class Mfor holding the velocity deficit
 
     """
-    print 'Performing DWM_calc_mixL (Ainslie Computation)'
+    print '# -------------------------- # mixL DEFICIT MODULE PROCESSING # ------------------------------------------ #'
+    print '--------------------------  Eddy viscosity model used: ' + meta.EV_model + ' -----------------------------'
     save_wakewidth_data = False
     i_p = 0
     if save_wakewidth_data:
@@ -668,5 +669,5 @@ def DWM_calc_mixL(meta,aero,mfor):
                 plt.xlabel('Radial position [R]'), plt.ylabel('eddy viscosity [-]')
             #plt.xlim(0., 2.5)
             plt.legend(), plt.show()
-
+    print '# -------------------------- # mixL DEFICIT MODULE PROCESS ENDED # --------------------------------------- #'
     return mfor

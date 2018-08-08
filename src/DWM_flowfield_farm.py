@@ -160,6 +160,7 @@ def DWM_aero(meta,ffor,aero,deficits,turb,inlets_ffor,inlets_ffor_deficits,out,I
         BEM (instance of class): holds the key results from the BEM calculation
 
     """
+    print '# -------------------------- # AERODYNAMIQUE MODULE PROCESSING # ----------------------------------------- #'
     mfor   =  MFoR(meta.WTG)
     ## Compute the average wake deficit accumulation
     if meta.wake_ind_setting==1:
@@ -331,6 +332,7 @@ def DWM_aero(meta,ffor,aero,deficits,turb,inlets_ffor,inlets_ffor_deficits,out,I
     out[str(meta.wtg_ind[0])].append(float(format(aero.CT/1., '.2f')))
     out[str(meta.wtg_ind[0])].append(float(format(aero.pow_cur, '.2f'))) # based on power curve
     out[str(meta.wtg_ind[0])].append(float(format(aero.ct_cur, '.2f'))) # based on power curve
+    print '# -------------------------- # AERODYNAMIQUE MODULE PROCESS ENDED # -------------------------------------- #'
     return aero, mfor, out, BEM
 
 
@@ -361,7 +363,7 @@ def DWM_rotor_aero(meta,aero,ID_waked, *args):
              r_t [1,r],     : non dimensional radial position where a is evaluated
              r_w [1,r]      : wake radius in near wake regime
     """
-
+    '# -------------------------- # BEM PROCESSING # ---------------------------------------------------------------- #'
     if (meta.mean_WS_DWM >= meta.WTG_spec.u_cutin) or (meta.mean_WS_DWM <= meta.WTG_spec.u_cutout) is True:
         BEM =getInduction(30, meta.WTG, 'hawc', meta.mean_WS_DWM, meta,ID_waked, derating=meta.derating)
         aero.a = np.array(BEM.a)
@@ -408,6 +410,7 @@ def DWM_rotor_aero(meta,aero,ID_waked, *args):
     aero.r_w = np.dot(aero.r_t, aero.f_w)   # New radial discretization for ainslie after the near wake expansion
     # Boundary conditions for U_w #(U_BC(r_BC) in Keck Validation of sDWM # Eq (6)
     aero.U_w     = 1.0-(aero.a * (1.0 + meta.fU))
+    '# -------------------------- # BEM PROCESS ENDED # ------------------------------------------------------------- #'
     return aero, BEM
 
 # Not needed???
@@ -913,6 +916,8 @@ def DWM_meta_meand(meand,meta):
             std_meand_y [z,t]  : standard deviation of wake center position in long
             time   [t]   : time vector
     """
+    print '# -------------------------- # LOADING MEANDERING properties from meta model # --------------------------- #'
+
     #meand.time             = np.arange(1,200.+1,1) # number of wake meandering samples 10 min at 1Hz
     meand.time             = np.arange(1,100+1,1) # number of wake meandering samples 10 min at 1Hz
     # meand.time         = np.arange(1,500+1,1) # number of wake meandering samples 10 min at 1Hz for DEBUG ONLY

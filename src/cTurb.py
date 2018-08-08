@@ -18,16 +18,16 @@ class MannBox:
         self.nz = 1      # Point Discretization along z-axis
 
 
-        self.lx = 1.     # 32768m in total
-        self.ly = 1.
-        self.lz = 1.
+        self.lx = None     # 32768m in total
+        self.ly = None
+        self.lz = None
 
-        self.L = 1.
-        self.U = 1.
-        self.T = 1.
+        self.L = None
+        self.U = None
+        self.T = None
 
-        self.dx = 1.
-        self.dt = 1.
+        self.dx = None
+        self.dt = None
 
         self.ti = []
 
@@ -58,9 +58,9 @@ class MannBox:
         # Permit to compute the algo fastly with less points
         # to read with all points, discr_reduc_factor = 1, and nx_r = nx = 16384 points  2^14
         self.discr_reduc_factor = 1
-        self.nx_r = 16384  # Discretization along x-axis to read fastly!
+        self.nx_r = None  # Discretization along x-axis to read fastly!
 
-        self.SimulationTime = 60  # (s)
+        self.SimulationTime = None  # (s)
         self.CorrectionDelay = True  # We want to begin the simulation when the first plan go out of the WindFarm Box
         # In this case at t=0, we have all the windfarm box affected by the turbulent box
         self.delay = 0.
@@ -68,11 +68,12 @@ class MannBox:
         self.WakeExpansion = True  # Carry by a simple wake model proposed by Larsen 2009
 
         #self.Keck_Transport_Velocity = False  # True to apply 0.8*U advection transport: Keck synthetic turbulence
+        # Not implemented
 
         self.loop_debug = False
-        self.multiplewake_build_on_first_wake = True
+        self.multiplewake_build_on_first_wake = False
 
-        self.Box_Kind = 'MannBox'  # LESBox or MannBox
+        self.Box_Kind = None
 
 
 

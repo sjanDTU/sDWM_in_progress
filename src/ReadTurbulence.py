@@ -10,7 +10,9 @@ from cTurb import MannBox
 
 from matplotlib import animation
 
-
+########################################################################################################################
+# --------------------------------- # FOR MANNBOX BOX # ------------------------------------------------------------------ #
+########################################################################################################################
 
 def ReadMannInput(filename):
     # Mann class object Init
@@ -151,8 +153,12 @@ def get_turb_component_from_MannBox(filename,kind_of_fluct,plot_bool,MannBox, vi
     """ Loading Mann boxes """
     count = nx*ny*nz
 
-    fid = open(src+kind_of_fluct)
-    Total_Vel = np.fromfile(fid, dtype=np.float32, count=-1)
+    if MannBox.Box_Kind == 'Mann':
+        fid = open(src+kind_of_fluct)
+        Total_Vel = np.fromfile(fid, dtype=np.float32, count=-1)
+    elif MannBox.Box_Kind == 'LES':
+        Total_Vel = np.load(src + kind_of_fluct + '.NPY')
+
 
 
     """ Reshaping to 3D box"""
@@ -183,7 +189,7 @@ def get_turb_component_from_MannBox(filename,kind_of_fluct,plot_bool,MannBox, vi
 
             Max_fluc = np.max(Total_Vel[:, :, i])
             Min_fluc = np.min(Total_Vel[:, :, i])
-            levels=np.linspace(Min_fluc, Max_fluc, 6)
+            levels=np.linspace(Min_fluc, Max_fluc, 10)
             plt.clf()
             plt.cla()
             plt.contourf(Y, Z, Total_Vel[:, :, i], levels=levels, cmap = plt.cm.jet)
@@ -245,6 +251,7 @@ def pre_init_turb(filename, WindFarm, WT):
 
     # ------------------ # GET TURBULENT BOX # -------------------------- #
     MannBox = ReadMannInput(filename)
+    MannBox.Box_Kind = 'Mann'
 
     # determine u' mean to get turbulent intensity after.
     # To reduce memory cost we have to get u' mean and delete the u_turbox
@@ -263,32 +270,16 @@ def pre_init_turb(filename, WindFarm, WT):
     print 'Meandering box, TI: ', MannBox.TI
 
     # Scaling based on the 3D TI
-    #"""
-    if MannBox.Box_Kind == 'MannBox':
-        # We have to scale the turbulent Component
+    # We have to scale the turbulent Component
 
-        k_scale = WindFarm.TI / MannBox.TI
+    k_scale = WindFarm.TI / MannBox.TI
 
-        MannBox.v_TurbBox = k_scale * MannBox.v_TurbBox
-        MannBox.w_TurbBox = k_scale * MannBox.w_TurbBox
+    MannBox.v_TurbBox = k_scale * MannBox.v_TurbBox
+    MannBox.w_TurbBox = k_scale * MannBox.w_TurbBox
 
-        MannBox.TI = WindFarm.TI
-        print 'MannBox meandering TI scaled: ', MannBox.TI
-    #"""
+    MannBox.TI = WindFarm.TI
+    print 'MannBox meandering TI scaled: ', MannBox.TI
 
-    # Scaling based on the axial TI needed?
-    """
-    if MannBox.Box_Kind == 'MannBox':
-        # We have to scale the turbulent Component
-
-        k_scale = WindFarm.TI / MannBox.TI
-
-        MannBox.v_TurbBox = k_scale * MannBox.v_TurbBox
-        MannBox.w_TurbBox = k_scale * MannBox.w_TurbBox
-
-        MannBox.TI = WindFarm.TI
-        print 'TI: ', MannBox.TI
-    #"""
     WindFarm.CT = WT.get_CT(WindFarm.U_mean)
     print 'CT: ', WindFarm.CT
     ##################################################################""
@@ -296,6 +287,84 @@ def pre_init_turb(filename, WindFarm, WT):
     return MannBox, WindFarm
 
 
+########################################################################################################################
+# --------------------------------- # FOR LES BOX # ------------------------------------------------------------------ #
+########################################################################################################################
+def ReadLESInput(filename):
+    # Mann class object Init
+    Mannbox = MannBox()
+
+    # Open datafile
+    dir = 'C:/Users/augus/Documents/Stage/ClusterDATA/Mann/'
+    src = dir + filename + '/LES.inp.NPY'
+
+    INPUT = np.load(src)
+
+    INPUT = INPUT.item()
 
 
+    Mannbox.nx = INPUT['nt']; Mannbox.ny = INPUT['ny']; Mannbox.nz = INPUT['nx']
 
+    Mannbox.ly = INPUT['lx']; Mannbox.lz = INPUT['ly']
+
+    Mannbox.U = 1. # NO DIMENSION HERE
+    Mannbox.T = INPUT['T']
+    Mannbox.lx = Mannbox.L = Mannbox.U * Mannbox.T
+    Mannbox.dt = INPUT['dt']
+
+    Mannbox.ti = [i*INPUT['dt'] for i in range(Mannbox.nx)]
+
+    return Mannbox
+
+def pre_init_turb_LES(filename, WindFarm, WT):
+    """
+    Purpose:
+    Get some essential informations before to run DWM_main_field
+    TI, U etc...
+
+    For a use of a TI input in sDWM we have to scale the turbulent component of the Mannbox.
+    In the case of the use of a LES Box, we use the TI from the Box, so not as an independant input.
+
+    Notice: the meandering is treated for every  WT in the ambient conditions. so we must scale the MannBox
+    only at the beginning
+    :return:
+    """
+    video = False
+    # pre_init
+    # Meand_Mann.wake_center_location = (0, WT.H/WindFarm.R_wt) for after to be center to the ground
+
+    # ------------------ # GET TURBULENT BOX # -------------------------- #
+    MannBox = ReadLESInput(filename)
+    MannBox.Box_Kind = 'LES'
+
+    # determine u' mean to get turbulent intensity after.
+    # To reduce memory cost we have to get u' mean and delete the u_turbox
+    # Because this component it's not needed for the next
+
+    u_TurbBox = get_turb_component_from_MannBox(filename, 'ufluct', False, MannBox, video=False)
+    u_TurbBox = u_TurbBox[:,:,::-1]
+    u = np.mean(np.sqrt(np.mean(u_TurbBox ** 2, axis = 2)))
+    u_TurbBox = []
+
+    MannBox.v_TurbBox = get_turb_component_from_MannBox(filename, 'vfluct', False, MannBox, video=video)
+    MannBox.v_TurbBox = MannBox.v_TurbBox[:,:,::-1]
+    MannBox.w_TurbBox = get_turb_component_from_MannBox(filename, 'wfluct', False, MannBox, video=False)
+    MannBox.w_TurbBox = MannBox.w_TurbBox[:,:,::-1]
+    v = np.mean(np.sqrt(np.mean(MannBox.v_TurbBox ** 2, axis = 2)))
+    w = np.mean(np.sqrt(np.mean(MannBox.w_TurbBox ** 2, axis = 2)))
+
+    print 'TI u', u
+    print 'TI v', v
+    print 'TI w', w
+
+    #MannBox.TI = np.sqrt((u ** 2 + v ** 2 + w ** 2) / 3)# / WindFarm.U_mean # BE CAREFUL HERE WE COUNT THE GROUND
+
+    print 'Meandering box, TI: ', MannBox.TI
+
+    WindFarm.CT = WT.get_CT(WindFarm.U_mean)
+    print 'CT: ', WindFarm.CT
+    ##################################################################""
+    ## END OF PRE INIT
+    return MannBox, WindFarm
+
+#pre_init_turb_LES('LES_Box_test', None,None)

@@ -19,7 +19,7 @@ class Meta:
         self.AINSLIE_EV_details = False
 
         # Meandering Process (more settings in cTurb)
-        self.MEANDERING_plot = False
+        self.MEANDERING_plot = True
         self.MEANDERING_detail_plot = False
         self.MEANDERING_WS_plot = True
         self.MEANDERING_WS_added_plot = True

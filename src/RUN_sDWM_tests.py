@@ -30,6 +30,7 @@ if __name__ == "__main__":
               'optim': False,
               'dynamic': True,                   # Imply bemsteady... TRUE
               'Meandering_turb_box_name': None,  # Imply used_saved data TRUE (not automatical for the moment)
+              #'Meandering_turb_box_name': ('LES_Box_test','LES_Box'),
               'WaT_turb_box_name': 'iso'}
     ##########################################################################
 

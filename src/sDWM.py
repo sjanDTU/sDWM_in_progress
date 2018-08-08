@@ -21,7 +21,7 @@ import matplotlib.pylab as plt
 import matplotlib._cntr as cntr
 import multiprocessing
 
-from ReadTurbulence import pre_init_turb, ReadMannInput
+from ReadTurbulence import pre_init_turb, ReadMannInput, pre_init_turb_LES
 from Wake_added_turbulence_Main import pre_init_turb_WaT
 
 
@@ -52,24 +52,52 @@ def sDWM(derating,kwargs,xind):
     #########################################################################################################
     if dynamic:
         if Meandering_turb_box_name!=None:
-            filename = Meandering_turb_box_name  # must come from sDWM Input
-            #R_wt = 46.5  # can come from sDWM
-            #WTG = 'NY2'  # can come from sDWM
-            #HH = 90.  # Hub height    # can come from sDWM
+            print '# ------------------------------------------------------------------------------------------------ #'
+            print '# -------------------------- Pre Init for Meandering --------------------------------------------- #'
+            if Meandering_turb_box_name[1] == 'Mann_Box':
+                filename = Meandering_turb_box_name[0]  # must come from sDWM Input
+                #R_wt = 46.5  # can come from sDWM
+                #WTG = 'NY2'  # can come from sDWM
+                #HH = 90.  # Hub height    # can come from sDWM
 
-            Rw = 1.  # try with no expansion
-            WF.U_mean = WS
-            WF.WT_R = WT.R
-            WF.WT_Rw = Rw
-            WF.TI = TI
+                Rw = 1.  # try with no expansion
+                WF.U_mean = WS
+                WF.WT_R = WT.R
+                WF.WT_Rw = Rw
+                WF.TI = TI
 
-            WT = wt.WindTurbine('Windturbine', '../WT-data/' + WTG + '/' + WTG + '_PC.dat', HH, WT.R)  # already present in sDWM
-            TurBox, WF = pre_init_turb(filename, WF, WT)
+                WT = wt.WindTurbine('Windturbine', '../WT-data/' + WTG + '/' + WTG + '_PC.dat', HH, WT.R)  # already present in sDWM
+                TurBox, WF = pre_init_turb(filename, WF, WT)
+            elif Meandering_turb_box_name[1] == 'LES_Box':
+                filename = Meandering_turb_box_name[0]  # must come from sDWM Input
+                # R_wt = 46.5  # can come from sDWM
+                # WTG = 'NY2'  # can come from sDWM
+                # HH = 90.  # Hub height    # can come from sDWM
+
+                Rw = 1.  # try with no expansion
+                WF.U_mean = WS
+                WF.WT_R = WT.R
+                WF.WT_Rw = Rw
+                WF.TI = TI
+
+                WT = wt.WindTurbine('Windturbine', '../WT-data/' + WTG + '/' + WTG + '_PC.dat', HH,
+                                    WT.R)  # already present in sDWM
+                TurBox, WF = pre_init_turb_LES(filename, WF, WT)
+            print '# -------------------------- End Pre Init for Meandering ----------------------------------------- #'
+            print '# ------------------------------------------------------------------------------------------------ #'
         else:
+            print '# -------------------------- Used Saved DATA for MEANDERING / No Meandering ---------------------- #'
             TurBox = ReadMannInput('1028')
+
         if WaT_turb_box_name!= None:
+            print '# ------------------------------------------------------------------------------------------------ #'
+            print '# -------------------------- Pre Init for WaT ---------------------------------------------------- #'
             MannBox = pre_init_turb_WaT(WaT_turb_box_name)
             MannBox.R_ref = R
+            print '# -------------------------- End Pre Init for WaT ------------------------------------------------ #'
+            print '# ------------------------------------------------------------------------------------------------ #'
+        else:
+            MannBox = None
         print 'TI Input:', TI
         #TI = TurBox.TI
         print 'TI from TurbBox', TI
@@ -154,7 +182,10 @@ def sDWM(derating,kwargs,xind):
     #"""
     ## Main DWM loop over turbines
     FFOR_result = []
+    print '############################################################################################################'
+    print '# -------------------------- # MAIN LOOP OVER TURBINE PROCESSING # --------------------------------------- #'
     for iT in range(WF.nWT):
+        print '# -------------------------- # PROCESSING for iteration '+str(iT)+' # -------------------------------- #'
         # Define flow case geometry
         cWT = id0[iT]
 
@@ -293,6 +324,10 @@ def sDWM(derating,kwargs,xind):
         RPM_plot=RPM_plot+[WT_RPM_out[iT,0]]
         PITCH_plot=PITCH_plot+[WT_pitch_out[iT,0]]
         #"""
+
+    print '# -------------------------- # MAIN LOOP OVER TURBINE PROCESS ENDED # ------------------------------------ #'
+    print '############################################################################################################'
+
     #
     #
     # print id0

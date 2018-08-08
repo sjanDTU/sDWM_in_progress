@@ -35,7 +35,9 @@ def get_Meandering_dynamic(meta, meand):
     return meta, meand
 
 def get_Meandering_dynamic_V2(meta, meand, TurBox, WF):
+    print '# -------------------------- # DYNAMIC MEANDERING PROCESSING # ------------------------------------------- #'
     if meta.use_saved_data:
+        print 'USE SAVED DATA in WAKES.NPY (pre-computed wake)'
         # New Version for Multiple wake meandering
         #meand.WakesCentersLocations_in_time = np.load(
          #     'C:/Users/augus/Documents/Stage/Codes/Mann_Turbulence/Result/Center_Position_in_time_Lillgrund/z_time_center_location.NPY')[meta.iT]
@@ -48,8 +50,10 @@ def get_Meandering_dynamic_V2(meta, meand, TurBox, WF):
         meta.nt = meand.nt
     else:
         if meta.iT==0:
+            print 'WAKES MEANDERING PROCESSING '
             WF.stream_location_z = meta.z_vec
             DWM_extract_meandering_from_TurbBox(TurBox, WF)
+        print 'EXTRACT WAKES MEANDERING PROPERTIES '
         meand.WakesCentersLocations_in_time = np.load('WAKES.NPY')[meta.iT]
         meand.time = meand.WakesCentersLocations_in_time[0][:, 0]  # ; print 'meand time : ', meand.time
         meand.nt = len(meand.time)  # ; print 'number of time points: ', meand.nt
@@ -61,7 +65,7 @@ def get_Meandering_dynamic_V2(meta, meand, TurBox, WF):
     for i_z in np.arange(0, meta.nz, 1):
         meand.WakesCentersLocations_in_time[i_z][:, 1] = meta.hub_x[0] + meand.WakesCentersLocations_in_time[i_z][:, 1]
         meand.WakesCentersLocations_in_time[i_z][:, 2] = meta.hub_y + meand.WakesCentersLocations_in_time[i_z][:, 2]
-
+    print '# -------------------------- # DYNAMIC MEANDERING PROCESS ENDED # ---------------------------------------- #'
     return meta, meand
 
 
@@ -93,7 +97,7 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor, MannBox):
     ##############################################################################################################
     # recalculate into Cartesian grid
     # initiate/reset Cartesian flow field
-
+    print '# -------------------------- # MFOR to FFOR PROCESSING # ------------------------------------------------- #'
     TEST = False
 
     if meta.Meandering:
@@ -292,12 +296,17 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor, MannBox):
                     tmp_field_WS_added[tmp_index_added] = (tmp_turb*Kmt_r)[tmp_index_added]
                     ffor.WS_axial_added_ffor[:, :, i_z, i_t] = tmp_field_WS_added
                 if meta.Keck:
+                    tmp_turb = np.zeros((meta.nx, meta.ny))
                     tmp_field_WS_added = np.zeros((meta.nx, meta.ny))
                     Kmt_r = np.zeros((meta.nx, meta.ny))
                     # Wake added Turbulence
-                    Kmt_r[tmp_index] = np.interp(r_dist[tmp_index], meta.vr_mixl, meta.kmt_r)
-                    #tmp_field_WS_added[tmp_index] = (obtain_wake_added_turbulence(MannBox, i_t, meta) * Kmt_r)[tmp_index]
-                    tmp_field_WS_added[tmp_index] = (obtain_wake_added_turbulence(MannBox, i_t, meta)* Kmt_r)[tmp_index]
+                    Kmt_r[tmp_index_added] = np.interp(r_dist[tmp_index_added], meta.vr_mixl[:-2], meta.kmt_r[:-2])
+
+                    tmp_turb[tmp_index_Mann_added] = \
+                    obtain_wake_added_turbulence(MannBox, i_t, meta)(meta.x_mat - Ro_x, meta.y_mat - Ro_y)[
+                        tmp_index_Mann_added]
+
+                    tmp_field_WS_added[tmp_index_added] = (tmp_turb * Kmt_r)[tmp_index_added]
                     ffor.WS_axial_added_ffor[:, :, i_z, i_t] = tmp_field_WS_added
 
                     #""""
@@ -413,7 +422,7 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor, MannBox):
             bar2 = np.linspace(min_added, max_added, 15)
             bar3 = np.linspace(min_def, max_tot, 30)
 
-            for i_t in np.arange(0, meand.nt, 6):
+            for i_t in np.arange(0, meand.nt, 2):
                 plt.cla()
                 plt.clf()
                 print 'i_t = ', i_t
@@ -467,6 +476,7 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor, MannBox):
 
         plt.ioff()
 
+    print '# -------------------------- # MFOR to FFOR PROCESS ENDED # ---------------------------------------------- #'
     return mfor, ffor, meta, meand
 
 

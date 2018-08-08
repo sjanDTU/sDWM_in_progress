@@ -28,10 +28,16 @@ def cart2pol_for_mesh(mesh):
     return rho, phi
 
 def get_plan_of_interest(MannBox,ti,component_char):
-    #print 'ti', ti
+    # print 'ti', ti
+    # print MannBox.U
+    # print MannBox.T
+    # print MannBox.lx
     xi = MannBox.U * (MannBox.T - ti)
     #print 'xi', xi
-    index_xi = int(xi * MannBox.nx_r / MannBox.lx) - 1
+    if MannBox.nx_r!=None:
+        index_xi = int(xi * MannBox.nx_r / MannBox.lx) - 1
+    else:
+        index_xi = int(xi * MannBox.nx / MannBox.lx) - 1
     #print 'index_xi: ', index_xi
     if component_char == 'vfluct':
         return MannBox.v_TurbBox[:, :, index_xi]
