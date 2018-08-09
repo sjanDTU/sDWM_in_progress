@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """ Multiple classes definition from the DWM flowfield model
 @moduleauthor:: Ewan Machefaux <ewan.machefaux@gmail.com>
+@moduleauthor:: Augustin Grosdidier <augustin.grosdidier@gmail.com> (2018)
+
 """
 import numpy as np
 from math import pi
@@ -10,7 +12,7 @@ class Meta:
     """
     def __init__(self):
         """ Initializing the data / Set default value ."""
-        self.previous_sDWM = True
+        self.previous_sDWM = True  # Don't change this
         # ---------------------------- # PLOT SETTINGS OPTIONS # ----------------------------------------------------- #
         # Deficit Process
         self.BEM_plot = False
@@ -20,9 +22,11 @@ class Meta:
 
         # Meandering Process (more settings in cTurb)
         self.MEANDERING_plot = True
-        self.MEANDERING_detail_plot = False
-        self.MEANDERING_WS_plot = True
-        self.MEANDERING_WS_added_plot = True
+
+        #self.MEANDERING_detail_plot = False
+        # ANIMATION Plot
+        self.MEANDERING_WS_plot = False
+        self.MEANDERING_WS_added_plot = False
         self.MEANDERING_TI_plot = False
 
         # Wake Added Turbulence Process
@@ -184,7 +188,7 @@ class Meta:
 
 
             # ------------- # Eddy Viscosity Model # ------------------ #
-            self.EV_model = 'Larsen'
+            self.EV_model = 'Madsen'
             # Keck : F1,F2 Improved WaT, Turbulent formulation, ABL etc..
             # Larsen: F1, F2, Famb, Ainslie
             # Madsen: F1, F2, Anslie or without F1, F2

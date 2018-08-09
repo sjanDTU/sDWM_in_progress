@@ -98,7 +98,9 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor, MannBox):
     # recalculate into Cartesian grid
     # initiate/reset Cartesian flow field
     print '# -------------------------- # MFOR to FFOR PROCESSING # ------------------------------------------------- #'
+    # Some plot Check
     TEST = False
+    i_z_detail = 3   # disable with a number superior to the number of WT
 
     if meta.Meandering:
         if not meta.working_with_meandering_statistical_data:
@@ -151,17 +153,15 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor, MannBox):
 
     #raw_input(ffor.x_vec)
 
-    # Init for WaT
+    # --------- # Init for WaT # --------- #
     if meta.WaT:
         init_turb_WaT(MannBox, meta)
+        MannBox.R_MB = (MannBox.ly / 2.) / MannBox.R_ref
+        R_Mannbox = MannBox.R_MB  # recommended in Madsen, 2010, Calibration
 
     for i_z in np.arange(0, meta.nz, 1):
-        # print 'meta.vz[iz]: ', meta.vz[i_z]
-        # EXTRACT TI_DWM AND WS_DWM IN MFoR
-        # Plot deficit MFOR
 
-        # After the first Iteration DWM WS DATA need a time dimension, because Ainslie is computed for deficits in time
-        #
+        # ------------- # Velocity/TI profil from mixL domain # ------------- #
         try:
             DWM_WS_DATA = mfor.U[meta.vz[i_z], :]
 
@@ -186,7 +186,7 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor, MannBox):
                 # meta.kmt_r = (DWM_TI_DATA - meta.mean_TI_DWM)
                 #print 'meant TI add:', np.mean(DWM_TI_DATA)  # - meta.mean_TI_DWM)
                 if meta.WaT_detail:
-                    print 'meant TI add:', np.mean(DWM_TI_DATA)  # - meta.mean_TI_DWM)
+                    print 'mean TI add:', np.mean(DWM_TI_DATA)  # - meta.mean_TI_DWM)
                     plt.figure()
                     plt.plot(meta.vr_mixl, meta.kmt_r)
                     plt.title('Radial scale factor based on TI from MixL')
@@ -213,8 +213,6 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor, MannBox):
 
                 meta.kmt_r = np.abs(deficit_depth) * meta.km1 + np.abs(derivative_deficit) * meta.km2
 
-            #if meta.Keck:
-                #Scale dynamic Turbulence on DWM TI _ DATA
 
             if TEST and False:
                 if meta.WaT_detail and meta.Keck:
@@ -231,7 +229,7 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor, MannBox):
                 plt.show()
 
         for i_t in np.arange(0, len(meand.time), 1):
-            i_z_detail = 3
+
             if meta.Meandering:
                 if meta.working_with_meandering_statistical_data:
                     Ro_x = meand.meand_pos_x[i_z, i_t]
@@ -245,11 +243,7 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor, MannBox):
             r_dist = np.sqrt((meta.x_mat - Ro_x) ** 2 + (meta.y_mat - Ro_y) ** 2) # Originally
             #print r_dist
             #print meta.x_mat - Ro_x
-            MannBox.R_MB = (MannBox.ly/2.) / MannBox.R_ref
-            R_Mannbox = MannBox.R_MB # recommended in Madsen, 2010, Calibration
-            tmp_index_Mann_added_x = (np.abs(meta.x_mat - Ro_x) < R_Mannbox)
-            tmp_index_Mann_added_y = (np.abs(meta.y_mat - Ro_y) < R_Mannbox)
-            tmp_index_Mann_added = tmp_index_Mann_added_x*tmp_index_Mann_added_y
+
 
             if i_z == i_z_detail:
                 plt.figure()
@@ -264,52 +258,37 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor, MannBox):
                 plt.pcolor(tmp_index_Mann_added)
                 plt.title('tmp_index_mann')
                 plt.show()
-            # r_dist for wake added Turbulence
 
             ###############################################################
-            # do we have to keep this for dynamic, or use GLarsen function?
             #print 'mfor.wakeW[meta.vz[i_z]]: ', mfor.WakeW[meta.vz[i_z]]
             tmp_index = r_dist < mfor.WakeW[meta.vz[i_z]] * 1.5
+
 
             ################################################################
             tmp_field_WS = np.ones((meta.nx, meta.ny))
             tmp_field_WS[tmp_index] = np.interp(r_dist[tmp_index], meta.vr_m, DWM_WS_DATA)
 
-            # ---------------- # Wake added Turubulence Process # ---------------------------------------------------- #
+            # ---------------- # Wake added Turbulence Process # ---------------------------------------------------- #
             #
             if meta.WaT:
-                #print 'R_mann', R_Mannbox
-                tmp_index_added = r_dist < R_Mannbox#mfor.WakeW[meta.vz[i_z]]
-                if meta.Madsen or meta.Larsen:
-                    tmp_turb = np.zeros((meta.nx, meta.ny))
-                    tmp_field_WS_added = np.zeros((meta.nx, meta.ny))
-                    Kmt_r = np.zeros((meta.nx, meta.ny))
-                    # Wake added Turbulence
-                    Kmt_r[tmp_index_added] =  np.interp(r_dist[tmp_index_added], meta.vr_mixl[:-2], meta.kmt_r[:-2])
+                tmp_index_Mann_added_x = (np.abs(meta.x_mat - Ro_x) < R_Mannbox)
+                tmp_index_Mann_added_y = (np.abs(meta.y_mat - Ro_y) < R_Mannbox)
+                tmp_index_Mann_added = tmp_index_Mann_added_x * tmp_index_Mann_added_y
+                tmp_index_added = r_dist < R_Mannbox
+                # ---- # Init # ---- #
+                tmp_turb = np.zeros((meta.nx, meta.ny))
+                tmp_field_WS_added = np.zeros((meta.nx, meta.ny))
+                Kmt_r = np.zeros((meta.nx, meta.ny))
 
+                # ---- # Mann, Kmt_r Matrix in FFoR # ---- #
+                Kmt_r[tmp_index_added] =  np.interp(r_dist[tmp_index_added], meta.vr_mixl[:-2], meta.kmt_r[:-2])
+                tmp_turb[tmp_index_Mann_added] = \
+                    obtain_wake_added_turbulence(MannBox, i_t, meta)(meta.x_mat-Ro_x,meta.y_mat-Ro_y)[tmp_index_Mann_added]
 
+                # ---- # Final Component in FFoR # ---- #
+                tmp_field_WS_added[tmp_index_added] = (tmp_turb*Kmt_r)[tmp_index_added]
+                ffor.WS_axial_added_ffor[:, :, i_z, i_t] = tmp_field_WS_added
 
-                    tmp_turb[tmp_index_Mann_added] = obtain_wake_added_turbulence(MannBox, i_t, meta)(meta.x_mat-Ro_x,meta.y_mat-Ro_y)[tmp_index_Mann_added]
-
-
-
-                    tmp_field_WS_added[tmp_index_added] = (tmp_turb*Kmt_r)[tmp_index_added]
-                    ffor.WS_axial_added_ffor[:, :, i_z, i_t] = tmp_field_WS_added
-                if meta.Keck:
-                    tmp_turb = np.zeros((meta.nx, meta.ny))
-                    tmp_field_WS_added = np.zeros((meta.nx, meta.ny))
-                    Kmt_r = np.zeros((meta.nx, meta.ny))
-                    # Wake added Turbulence
-                    Kmt_r[tmp_index_added] = np.interp(r_dist[tmp_index_added], meta.vr_mixl[:-2], meta.kmt_r[:-2])
-
-                    tmp_turb[tmp_index_Mann_added] = \
-                    obtain_wake_added_turbulence(MannBox, i_t, meta)(meta.x_mat - Ro_x, meta.y_mat - Ro_y)[
-                        tmp_index_Mann_added]
-
-                    tmp_field_WS_added[tmp_index_added] = (tmp_turb * Kmt_r)[tmp_index_added]
-                    ffor.WS_axial_added_ffor[:, :, i_z, i_t] = tmp_field_WS_added
-
-                    #""""
                 if i_z == i_z_detail:
                     plt.figure()
                     plt.subplot(221)
@@ -346,12 +325,13 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor, MannBox):
                 ffor.ffor_flow_field_TI_tmp_tmp[:, :] = tmp_field_TI
                 ffor.TI_axial_ffor[:, :, i_z, i_t] = ffor.ffor_flow_field_TI_tmp_tmp# ** 2
 
+    # ------ FINAL SUMMATION in FFoR ------ #
     ffor.WS_axial_ffor = ffor.WS_axial_deficit_ffor + ffor.WS_axial_added_ffor
 
-
+    # ------------------------ # Post Process to get TI # -------------------------------------------------------- #
     if meta.WaT:
         if True:
-            # ------------------------ # Post Process to get TI # -------------------------------------------------------- #
+
             mean_WS = np.mean(ffor.WS_axial_ffor, axis = (3))
             mean_WS_meand = np.mean(ffor.WS_axial_deficit_ffor, axis = (3))
 
@@ -366,6 +346,7 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor, MannBox):
             if TEST:
                 plt.figure()
                 plt.subplot(121)
+                plt.title('ffor.TI_axial befor post process')
                 plt.contourf(ffor.TI_axial_ffor[:,:,1,0])
                 plt.colorbar()
                 print 'Mean TI from Keck:', np.mean(ffor.TI_axial_ffor[:,:,1,0])#-meta.mean_TI_DWM)
@@ -383,15 +364,78 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor, MannBox):
                 print 'Mean TI from Dynamic WaT averaged in time:', np.mean(ffor.TI_axial_ffor[:, :, 1, :])#-meta.mean_TI_DWM)
 
                 plt.subplot(122)
+                plt.title('ffor.TI_axial_added')
                 plt.contourf(ffor.TI_axial_added_ffor[:,:,1,0], np.linspace(0.,MAX_TI_Keck+0.05,10))#-meta.mean_TI_DWM)
                 plt.colorbar()
                 plt.show()
-            """
                 plt.figure()
+                plt.title('ffor.TI_axial')
                 plt.contourf((ffor.TI_axial_ffor[:,:,0,0]-Last_TI))#/(Last_TI-meta.mean_TI_DWM))
                 plt.colorbar()
-                plt.show()  #"""
+                plt.show()
 
+    if meta.MEANDERING_plot:
+        Average_TI_added = np.mean(ffor.TI_axial_added_ffor, axis = 3)
+        Average_TI_meand = np.mean(ffor.TI_meand_axial_ffor, axis=3)
+        Average_TI = np.mean(ffor.TI_axial_ffor, axis=3)
+
+        X, Y = ffor.x_mat, ffor.y_mat
+        ref_rotor_x_emitting = (meta.hub_x[0] + np.cos(np.linspace(-pi, pi))) / 2.
+        ref_rotor_y_emitting = (meta.hub_y + np.sin(np.linspace(-pi, pi))) / 2.
+
+        for i_z in range(meta.nz):
+            ref_rotor_x_concerned = (meta.hub_x[i_z] + np.cos(np.linspace(-pi, pi))) / 2.
+            ref_rotor_y_concerned = (meta.hub_y + np.sin(np.linspace(-pi, pi))) / 2.
+
+            plt.figure(i_z)
+            plt.subplot(132)
+            plt.title('TI_added')
+            plt.contourf(X, Y, Average_TI_added[:,:,i_z], cmap = plt.cm.jet)
+            plt.plot(ref_rotor_x_emitting, ref_rotor_y_emitting, 'r', label='WT emitting')
+            plt.plot(ref_rotor_x_concerned, ref_rotor_y_concerned, 'k', label='WT concerned')
+            plt.colorbar()
+            plt.subplot(131)
+            plt.title('TI_meand')
+            plt.contourf(X, Y, Average_TI_meand[:, :, i_z], cmap = plt.cm.jet)
+            plt.plot(ref_rotor_x_emitting, ref_rotor_y_emitting, 'r', label='WT emitting')
+            plt.plot(ref_rotor_x_concerned, ref_rotor_y_concerned, 'k', label='WT concerned')
+            plt.colorbar()
+            plt.subplot(133)
+            plt.title('TI')
+            plt.contourf(X, Y, Average_TI[:, :, i_z], cmap = plt.cm.jet)
+            plt.plot(ref_rotor_x_emitting, ref_rotor_y_emitting, 'r', label='WT emitting')
+            plt.plot(ref_rotor_x_concerned, ref_rotor_y_concerned, 'k', label='WT concerned')
+            plt.colorbar()
+        plt.show()
+
+        Average_axial_deficit = np.mean(ffor.WS_axial_deficit_ffor, axis = 3)
+        Average_added_deficit = np.mean(ffor.WS_axial_added_ffor, axis = 3)
+        Average_total_deficit = np.mean(ffor.WS_axial_ffor, axis = 3)
+
+        for i_z in range(meta.nz):
+            ref_rotor_x_concerned = (meta.hub_x[i_z] + np.cos(np.linspace(-pi, pi))) / 2.
+            ref_rotor_y_concerned = (meta.hub_y + np.sin(np.linspace(-pi, pi))) / 2.
+
+            plt.figure(i_z)
+            plt.subplot(132)
+            plt.title('WS_axial_added')
+            plt.contourf(X, Y, Average_added_deficit[:, :, i_z], cmap = plt.cm.jet)
+            plt.plot(ref_rotor_x_emitting, ref_rotor_y_emitting, 'r', label='WT emitting')
+            plt.plot(ref_rotor_x_concerned, ref_rotor_y_concerned, 'k', label='WT concerned')
+            plt.colorbar()
+            plt.subplot(131)
+            plt.title('WS_axial_deficit_ffor')
+            plt.contourf(X, Y, Average_axial_deficit[:, :, i_z], cmap = plt.cm.jet)
+            plt.plot(ref_rotor_x_emitting, ref_rotor_y_emitting, 'r', label='WT emitting')
+            plt.plot(ref_rotor_x_concerned, ref_rotor_y_concerned, 'k', label='WT concerned')
+            plt.colorbar()
+            plt.subplot(133)
+            plt.title('WS_axial_ffor')
+            plt.contourf(X, Y, Average_total_deficit[:, :, i_z], cmap = plt.cm.jet)
+            plt.plot(ref_rotor_x_emitting, ref_rotor_y_emitting, 'r', label='WT emitting')
+            plt.plot(ref_rotor_x_concerned, ref_rotor_y_concerned, 'k', label='WT concerned')
+            plt.colorbar()
+        plt.show()
 
     if meta.MEANDERING_plot:
 

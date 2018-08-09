@@ -33,7 +33,7 @@ def ReadMannInput(filename):
     Input = new_Input
 
 
-    print 'MannBox read for Wake added Turubulence'
+    print 'READING MannBox for Wake added Turbulence'
     print Input
 
     Mannbox.fieldDim = int(Input[0]); Mannbox.N_Comp = int(Input[1])
