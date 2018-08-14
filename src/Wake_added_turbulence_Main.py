@@ -51,7 +51,7 @@ def init_turb_WaT(MannBox, meta):
     :param MannBox:
     :return:
     """
-    debug = False
+    debug = True
     # is it possible to not create a second mannbox to save memory cost
     # ---------------------------- # Scale Turbulence Intensity # -------------------- #
     # We take of the last scaling due to the last iteration
@@ -64,14 +64,14 @@ def init_turb_WaT(MannBox, meta):
         print 'k_scale', MannBox.k_scale
         print 'MannBox_Tiu', MannBox.TI_u
         print 'mean DWM Ti', meta.mean_TI_DWM
-    MannBox.k_scale = meta.mean_TI_DWM / MannBox.TI_u
+    MannBox.k_scale = meta.mean_TI_DWM / (MannBox.TI_u * MannBox.U_ref / meta.WS)
 
     # We apply the scaling
     MannBox.u_TurbBox = MannBox.k_scale * MannBox.u_TurbBox
     if debug:
         print 'kscale: ', MannBox.k_scale
-        print 'Mannbox Ti', np.sqrt(np.mean((MannBox.u_TurbBox) ** 2))
-        raw_input('...')
+        print 'Mannbox Ti', np.sqrt(np.mean((MannBox.u_TurbBox) ** 2))/ meta.WS
+        #raw_input('...')
 
     return
 
@@ -88,8 +88,12 @@ def obtain_wake_added_turbulence(MannBox, i_t, meta):
     :param meta:
     :return:
     """
+    if meta.Meandering:
+        t = meta.time[i_t] # needed to synchronize in time Meandering and WaT
+        xi =  meta.WS / MannBox.U  * t  # get the plan of interest , scale to the correct ambien WS
+        index_t = int(round(xi))
 
-    plan_of_interest = MannBox.u_TurbBox[:, :, i_t]
+    plan_of_interest = MannBox.u_TurbBox[:, :, index_t]
 
     # Box containing cross section covering one rotor diameter (according to Madsen, 2010, calibration ...)
     if MannBox.One_rotordiameter_size:
@@ -101,7 +105,7 @@ def obtain_wake_added_turbulence(MannBox, i_t, meta):
         Ly = Ly /MannBox.R_ref
         Lz = Lz/MannBox.R_ref
 
-    f_cart = RectBivariateSpline(x=Ly, y=Lz, z=np.transpose(plan_of_interest/MannBox.U_ref),
+    f_cart = RectBivariateSpline(x=Ly, y=Lz, z=np.transpose(plan_of_interest/meta.WS),
                                                    # np.transpose for last version of scipy
                                                    kx=1,  # number of splines: can't be superior to 5
                                                    ky=1,

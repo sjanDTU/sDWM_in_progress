@@ -78,8 +78,8 @@ def get_averaged_U(filename):
         # {\alpha*\epsilon^{2/3}, L, \Gamma} = {0.0553, 55.7, 3.81}, <U>=10.7 m/s , <dir>=13.6 degree ;
         return 10.7
     if filename=='iso':
-        return 8.
-    raise Exception('Specify the MannBox U ref ')
+        return 10.7
+    raise Exception('Specify the MannBox U ref in get_averaged_U')
     return None
 
 ############################ ADAPT IT for Wake added Turbulence
@@ -185,38 +185,6 @@ def get_turb_component_from_MannBox(filename,kind_of_fluct,plot_bool,MannBox, vi
     print 'shape(fluc_component_field): ', np.shape(Total_Vel)
     return Total_Vel
 
-def sizing_MannBox_MFOR(MannBox , WindFarm):
-    """
-    Note: this sizing imply a choice of the reference wich is obvious if all turbines are same => there is ONE Radius
-    :param MannBox:
-    :param R_WindTurbine:
-    :param U_mean_WindFarm:
-    :param windFarm_lenght:
-    :return:
-    """
-
-    MannBox.U = MannBox.U / WindFarm.U_mean
-    print 'U (no dimension): ', MannBox.U
-    MannBox.L = MannBox.L / WindFarm.WT_R
-    print 'L (no dimension): ', MannBox.L
-
-    MannBox.T = MannBox.L / MannBox.U; print 'Mannbox T_total (no dimension): ', MannBox.T
-    MannBox.dt = MannBox.T / MannBox.nx; print 'dt (no dimension): ', MannBox.dt
-    MannBox.ti = [i*MannBox.dt for i in range(MannBox.nx)]
-    MannBox.ti = [t for t in MannBox.ti
-                  if t < MannBox.SimulationTime + MannBox.dt]  # we catch just one point after the simulation time
-
-
-    # Should depends on the FFoR domain.
-    MannBox.lx = MannBox.L
-    MannBox.ly = MannBox.ly / WindFarm.WT_R * k
-    MannBox.lz = MannBox.lz / WindFarm.WT_R * k
-
-    MannBox.dx = MannBox.lx / MannBox.nx
-    MannBox.dt = MannBox.dx / MannBox.U
-
-    MannBox.u_TurbBox = MannBox.u_TurbBox / MannBox.U_ref
-    return MannBox
 
 
 

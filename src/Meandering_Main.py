@@ -130,11 +130,11 @@ def DWM_extract_meandering_from_TurbBox(MannBox, WindFarm):
                             #vc_wc = Wake_Dynamic_at_Ld(ld, ts, MannBox, Meand_Mann)
                         ts_vc_wc.append([ts-MannBox.delay] + vc_wc)
                     else:
-                        if ts - tho < 0:
+                        if ts - tho_ref-tho_rel< 0:
                             ts_vc_wc.append([ts, np.nan, np.nan])
                         else:
 
-                            vc_wc = Wake_Dynamic_at_Ld(ld, ts - tho, MannBox, Meand_Mann)
+                            vc_wc = Wake_Dynamic_at_Ld(ld, ts - tho_ref-tho_rel, MannBox, Meand_Mann)
                             if not boolref:
                                 boolref = True
                                 vc_wc_ref = vc_wc
@@ -147,7 +147,7 @@ def DWM_extract_meandering_from_TurbBox(MannBox, WindFarm):
                     ts_yc_zc[NaN_index, 1] = vc_wc_ref[0]
                     ts_yc_zc[NaN_index, 2] = vc_wc_ref[1]
 
-                ts_yc_zc[:, 1:3] = ld/MannBox.U * ts_yc_zc[:, 1:3]
+                ts_yc_zc[:, 1:3] = ld / MannBox.U * ts_yc_zc[:, 1:3]
                 Wake.append(ts_yc_zc)
             WAKES.append(Wake)
         print 'Computation time for crude approach: ', time.time() - start_time
@@ -226,11 +226,11 @@ def DWM_extract_meandering_from_TurbBox(MannBox, WindFarm):
                             # vc_wc = Wake_Dynamic_at_Ld(ld, ts, MannBox, Meand_Mann)
                         ts_vc_wc.append([ts - MannBox.delay] + vc_wc)
                     else:
-                        if ts - tho_rel < 0:
+                        if ts - tho_ref-tho_rel < 0:
                             ts_vc_wc.append([ts, np.nan, np.nan])
                         else:
 
-                            vc_wc = Wake_Dynamic_at_Ld(ld, ts - tho, MannBox, Meand_Mann)
+                            vc_wc = Wake_Dynamic_at_Ld(ld, ts - tho_ref-tho_rel, MannBox, Meand_Mann)
                             if not boolref:
                                 boolref = True
                                 vc_wc_ref = vc_wc
@@ -263,14 +263,14 @@ def DWM_extract_meandering_from_TurbBox(MannBox, WindFarm):
                 # ------------ # POST PROCESSING TO apply OTHER WAKEs ld/U from simplification # ----------------- #
                 for i_ld in range(len(Ld)):
                     ld = float(Ld[i_ld])
-                    wake_to_add[i_ld][:][:, 1:3] = ld/MannBox.U * wake_to_add[i_ld][:][:, 1:3]
+                    wake_to_add[i_ld][:][:, 1:3] = ld / WindFarm.U_mean * wake_to_add[i_ld][:][:, 1:3]
                 WAKES.append(wake_to_add)
 
             # --------------------- # Post Processing apply ld/U to first wake # --------------------------------- #
             wake_to_change = copy.deepcopy(WAKES[0])
             for i_ld in range(len(WindFarm.stream_location_z)):
                 ld = float(WindFarm.stream_location_z[i_ld])
-                wake_to_change[i_ld][:][:, 1:3] = ld/MannBox.U * wake_to_change[i_ld][:][:, 1:3]
+                wake_to_change[i_ld][:][:, 1:3] = ld / MannBox.U * wake_to_change[i_ld][:][:, 1:3]
             WAKES[0] = wake_to_change
 
             print 'Computation time for Post Process: ', time.time()-start_time
@@ -347,11 +347,11 @@ def DWM_extract_meandering_from_TurbBox(MannBox, WindFarm):
                             ts_vc_wc.append([ts - MannBox.delay] + vc_wc)
 
                         else:
-                            if ts - tho_rel < 0:
+                            if ts - tho_ref-tho_rel < 0:
                                 ts_vc_wc.append([ts, np.nan, np.nan])
                             else:
 
-                                vc_wc = Wake_Dynamic_at_Ld(ld, ts - tho, MannBox, Meand_Mann)
+                                vc_wc = Wake_Dynamic_at_Ld(ld, ts - tho_ref-tho_rel, MannBox, Meand_Mann)
                                 if not boolref:
                                     boolref = True
                                     vc_wc_ref = vc_wc
@@ -401,7 +401,7 @@ def Init_Turb(MannBox, WindFarm):
     # (note: not yet implemented but we can also positionate rightly the turbulent Box to be close to the ground
     # and we could manage the ground effect on the meandering)
     # for the moment the wake movement doesn't need to take care of the ground (no need to implement reflecting surface)
-    WindFarm.Rw_Max = get_Rw(x=WindFarm.nodim_lenght, R=1., TI=MannBox.TI, CT=WindFarm.CT)
+    WindFarm.Rw_Max = get_Rw(x=WindFarm.nodim_lenght, R=1., TI=WindFarm.TI, CT=WindFarm.CT)
     print 'Rw max in WindFarm is: ', WindFarm.Rw_Max
     if MannBox.Box_Kind == 'Mann':
         MannBox = sizing_MannBox(MannBox, WindFarm)  # put: , windFarm_lenght=0.) for the first function of  Main loop

@@ -117,8 +117,9 @@ def sizing_MannBox(MannBox , WindFarm):
     MannBox.U_ref = WindFarm.U_mean
     MannBox.R_ref = WindFarm.WT_R
 
-    MannBox.v_TurbBox = MannBox.v_TurbBox / MannBox.U_ref
-    MannBox.w_TurbBox = MannBox.w_TurbBox / MannBox.U_ref
+    # Scaling / Non Dimensionalised
+    MannBox.v_TurbBox = MannBox.v_TurbBox / MannBox.U
+    MannBox.w_TurbBox = MannBox.w_TurbBox / MannBox.U
     return MannBox
 
 def get_turb_component_from_MannBox(filename,kind_of_fluct,plot_bool,MannBox, video):
@@ -266,7 +267,7 @@ def pre_init_turb(filename, WindFarm, WT):
     v = np.sqrt(np.mean(MannBox.v_TurbBox ** 2))
     w = np.sqrt(np.mean(MannBox.w_TurbBox ** 2))
 
-    MannBox.TI = np.sqrt((u ** 2 + v ** 2 + w ** 2) / 3) / WindFarm.U_mean
+    MannBox.TI = np.sqrt((u ** 2 + v ** 2 + w ** 2) / 3) / get_averaged_U(filename)
     print 'Meandering box, TI: ', MannBox.TI
 
     # Scaling based on the 3D TI
@@ -358,6 +359,7 @@ def pre_init_turb_LES(filename, WindFarm, WT):
     print 'TI w', w
 
     #MannBox.TI = np.sqrt((u ** 2 + v ** 2 + w ** 2) / 3)# / WindFarm.U_mean # BE CAREFUL HERE WE COUNT THE GROUND
+    print 'TI: ', np.sqrt((u ** 2 + v ** 2 + w ** 2) / 3)  # / WindFarm.U_mean # BE CAREFUL HERE WE COUNT THE GROUND
 
     print 'Meandering box, TI: ', MannBox.TI
 

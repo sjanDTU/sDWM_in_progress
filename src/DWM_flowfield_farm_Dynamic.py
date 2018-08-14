@@ -100,7 +100,7 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor, MannBox):
     print '# -------------------------- # MFOR to FFOR PROCESSING # ------------------------------------------------- #'
     # Some plot Check
     TEST = False
-    i_z_detail = 3   # disable with a number superior to the number of WT
+    i_z_detail = -1   # disable with a number superior to the number of WT or -1
 
     if meta.Meandering:
         if not meta.working_with_meandering_statistical_data:
@@ -229,7 +229,6 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor, MannBox):
                 plt.show()
 
         for i_t in np.arange(0, len(meand.time), 1):
-
             if meta.Meandering:
                 if meta.working_with_meandering_statistical_data:
                     Ro_x = meand.meand_pos_x[i_z, i_t]
@@ -466,11 +465,12 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor, MannBox):
             bar2 = np.linspace(min_added, max_added, 15)
             bar3 = np.linspace(min_def, max_tot, 30)
 
-            for i_t in np.arange(0, meand.nt, 2):
+            for i_t in np.arange(0, meand.nt, 6):
                 plt.cla()
                 plt.clf()
+                plt.suptitle('t = '+str(ffor.time[i_t]))
                 print 'i_t = ', i_t
-                if meta.MEANDERING_WS_plot:
+                if meta.MEANDERING_WS_plot and not meta.MEANDERING_WS_total_plot:
                     plt.subplot(131)
                     CS1 = plt.contourf(X, Y, ffor.WS_axial_deficit_ffor[:, :, i_z, i_t], bar1, cmap = plt.cm.jet)
                     #CS1 = plt.contourf(ffor.WS_axial_deficit_ffor[:, :, i_z, i_t], bar1, cmap=plt.cm.jet)
@@ -479,24 +479,33 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor, MannBox):
                     plt.plot(ref_rotor_x_concerned, ref_rotor_y_concerned, 'k', label='WT concerned')
                     plt.legend()
                     plt.colorbar(CS1)
-                if meta.MEANDERING_WS_added_plot:
-                    plt.subplot(132)
-                    CS1 = plt.contourf(X, Y, ffor.WS_axial_added_ffor[:, :, i_z, i_t])#, bar2, cmap = plt.cm.jet)
-                    #CS1 = plt.contourf(ffor.WS_axial_added_ffor[:, :, i_z, i_t], bar2, cmap=plt.cm.jet)
-                    plt.xlabel('x'), plt.ylabel('y'), plt.title('Added WS FFoR for Turbine ' + str(meta.wtg_ind[i_z]))  # 7-iz
-                    plt.plot(ref_rotor_x_emitting, ref_rotor_y_emitting, 'r', label='WT emitting')
-                    plt.plot(ref_rotor_x_concerned, ref_rotor_y_concerned, 'k', label='WT concerned')
-                    plt.legend()
-                    plt.colorbar(CS1)
+                    if meta.MEANDERING_WS_added_plot:
+                        plt.subplot(132)
+                        CS1 = plt.contourf(X, Y, ffor.WS_axial_added_ffor[:, :, i_z, i_t])#, bar2, cmap = plt.cm.jet)
+                        #CS1 = plt.contourf(ffor.WS_axial_added_ffor[:, :, i_z, i_t], bar2, cmap=plt.cm.jet)
+                        plt.xlabel('x'), plt.ylabel('y'), plt.title('Added WS FFoR for Turbine ' + str(meta.wtg_ind[i_z]))  # 7-iz
+                        plt.plot(ref_rotor_x_emitting, ref_rotor_y_emitting, 'r', label='WT emitting')
+                        plt.plot(ref_rotor_x_concerned, ref_rotor_y_concerned, 'k', label='WT concerned')
+                        plt.legend()
+                        plt.colorbar(CS1)
 
-                    plt.subplot(133)
-                    CS1 = plt.contourf(X, Y, ffor.WS_axial_ffor[:, :, i_z, i_t])#, bar3, cmap=plt.cm.jet)
+                        plt.subplot(133)
+                        CS1 = plt.contourf(X, Y, ffor.WS_axial_ffor[:, :, i_z, i_t])#, bar3, cmap=plt.cm.jet)
+                        plt.xlabel('x'), plt.ylabel('y'), plt.title(
+                            'Total WS FFoR for Turbine ' + str(meta.wtg_ind[i_z]))  # 7-iz
+                        plt.plot(ref_rotor_x_emitting, ref_rotor_y_emitting, 'r', label='WT emitting')
+                        plt.plot(ref_rotor_x_concerned, ref_rotor_y_concerned, 'k', label='WT concerned')
+                        plt.legend()
+                        plt.colorbar(CS1)
+                elif meta.MEANDERING_WS_total_plot:
+                    CS1 = plt.contourf(X, Y, ffor.WS_axial_ffor[:, :, i_z, i_t])  # , bar3, cmap=plt.cm.jet)
                     plt.xlabel('x'), plt.ylabel('y'), plt.title(
                         'Total WS FFoR for Turbine ' + str(meta.wtg_ind[i_z]))  # 7-iz
                     plt.plot(ref_rotor_x_emitting, ref_rotor_y_emitting, 'r', label='WT emitting')
                     plt.plot(ref_rotor_x_concerned, ref_rotor_y_concerned, 'k', label='WT concerned')
                     plt.legend()
                     plt.colorbar(CS1)
+
 
                 if meta.MEANDERING_TI_plot:
                     plt.subplot(122)
