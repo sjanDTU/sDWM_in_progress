@@ -67,7 +67,7 @@ class MannBox:
 
         self.WakeExpansion = True  # Carry by a simple wake model proposed by Larsen 2009
 
-        #self.Keck_Transport_Velocity = False  # True to apply 0.8*U advection transport: Keck synthetic turbulence
+        self.Keck_Transport_Velocity = True  # True to apply 0.8*U advection transport: Keck synthetic turbulence
         # Not implemented
 
         self.loop_debug = False

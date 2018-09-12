@@ -587,7 +587,7 @@ def DWM_calc_mixL(meta,aero,mfor):
         plt.legend(), plt.show()
 
         plt.figure(2)
-        plt.title('WS at different downstream distance')
+        plt.title('WS at different downstream distances')
         L_observer = [1,3,6,10, 16,32,48,64] # in R, strictly ascending location
         i_p = 0
         for j in np.arange(1, len(meta.vz_mixl), 1):
@@ -596,7 +596,8 @@ def DWM_calc_mixL(meta,aero,mfor):
                 Udef = mfor.U[j-1,:]
 
                 if reverse_axis:
-                    plt.plot(Udef, meta.vr_mixl, label = str(meta.vz_mixl[j-1])[:3]+'-'+str(meta.vz_mixl[j])[:3]+' [R]')
+                    #plt.plot(Udef, meta.vr_mixl, label = str(meta.vz_mixl[j-1])[:3]+'-'+str(meta.vz_mixl[j])[:3]+' [R]')
+                    plt.plot(Udef, meta.vr_mixl, label='at '+str(meta.vz_mixl[j - 1])[:3]+' [R]')
                 else:
                     plt.plot(meta.vr_mixl, Udef,label=str(meta.vz_mixl[j - 1])[:3] + '-' + str(meta.vz_mixl[j])[:3] + ' [R]')
                 if i_p == len(L_observer):
@@ -630,7 +631,10 @@ def DWM_calc_mixL(meta,aero,mfor):
                     i_p = i_p + 1
                     TI = mfor.TI_DWM[j - 1, :]
                     if reverse_axis:
-                        plt.plot(TI, meta.vr_mixl, label = str(meta.vz_mixl[j-1])[:3]+'-'+str(meta.vz_mixl[j])[:3]+' [R]')
+                        #plt.plot(TI, meta.vr_mixl, label = str(meta.vz_mixl[j-1])[:3]+'-'+str(meta.vz_mixl[j])[:3]+' [R]')
+                        plt.plot(TI, meta.vr_mixl,
+                                 label='at '+str(meta.vz_mixl[j - 1])[:3] + '[R]')
+
                     else:
                         plt.plot(meta.vr_mixl, TI, label=str(meta.vz_mixl[j - 1])[:3] + '-' + str(meta.vz_mixl[j])[:3] + ' [R]')
                     if i_p == len(L_observer):
@@ -649,15 +653,16 @@ def DWM_calc_mixL(meta,aero,mfor):
             reverse_axis = False
             print 'Plot: We restrict the x abscisse to 2.5'
             plt.figure()
-            plt.title('Eddy Viscosity in DWM')
-            L_observer = [1, 3, 10, 16, 32, 48, 64]  # in R, strictly ascending location
+            plt.title('Eddy Viscosity at different downstream distances')
+            L_observer = [1, 3, 10, 16, 32, 64]  # in R, strictly ascending location
             i_p = 0
             for j in np.arange(1, len(meta.vz_mixl), 1):
                 if meta.vz_mixl[j - 1] <= L_observer[i_p] < meta.vz_mixl[j]:
                     i_p = i_p + 1
                     visc = mfor.visc[j, :]
                     if reverse_axis:
-                        plt.plot(visc, meta.vr_mixl,label=str(meta.vz_mixl[j - 1])[:3] + '-' + str(meta.vz_mixl[j])[:3] + ' [R]')
+                        #plt.plot(visc, meta.vr_mixl,label=str(meta.vz_mixl[j - 1])[:3] + '-' + str(meta.vz_mixl[j])[:3] + ' [R]')
+                        plt.plot(visc, meta.vr_mixl, label='at '+str(meta.vz_mixl[j - 1])[:3] + ' [R]')
                     else:
                         plt.plot(meta.vr_mixl, visc,label=str(meta.vz_mixl[j - 1])[:3] + '-' + str(meta.vz_mixl[j])[:3] + ' [R]')
                     if i_p == len(L_observer):
@@ -667,7 +672,35 @@ def DWM_calc_mixL(meta,aero,mfor):
                 plt.ylabel('Radial position [R]'), plt.xlabel('eddy viscosity [-]')
             else:
                 plt.xlabel('Radial position [R]'), plt.ylabel('eddy viscosity [-]')
-            #plt.xlim(0., 2.5)
-            plt.legend(), plt.show()
+    if meta.WaT_detail:
+        reverse_axis = False
+        print 'Plot: We restrict the x abscisse to 2.5'
+        plt.figure()
+        plt.title('Radial scaling Factor at different downstream distances')
+        L_observer = [1, 3, 10, 16, 32, 64]  # in R, strictly ascending location
+        i_p = 0
+        for j in np.arange(1, len(meta.vz_mixl), 1):
+            if meta.vz_mixl[j - 1] <= L_observer[i_p] < meta.vz_mixl[j]:
+                i_p = i_p + 1
+                if meta.Madsen or meta.Larsen:
+                    Udef = mfor.U[j-1,:]
+                    # derive U by r:
+                    dUdef_dr_r = [0] + [(Udef[i_r + 1] - Udef[i_r - 1]) / (meta.vr_mixl[i_r + 1] - meta.vr_mixl[i_r - 1])
+                                        for i_r in range(1, len(meta.vr_mixl) - 1)] + [0]
+
+                    deficit_depth = 1 - Udef
+                    derivative_deficit = dUdef_dr_r
+
+                    kmt_r = np.abs(deficit_depth) * meta.km1 + np.abs(derivative_deficit) * meta.km2
+
+                if meta.Keck:
+                    kmt_r = mfor.TI_DWM[j - 1, :]/meta.mean_TI_DWM
+                plt.plot(kmt_r, meta.vr_mixl,
+                         label=str(meta.vz_mixl[j - 1])[:3] + '-' + str(meta.vz_mixl[j])[:3] + ' [R]')
+                if i_p == len(L_observer):
+                    break
+        plt.ylabel('Radial position [R]'), plt.xlabel('[-]')
+        #plt.xlim(0., 2.5)
+        plt.legend(), plt.show()
     print '# -------------------------- # mixL DEFICIT MODULE PROCESS ENDED # --------------------------------------- #'
     return mfor

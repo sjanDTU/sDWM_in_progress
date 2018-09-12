@@ -32,8 +32,8 @@ if __name__ == "__main__":
               'dynamic': True,                   # Imply bemsteady... TRUE
               #'Meandering_turb_box_name': ('1028','Mann_Box'),  # Imply used_saved data TRUE (not automatical for the moment)
               #'Meandering_turb_box_name': ('LES_Box_test','LES_Box'),
-              'Meandering_turb_box_name': ('LES_Box_freq_5', 'LES_Box'),
-              #'Meandering_turb_box_name': None,
+              #'Meandering_turb_box_name': ('LES_Box_freq_5', 'LES_Box'),
+              'Meandering_turb_box_name': None,
               'WaT_turb_box_name': 'iso'}
     ##########################################################################
 

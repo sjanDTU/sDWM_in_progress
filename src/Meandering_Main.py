@@ -416,6 +416,9 @@ def Init_Turb(MannBox, WindFarm):
     MannBox.WakeRadius_for_this_Plan = 1. # the wake generating plan rotor radius = wake radius (we assumed)
     MannBox.Af = m.pi * (2 * MannBox.WakeRadius_for_this_Plan) ** 2
 
+    if MannBox.Keck_Transport_Velocity:
+        MannBox.U=0.8
+
     ################################################################################################
 
     # Initialization if no 'Simplification'

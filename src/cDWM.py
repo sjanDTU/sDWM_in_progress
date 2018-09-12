@@ -25,10 +25,10 @@ class Meta:
 
         #self.MEANDERING_detail_plot = False
         # ANIMATION Plot
-        self.MEANDERING_WS_plot = True
-        self.MEANDERING_WS_added_plot = True
+        self.MEANDERING_WS_plot = False
+        self.MEANDERING_WS_added_plot = False
         self.MEANDERING_TI_plot = False
-        self.MEANDERING_WS_total_plot = True
+        self.MEANDERING_WS_total_plot = False
 
         # Wake Added Turbulence Process
         self.WaT_detail = False
@@ -36,7 +36,7 @@ class Meta:
         # Build-up process and result in term of global deficit and Turbulence
         self.TI_Dynamic_for_Loads_plot = False  # According to Keck Atmospheric shear and wake ... 2013-2015
 
-        self.DEFICIT_plot = False
+        self.DEFICIT_plot = True
         self.DEFICIT_details = False # For Dynamic, it gives result in time
 
 
@@ -180,7 +180,7 @@ class Meta:
             # ----------- # Meandering # -------------------#
             self.Meandering = True
             # DO AN OPTION to DISABLE MEANDERING
-            self.use_saved_data = False  # Use WAKES pre-computed and stored in the root 'src'
+            self.use_saved_data = True  # Use WAKES pre-computed and stored in the root 'src'
             self.working_with_meandering_statistical_data = False
 
             # ----------- # Wake Added Turbulence Settings # ----------- #

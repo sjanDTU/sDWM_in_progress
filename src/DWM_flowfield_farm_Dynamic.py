@@ -180,8 +180,8 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor, MannBox):
 
         if meta.Keck:
             if meta.WaT:
-                scale = 100.
-                meta.kmt_r = (DWM_TI_DATA) / meta.mean_TI_DWM  # / scale
+                scale = 4.
+                meta.kmt_r = (DWM_TI_DATA) / meta.mean_TI_DWM  / scale
                 # meta.kmt_r = (DWM_TI_DATA - meta.mean_TI_DWM) / meta.mean_TI_DWM  # / scale
                 # meta.kmt_r = (DWM_TI_DATA - meta.mean_TI_DWM)
                 #print 'meant TI add:', np.mean(DWM_TI_DATA)  # - meta.mean_TI_DWM)
@@ -325,18 +325,21 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor, MannBox):
                 ffor.TI_axial_ffor[:, :, i_z, i_t] = ffor.ffor_flow_field_TI_tmp_tmp# ** 2
 
     # ------ FINAL SUMMATION in FFoR ------ #
-    ffor.WS_axial_ffor = ffor.WS_axial_deficit_ffor + ffor.WS_axial_added_ffor
+    if not meta.WaT:
+        ffor.WS_axial_ffor = ffor.WS_axial_deficit_ffor
+    if meta.WaT:
+        ffor.WS_axial_ffor = ffor.WS_axial_deficit_ffor + ffor.WS_axial_added_ffor
 
     # ------------------------ # Post Process to get TI # -------------------------------------------------------- #
     if meta.WaT:
-        if True:
+        if False:
 
             mean_WS = np.mean(ffor.WS_axial_ffor, axis = (3))
             mean_WS_meand = np.mean(ffor.WS_axial_deficit_ffor, axis = (3))
 
             for i_t in np.arange(0, len(meand.time), 1):
                 # Old Formulation
-                ffor.TI_meand_axial_ffor[:, : , :, i_t] = np.sqrt((ffor.WS_axial_deficit_ffor[:, : , :, i_t]-mean_WS_meand)**2)/mean_WS_meand#_meand) " Orginal withou Meand
+                ffor.TI_meand_axial_ffor[:, : , :, i_t] = np.sqrt((ffor.WS_axial_deficit_ffor[:, : , :, i_t]-mean_WS)**2)/mean_WS#_meand) " Orginal withou Meand
                 #ffor.TI_axial_added_ffor[:, : , :, i_t] = np.abs((ffor.WS_axial_added_ffor[:, : , :, i_t]/mean_WS))
                 # new Formulation
                 ffor.TI_axial_added_ffor[:, :, :, i_t] = np.sqrt((ffor.WS_axial_added_ffor[:, :, :, i_t])**2.)
@@ -372,6 +375,25 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor, MannBox):
                 plt.contourf((ffor.TI_axial_ffor[:,:,0,0]-Last_TI))#/(Last_TI-meta.mean_TI_DWM))
                 plt.colorbar()
                 plt.show()
+    if True:
+        U_fluct = np.zeros((meta.nx, meta.ny, meta.nz, meta.nt))
+        mean_WS = np.mean(ffor.WS_axial_ffor, axis = (3))
+
+        for i_t in np.arange(0, len(meand.time), 1):
+            U_fluct[:,:,:,i_t] = ffor.WS_axial_ffor[:,:,:,i_t] - mean_WS
+        U_rms = np.sqrt(np.mean(U_fluct**2,axis=3))
+        ffor.TI_axial_ffor = np.sqrt(1./3.*U_rms)
+        # plt.figure()
+        # plt.contourf(ffor.TI_axial_ffor[:,:,0])
+        # plt.contourf(ffor.TI_axial_ffor[:, :, 2])
+        # plt.colorbar()
+
+        ffor.TI_axial_ffor[ffor.TI_axial_ffor < meta.mean_TI_DWM] = meta.mean_TI_DWM
+        # plt.figure()
+        # plt.contourf(ffor.TI_axial_ffor[:, :, 0])
+        # plt.contourf(ffor.TI_axial_ffor[:, :, 2])
+        # plt.colorbar()
+
 
     if meta.MEANDERING_plot:
         Average_TI_added = np.mean(ffor.TI_axial_added_ffor, axis = 3)
@@ -445,7 +467,7 @@ def DWM_MFOR_to_FFOR_dynamic(mfor, meta, meand, ffor, MannBox):
         ref_rotor_x_emitting = (meta.hub_x[0] + np.cos(np.linspace(-pi, pi))) / 2.
         ref_rotor_y_emitting =(meta.hub_y + np.sin(np.linspace(-pi, pi))) / 2.
         #for i_z in np.arange(0, 3):
-        for i_z in np.arange(0, meta.nz):
+        for i_z in np.arange(1, meta.nz):
             ref_rotor_x_concerned = (meta.hub_x[i_z] + np.cos(np.linspace(-pi, pi))) / 2.
             ref_rotor_y_concerned =(meta.hub_y + np.sin(np.linspace(-pi, pi))) / 2.
 
@@ -611,7 +633,7 @@ def DWM_get_deficit_FFOR_dynamic(ffor, meta,deficits,ID_waked,inlets_ffor,inlets
 
         ID_waked[str(meta.wtg_ind[i_z])].append(meta.wtg_ind[0])
     #"""
-    if meta.DEFICIT_plot:
+    if meta.DEFICIT_plot and meta.iT==7:
         if not meta.steadyBEM_AINSLIE:
             i_z = 1
             plt.figure()
@@ -626,7 +648,7 @@ def DWM_get_deficit_FFOR_dynamic(ffor, meta,deficits,ID_waked,inlets_ffor,inlets
                 for i_z in np.arange(0, meta.nz, 1):
                     plt.figure(i_z)
                     plt.title('WT' + str(meta.wtg_ind[i_z]) + ' deficits in time')
-                    plt.plot(meta.time, deficits_in_time[str(meta.wtg_ind[i_z])][-1], label='temporal data')
+                    plt.plot(meta.time, deficits_in_time[str(meta.wtg_ind[i_z])][-1], '-x',label='temporal data')
                     plt.plot(meta.time, [deficits[str(meta.wtg_ind[i_z])][-1] for i_t in meta.time], label='Average deficit in time')
                     plt.ylim(0., 1.)
                     plt.xlabel('Simulation time t [s]'), plt.ylabel('WS'), plt.legend()
@@ -641,7 +663,7 @@ def DWM_get_deficit_FFOR_dynamic(ffor, meta,deficits,ID_waked,inlets_ffor,inlets
                 # print 'length ref ', length_ref
                 Deficit_to_plot = [deficits[str(i_z)][i] for i_z in np.arange(0, length_ref, 1)]
                 # print Deficit_to_plot
-                plt.plot(np.arange(0, length_ref, 1), Deficit_to_plot, label='WT' + str(length_ref - 1))
+                plt.plot(np.arange(0, length_ref, 1), Deficit_to_plot, '-x',label='WT' + str(length_ref - 1))
                 if i == 0:
                     plt.xlim(length_ref - 1, 0)
             plt.legend()

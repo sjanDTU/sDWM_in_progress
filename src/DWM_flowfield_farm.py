@@ -598,7 +598,7 @@ def DWM_get_turb(ffor,meta,turb,inlets_ffor_turb,):
         inlets_ffor_turb[str(meta.wtg_ind[i_z])].append(turbmasknan)
         #print 'inlets_ffor_deficits shape (after mean): ', np.shape(turbmasknan)
 
-    if meta.DEFICIT_plot:
+    if meta.DEFICIT_plot and meta.iT==7:
         plt.figure('Rotor averaged turbulence intensity')
         plt.title('Rotor averaged TI generating by each Turbine on other Turbines'), plt.xlabel('WT'), plt.ylabel('Deficit')
         for i in range(len(turb[str(0)])):
@@ -607,7 +607,7 @@ def DWM_get_turb(ffor,meta,turb,inlets_ffor_turb,):
             #print 'length ref ', length_ref
             Turb_to_plot = [turb[str(i_z)][i] for i_z in np.arange(0, length_ref, 1)]
             #print Deficit_to_plot
-            plt.plot(np.arange(0, length_ref, 1), Turb_to_plot, label='WT'+str(length_ref-1))
+            plt.plot(np.arange(0, length_ref, 1), Turb_to_plot, '-x',label='WT'+str(length_ref-1))
             if i==0:
                 plt.xlim(length_ref-1, 0)
         plt.xlabel('WT index in the the flow'), plt.ylabel('TI')
@@ -1320,7 +1320,8 @@ def DWM_main_field_model_partly_dynamic(ID_waked,deficits,inlets_ffor,inlets_ffo
     deficits, ID_waked, inlets_ffor, inlets_ffor_deficits  = DWM_get_deficit_FFOR_dynamic(ffor, meta, deficits, ID_waked, inlets_ffor, inlets_ffor_deficits)
 
     # ############## Compute turbulence level at downstream rotor
-    turb, inlets_ffor_turb = DWM_get_turb_dynamic(ffor, meta, turb, inlets_ffor_turb)
+    #turb, inlets_ffor_turb = DWM_get_turb_dynamic(ffor, meta, turb, inlets_ffor_turb)
+    turb, inlets_ffor_turb = DWM_get_turb(ffor, meta, turb, inlets_ffor_turb)
 
     # ############# Compute new axisymmetric flow for next turbine ##################################################
     #ffor,inlets = DWM_make_inflow_to_mixl(meta,ffor,inlets)
